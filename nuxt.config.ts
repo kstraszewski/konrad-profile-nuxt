@@ -2,6 +2,11 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-04-29',
   devtools: { enabled: false },
   css: ['~/assets/css/main.css'],
+  nitro: {
+    prerender: {
+      routes: ['/api/cv/general.pdf', '/api/cv/posthog.pdf']
+    }
+  },
   app: {
     head: {
       htmlAttrs: {
