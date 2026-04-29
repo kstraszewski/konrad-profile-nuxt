@@ -12,6 +12,11 @@
         and watching what actually breaks. That history is the leverage.
       </p>
 
+      <p class="lendi__pride">
+        The part I'm especially proud of: helping scale Lendi from a startup into
+        Poland's #1 broker and the fastest-growing broker in Europe.
+      </p>
+
       <div class="lendi__phases">
         <article
           v-for="(phase, index) in phases"
@@ -129,6 +134,16 @@ const pillars = [
   color: var(--dim);
   font-size: 1.1875rem;
   line-height: 1.55;
+}
+
+.lendi__pride {
+  max-width: 820px;
+  margin: 28px 0 0;
+  padding-left: 22px;
+  border-left: 3px solid var(--accent);
+  color: var(--ink);
+  font-size: 1.375rem;
+  line-height: 1.4;
 }
 
 .lendi__phases {
