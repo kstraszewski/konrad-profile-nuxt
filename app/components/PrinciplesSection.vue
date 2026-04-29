@@ -2,15 +2,19 @@
   <section id="principles" class="principles">
     <div class="principles__outer">
       <div class="principles__inner">
-        <SectionLabel label="§ 04 · Principles" sub="Four beliefs, hard-earned" dark />
+        <SectionLabel :label="profile.principles.label" :sub="profile.principles.sub" dark />
 
         <div>
           <h2 class="principles__heading">
-            The opinions I'd defend in a room full of people who disagree.
+            {{ profile.principles.heading }}
           </h2>
 
           <div class="principles__list">
-            <article v-for="(principle, index) in principles" :key="principle.number" class="principles__item">
+            <article
+              v-for="principle in profile.principles.items"
+              :key="principle.number"
+              class="principles__item"
+            >
               <div class="principles__number">P · {{ principle.number }}</div>
               <h3>{{ principle.heading }}</h3>
               <p>{{ principle.description }}</p>
@@ -23,32 +27,7 @@
 </template>
 
 <script setup>
-const principles = [
-  {
-    number: '01',
-    heading: 'Programmers become product builders',
-    description:
-      "AI collapses the distance between idea and shipped feature. The job stops being 'write code' and becomes 'own outcomes'. That's my main KPI at Lendi."
-  },
-  {
-    number: '02',
-    heading: 'Vendor-agnostic by default',
-    description:
-      'Models, vector stores, infra - all swappable. Bet on interfaces, not providers. The wrapper is the product; the model is a commodity.'
-  },
-  {
-    number: '03',
-    heading: "Replace, don't augment",
-    description:
-      "When AI eats 30% of a workflow, the move is to redesign the workflow - not wedge AI into the gaps. I redefine departments, not toolchains."
-  },
-  {
-    number: '04',
-    heading: 'Ship beats slides',
-    description:
-      "An adoption strategy that doesn't end in a deployed tool is a strategy that didn't happen. The deck is a side-effect, not the artefact."
-  }
-]
+import { profile } from '~/data/profile'
 </script>
 
 <style scoped>
@@ -100,7 +79,7 @@ const principles = [
 
 .principles__number {
   padding-top: 8px;
-  color: var(--accent);
+  color: #f5f5f5;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   letter-spacing: 0.12em;

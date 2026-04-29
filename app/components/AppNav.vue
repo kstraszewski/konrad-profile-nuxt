@@ -1,17 +1,17 @@
 <template>
   <header class="nav" :class="{ 'nav--scrolled': scrolled }">
     <div class="nav__inner">
-      <a class="nav__brand" href="#top" aria-label="Back to top">
+      <a class="nav__brand" :href="homeHref" aria-label="Back to top">
         <span class="nav__brand-dot" aria-hidden="true" />
-        <span class="nav__name">Konrad Straszewski</span>
-        <span class="nav__role">&middot; AI Manager &amp; Builder</span>
+        <span class="nav__name">{{ profile.person.name }}</span>
+        <span class="nav__role">&middot; {{ profile.person.role }}</span>
       </a>
 
       <nav class="nav__links" aria-label="Page sections">
-        <a v-for="item in items" :key="item.href" :href="item.href" class="nav__link">
+        <a v-for="item in items" :key="item.href" :href="navHref(item.href)" class="nav__link">
           {{ item.label }}
         </a>
-        <a class="nav__cta" href="#contact">Let's talk &rarr;</a>
+        <a class="nav__cta" :href="sectionHref('#contact')">Let's talk &rarr;</a>
       </nav>
     </div>
 
@@ -20,18 +20,17 @@
 </template>
 
 <script setup>
+import { profile } from '~/data/profile'
+
+const route = useRoute()
 const scrolled = ref(false)
 const progress = ref(0)
 
-const items = [
-  { label: 'Now', href: '#now' },
-  { label: 'Lendi', href: '#lendi' },
-  { label: 'jasne.ai', href: '#jasne' },
-  { label: 'Principles', href: '#principles' },
-  { label: 'Track record', href: '#track' },
-  { label: 'Writing', href: '#writing' },
-  { label: 'Contact', href: '#contact' }
-]
+const items = profile.nav.main
+
+const homeHref = computed(() => (route.path === '/' ? '#top' : '/'))
+const sectionHref = (hash) => (route.path === '/' ? hash : `/${hash}`)
+const navHref = (href) => (href.startsWith('#') ? sectionHref(href) : href)
 
 let removeScrollListener = null
 
@@ -66,7 +65,7 @@ onBeforeUnmount(() => {
 
 .nav--scrolled {
   border-bottom-color: var(--rule);
-  background: rgba(250, 250, 247, 0.85);
+  background: rgba(255, 255, 255, 0.86);
   backdrop-filter: blur(12px);
 }
 

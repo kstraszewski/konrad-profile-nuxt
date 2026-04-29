@@ -1,38 +1,44 @@
 <template>
   <section id="top" class="hero">
     <div class="hero__meta-row">
-      <Eyebrow accent>Available &middot; senior AI roles &middot; Warsaw / remote</Eyebrow>
-      <span class="hero__est">EST. 2017 - LENDI &middot; 2024 &rarr; AI</span>
+      <Eyebrow accent>{{ profile.hero.eyebrow }}</Eyebrow>
+      <span class="hero__est">{{ profile.hero.meta }}</span>
     </div>
 
     <h1 class="hero__title">
-      I rewire teams<br>
-      <span class="hero__around">around</span>
+      {{ profile.hero.title.first }}<br>
+      <span class="hero__around">{{ profile.hero.title.around }}</span>
       {{ ' ' }}
       <span class="hero__ai-wrap">
         <span class="hero__ai">
-          AI
+          {{ profile.hero.title.highlight }}
           <span class="hero__underline" :class="{ 'hero__underline--short': tick % 2 !== 0 }" />
         </span>,
       </span><br>
-      then ship the products.
+      {{ profile.hero.title.last }}
     </h1>
 
     <div class="hero__intro-grid">
       <p class="hero__intro">
-        8.5 years at <strong>Lendi</strong> - frontend developer, then lead, then R&amp;D,
-        now <strong>AI Manager &amp; Builder</strong>. My mandate: redefine the role of
-        the engineer - from feature-shipper to product builder - and prove it ships.
-        On the side I'm building
-        <a href="#jasne" class="link-underline">jasne.ai</a>.
+        {{ profile.hero.intro.years }}
+        <a
+          :href="profile.links.lendi.href"
+          class="hero__brand hero__brand--lendi"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {{ profile.hero.intro.company }}
+        </a> -
+        {{ profile.hero.intro.path }}
+        <strong>{{ profile.hero.intro.role }}</strong>. {{ profile.hero.intro.mandate }}
+        {{ profile.hero.intro.side }}
+        <NuxtLink to="/jasne.ai" class="link-underline hero__brand hero__brand--jasne">
+          {{ profile.hero.intro.sideBuild }}
+        </NuxtLink>.
       </p>
 
       <div class="hero__facts" aria-label="Profile facts">
-        <KeyValue label="Currently" value="AI Manager · Lendi" />
-        <KeyValue label="Side build" value="jasne.ai" />
-        <KeyValue label="Based" value="Szczecin, Poland" />
-        <KeyValue label="Open to" value="Head of AI · AI Lead" />
-        <KeyValue label="Stack" value="vendor-agnostic" />
+        <KeyValue v-for="fact in profile.hero.facts" :key="fact.label" :label="fact.label" :value="fact.value" />
         <div class="hero__fact-end" />
       </div>
     </div>
@@ -40,16 +46,15 @@
     <div class="hero__marquee" aria-hidden="true">
       <div class="hero__marquee-track">
         <span v-for="index in 3" :key="index">
-          <span class="hero__marquee-strong">AI Manager</span>
-          <span class="hero__marquee-accent">✦</span>
-          Builder of <span class="hero__marquee-italic">jasne.ai</span>
-          <span class="hero__marquee-accent">✦</span>
-          <span class="hero__marquee-strong">8.5 yrs at Lendi</span>
-          <span class="hero__marquee-accent">✦</span>
-          Vendor-agnostic by design
-          <span class="hero__marquee-accent">✦</span>
-          <span class="hero__marquee-strong">Programmers &rarr; product builders</span>
-          <span class="hero__marquee-accent">✦</span>
+          <template v-for="item in profile.hero.marquee" :key="`${index}-${item.text}`">
+            <span :class="{ 'hero__marquee-strong': item.strong }">
+              <template v-if="item.italicWord">
+                {{ item.text.replace(item.italicWord, '') }}<span class="hero__marquee-italic">{{ item.italicWord }}</span>
+              </template>
+              <template v-else>{{ item.text }}</template>
+            </span>
+            <span class="hero__marquee-accent">✦</span>
+          </template>
         </span>
       </div>
     </div>
@@ -57,6 +62,8 @@
 </template>
 
 <script setup>
+import { profile } from '~/data/profile'
+
 const tick = ref(0)
 let intervalId = null
 
@@ -155,6 +162,29 @@ onBeforeUnmount(() => {
   font-weight: 500;
 }
 
+.hero__brand {
+  font-weight: 600;
+  text-decoration: none;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  transition: color 0.18s ease, text-shadow 0.18s ease;
+}
+
+.hero__brand--lendi {
+  color: var(--ink);
+}
+
+.hero__brand--lendi:hover,
+.hero__brand--lendi:focus-visible {
+  color: var(--brand-lendi);
+  text-shadow: 0 0 18px rgba(34, 199, 250, 0.22);
+}
+
+.hero__brand--jasne {
+  color: var(--brand-jasne);
+  text-decoration-color: currentColor;
+}
+
 .hero__facts {
   color: var(--dim);
   font-family: var(--font-body);
@@ -194,6 +224,7 @@ onBeforeUnmount(() => {
 }
 
 .hero__marquee-italic {
+  color: var(--brand-jasne);
   font-style: italic;
 }
 

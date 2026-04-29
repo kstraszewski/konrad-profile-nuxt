@@ -1,13 +1,12 @@
 <template>
   <section id="now">
-    <TwoCol label="§ 01 · Now" sub="2026 - present">
+    <TwoCol :label="profile.now.label" :sub="profile.now.sub">
       <SerifHeading :size="48" class="now__heading">
-        Three things, one thesis: the engineer's job has changed and the orgs that
-        catch up will eat the ones that don't.
+        {{ profile.now.heading }}
       </SerifHeading>
 
       <div class="now__grid">
-        <article v-for="item in items" :key="item.heading" class="now__item">
+        <article v-for="item in profile.now.items" :key="item.heading" class="now__item">
           <div class="now__tag">{{ item.tag }}</div>
           <h3 class="now__item-heading">{{ item.heading }}</h3>
           <p class="now__description">{{ item.description }}</p>
@@ -18,32 +17,7 @@
 </template>
 
 <script setup>
-const items = [
-  {
-    heading: 'Leading AI adoption at Lendi',
-    description:
-      "Company-wide rollout. Strategy, tooling, training, KPIs. The unglamorous work of moving an org from 'we should do something with AI' to 'this is how we ship now'.",
-    tag: 'Day job'
-  },
-  {
-    heading: 'Building jasne.ai',
-    description:
-      'A vertical AI product. Solo, end-to-end. Vendor-agnostic stack. The proof that the model I sell at Lendi works in the wild.',
-    tag: 'Side build'
-  },
-  {
-    heading: 'Writing the product-builder playbook',
-    description:
-      'Notes, essays, internal memos. What the engineering role becomes when AI is the default collaborator - and what hiring, performance, and team shape look like next.',
-    tag: 'Public'
-  },
-  {
-    heading: 'Exploring AI-to-UI and MCP apps',
-    description:
-      'Generative UI as a product surface: agents that render the interface they need, and MCP apps as the bridge between tools, data, and real workflows.',
-    tag: 'Current focus'
-  }
-]
+import { profile } from '~/data/profile'
 </script>
 
 <style scoped>

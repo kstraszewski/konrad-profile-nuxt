@@ -1,28 +1,32 @@
 <template>
   <section id="lendi" class="lendi">
-    <TwoCol label="§ 02 · Lendi" sub="8.5 yrs · FE → Lead → R&D → AI">
+    <TwoCol :label="profile.lendi.label" :sub="profile.lendi.sub">
       <SerifHeading :size="86" class="lendi__heading">
-        <span class="lendi__accent">Lendi</span> is where I learned the building,
-        the leading, and the unbuilding.
+        <a
+          :href="profile.links.lendi.href"
+          class="lendi__accent"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {{ profile.lendi.heading.accent }}
+        </a>
+        {{ profile.lendi.heading.rest }}
       </SerifHeading>
 
       <p class="lendi__intro">
-        Most "AI managers" arrive at AI from outside the company. I arrived from
-        inside - eight and a half years of shipping the product, leading the team,
-        and watching what actually breaks. That history is the leverage.
+        {{ profile.lendi.intro }}
       </p>
 
       <p class="lendi__pride">
-        The part I'm especially proud of: helping scale Lendi from a startup into
-        Poland's #1 broker and the fastest-growing broker in Europe.
+        {{ profile.lendi.pride }}
       </p>
 
       <div class="lendi__phases">
         <article
-          v-for="(phase, index) in phases"
+          v-for="(phase, index) in profile.lendi.phases"
           :key="phase.year"
           class="lendi__phase"
-          :class="{ 'lendi__phase--current': index === phases.length - 1 }"
+          :class="{ 'lendi__phase--current': index === profile.lendi.phases.length - 1 }"
         >
           <div class="lendi__phase-kicker">YEAR {{ phase.ordinal }}</div>
           <h3 class="lendi__phase-year">{{ phase.year }}</h3>
@@ -34,7 +38,7 @@
       <div class="lendi__pillars-wrap">
         <Eyebrow>The mandate &middot; three pillars</Eyebrow>
         <div class="lendi__pillars">
-          <article v-for="pillar in pillars" :key="pillar.number" class="lendi__pillar">
+          <article v-for="pillar in profile.lendi.pillars" :key="pillar.number" class="lendi__pillar">
             <div class="lendi__pillar-kicker">PILLAR {{ pillar.number }}</div>
             <h3 class="lendi__pillar-heading">{{ pillar.heading }}</h3>
             <p class="lendi__pillar-line">{{ pillar.line }}</p>
@@ -47,71 +51,16 @@
 
       <figure class="lendi__quote">
         <blockquote>
-          "If your AI strategy lives in one department, you're already behind. The
-          work is to <span>redefine the unit</span> - not the tool."
+          "{{ profile.lendi.quote }}"
         </blockquote>
-        <figcaption>INTERNAL MEMO · LENDI · 2025</figcaption>
+        <figcaption>{{ profile.lendi.quoteMeta }}</figcaption>
       </figure>
     </TwoCol>
   </section>
 </template>
 
 <script setup>
-const phases = [
-  {
-    year: '2017',
-    label: 'Joined Lendi',
-    description: 'Vue/Nuxt developer. Frontend on B2B and B2C surfaces.',
-    ordinal: '01'
-  },
-  {
-    year: '2020',
-    label: 'Frontend Lead',
-    description: 'Owned the front-end stack. Mentored juniors. Nuxt 2 -> 3 from alpha.',
-    ordinal: '04'
-  },
-  {
-    year: '2023',
-    label: 'R&D',
-    description: 'One year off the product, on the future. AI prototypes, internal tools, the company-wide case.',
-    ordinal: '07'
-  },
-  {
-    year: '2024',
-    label: 'AI Manager & Builder',
-    description: 'Lead AI adoption company-wide. Redefine the engineering function.',
-    ordinal: '08+'
-  }
-]
-
-const pillars = [
-  {
-    number: '01',
-    heading: 'Adoption',
-    line: 'I roll AI into the seams of the company.',
-    bullets: [
-      'Internal copilots in product, eng, ops',
-      'Agentic workflows that replace coordination meetings',
-      'Tooling that ships, not slides that pitch'
-    ]
-  },
-  {
-    number: '02',
-    heading: 'Redefinition',
-    line: 'I move engineers from tickets to outcomes.',
-    bullets: [
-      'Product-builder competency model',
-      'Smaller pods, larger surface, faster loops',
-      'Performance shifted from velocity to ownership'
-    ]
-  },
-  {
-    number: '03',
-    heading: 'Optimisation',
-    line: "I find the 30% of work AI eats first - and don't pretend it's augmentation.",
-    bullets: ['Replace rituals before tools', 'Audit work, not seats', 'Compounding wins beat hero deployments']
-  }
-]
+import { profile } from '~/data/profile'
 </script>
 
 <style scoped>
@@ -125,7 +74,16 @@ const pillars = [
 }
 
 .lendi__accent {
-  color: var(--accent);
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.18s ease, text-shadow 0.18s ease;
+}
+
+.lendi__accent:hover,
+.lendi__accent:focus-visible {
+  color: var(--brand-lendi);
+  text-shadow: 0 0 24px rgba(34, 199, 250, 0.22);
 }
 
 .lendi__intro {
@@ -165,7 +123,7 @@ const pillars = [
 }
 
 .lendi__phase--current {
-  background: rgba(196, 88, 42, 0.1);
+  background: rgba(17, 17, 17, 0.06);
 }
 
 .lendi__phase-kicker {

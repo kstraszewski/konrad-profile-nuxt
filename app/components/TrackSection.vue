@@ -1,13 +1,13 @@
 <template>
   <section id="track" class="track">
-    <TwoCol label="§ 06 · Track record" sub="11 years · two companies">
+    <TwoCol :label="profile.track.label" :sub="profile.track.sub">
       <SerifHeading :size="48" class="track__heading">
-        Long arcs over loud titles. I stayed where the work compounded.
+        {{ profile.track.heading }}
       </SerifHeading>
 
       <div class="track__list">
         <article
-          v-for="(item, index) in experience"
+          v-for="(item, index) in profile.track.experience"
           :key="`${item.year}-${item.role}`"
           class="track__item"
           :class="{ 'track__item--dim': hovered !== null && hovered !== index }"
@@ -26,8 +26,8 @@
       <div class="track__education">
         <div class="track__education-label">Education</div>
         <div>
-          Automation &amp; Robotics
-          <span>· West Pomeranian University of Technology</span>
+          {{ profile.track.education.field }}
+          <span>· {{ profile.track.education.school }}</span>
         </div>
       </div>
     </TwoCol>
@@ -35,45 +35,9 @@
 </template>
 
 <script setup>
-const hovered = ref(null)
+import { profile } from '~/data/profile'
 
-const experience = [
-  {
-    year: '2024 → now',
-    role: 'AI Manager & Builder',
-    org: 'Lendi',
-    description:
-      'Lead AI adoption company-wide. Redefine engineering function around the product-builder model. Ship internal tooling, agentic workflows, and the cultural shift that makes them stick.'
-  },
-  {
-    year: '2024 → now',
-    role: 'Founder',
-    org: 'jasne.ai',
-    description:
-      'Vertical AI product. Solo end-to-end: design, code, infra, distribution. Vendor-agnostic stack on Vercel AI SDK.'
-  },
-  {
-    year: '2023 - 2024',
-    role: 'R&D',
-    org: 'Lendi',
-    description:
-      'One year exploring AI as the next platform. Prototypes, internal tools, the case for company-wide adoption. The bridge between frontend lead and AI manager.'
-  },
-  {
-    year: '2017 - 2023',
-    role: 'Frontend Developer -> Lead',
-    org: 'Lendi',
-    description:
-      "Seven years on Lendi's product. Started as Vue/Nuxt developer, grew into front-end lead. Shipped Nuxt 2/3 from alpha, mentored juniors, owned the front-end stack across B2B and B2C surfaces."
-  },
-  {
-    year: '2015 - 2017',
-    role: 'Frontend Developer',
-    org: 'Finpack',
-    description:
-      'B2B financial calculators on Vue and Angular. Where I learned how much UI sits between a financial product and a customer.'
-  }
-]
+const hovered = ref(null)
 </script>
 
 <style scoped>

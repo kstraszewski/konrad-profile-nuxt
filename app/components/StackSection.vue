@@ -1,13 +1,12 @@
 <template>
   <section class="stack">
-    <TwoCol label="§ 05 · Daily stack" sub="Tools, not religion">
+    <TwoCol :label="profile.stack.label" :sub="profile.stack.sub">
       <SerifHeading :size="48" class="stack__heading">
-        I'm vendor-agnostic on principle. The abstractions move faster than the
-        providers - and the providers know it.
+        {{ profile.stack.heading }}
       </SerifHeading>
 
       <div class="stack__groups">
-        <section v-for="group in groups" :key="group.label" class="stack__group">
+        <section v-for="group in profile.stack.groups" :key="group.label" class="stack__group">
           <h3 class="stack__group-label">{{ group.label }}</h3>
           <div class="stack__items">
             <div v-for="item in group.items" :key="item" class="stack__item">{{ item }}</div>
@@ -19,11 +18,7 @@
 </template>
 
 <script setup>
-const groups = [
-  { label: 'Daily', items: ['Claude', 'Codex', 'Cursor', 'Superset'] },
-  { label: 'Build', items: ['Vercel AI SDK', 'Next.js', 'Nuxt', 'TypeScript'] },
-  { label: 'Posture', items: ['Vendor-agnostic', 'Interface-first', 'Replace > augment'] }
-]
+import { profile } from '~/data/profile'
 </script>
 
 <style scoped>

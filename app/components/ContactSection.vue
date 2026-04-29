@@ -3,24 +3,22 @@
     <div class="contact__inner">
       <div class="contact__label">
         <span class="contact__dot" aria-hidden="true" />
-        <span>§ 08 · Let's talk</span>
+        <span>{{ profile.contact.label }}</span>
       </div>
 
       <h2 class="contact__heading">
-        If you're building something
-        <span>serious</span>
-        with AI, I want to hear about it.
+        {{ profile.contact.heading.first }}
+        <span>{{ profile.contact.heading.accent }}</span>
+        {{ profile.contact.heading.last }}
       </h2>
 
       <p class="contact__copy">
-        Best for: Head of AI / AI Lead roles, founding AI engineer at a serious
-        team, or a clear mandate to redefine an engineering function. Worst for:
-        "we want a chatbot."
+        {{ profile.contact.copy }}
       </p>
 
       <div class="contact__links">
         <a
-          v-for="item in links"
+          v-for="item in contactLinks"
           :key="item.label"
           :href="item.href"
           :target="item.external ? '_blank' : undefined"
@@ -33,39 +31,16 @@
       </div>
 
       <div class="contact__footer">
-        <span>&copy; KONRAD STRASZEWSKI · 2026</span>
-        <span>VENDOR-AGNOSTIC BY DESIGN</span>
-        <span>END OF FILE · 08 / 08</span>
+        <span v-for="item in profile.contact.footer" :key="item">{{ item }}</span>
       </div>
     </div>
   </footer>
 </template>
 
 <script setup>
-const links = [
-  {
-    label: 'Email',
-    value: 'koonradstraszewski@gmail.com',
-    href: 'mailto:koonradstraszewski@gmail.com'
-  },
-  {
-    label: 'Phone',
-    value: '+48 794 175 956',
-    href: 'tel:+48794175956'
-  },
-  {
-    label: 'GitHub',
-    value: 'github.com/kstraszewski',
-    href: 'https://github.com/kstraszewski',
-    external: true
-  },
-  {
-    label: 'LinkedIn',
-    value: 'in/konrad-straszewski',
-    href: 'https://www.linkedin.com/in/konrad-straszewski-b4a939165/',
-    external: true
-  }
-]
+import { profile } from '~/data/profile'
+
+const contactLinks = [profile.links.email, profile.links.phone, profile.links.github, profile.links.linkedin]
 </script>
 
 <style scoped>
@@ -97,7 +72,7 @@ const links = [
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent);
+  background: #f5f5f5;
 }
 
 .contact__heading {
@@ -113,7 +88,7 @@ const links = [
 }
 
 .contact__heading span {
-  color: var(--accent);
+  color: #d8d8d8;
   font-style: italic;
 }
 
@@ -145,7 +120,7 @@ const links = [
 }
 
 .contact__link:hover {
-  color: var(--accent);
+  color: #d8d8d8;
 }
 
 .contact__link-label {
