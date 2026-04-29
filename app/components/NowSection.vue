@@ -36,6 +36,12 @@ const items = [
     description:
       'Notes, essays, internal memos. What the engineering role becomes when AI is the default collaborator - and what hiring, performance, and team shape look like next.',
     tag: 'Public'
+  },
+  {
+    heading: 'Exploring AI-to-UI and MCP apps',
+    description:
+      'Generative UI as a product surface: agents that render the interface they need, and MCP apps as the bridge between tools, data, and real workflows.',
+    tag: 'Current focus'
   }
 ]
 </script>
@@ -48,7 +54,7 @@ const items = [
 
 .now__grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 32px;
 }
 
@@ -84,7 +90,13 @@ const items = [
   line-height: 1.55;
 }
 
-@media (max-width: 920px) {
+@media (max-width: 1180px) {
+  .now__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
   .now__grid {
     grid-template-columns: 1fr;
   }
