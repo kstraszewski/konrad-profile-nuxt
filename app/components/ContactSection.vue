@@ -54,6 +54,12 @@ const links = [
     href: 'tel:+48794175956'
   },
   {
+    label: 'GitHub',
+    value: 'github.com/kstraszewski',
+    href: 'https://github.com/kstraszewski',
+    external: true
+  },
+  {
     label: 'LinkedIn',
     value: 'in/konrad-straszewski',
     href: 'https://www.linkedin.com/in/konrad-straszewski-b4a939165/',
@@ -121,7 +127,7 @@ const links = [
 
 .contact__links {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 32px;
   margin-top: 100px;
 }
