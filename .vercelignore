@@ -1,0 +1,12 @@
+Konrad CV*.html
+Konrad Straszewski - standalone.html
+cv/
+uploads/
+public/uploads/
+node_modules/
+.nuxt/
+.output/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
