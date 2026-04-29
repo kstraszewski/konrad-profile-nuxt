@@ -80,10 +80,10 @@ useHead({
 
 .jasne-page h1 {
   margin: 0;
-  color: var(--brand-jasne);
+  color: var(--ink);
   font-family: var(--font-headline);
   font-size: clamp(5rem, 13vw, 11rem);
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: 0;
   line-height: 0.95;
 }
@@ -104,6 +104,14 @@ useHead({
   font-size: 0.8125rem;
   padding-bottom: 4px;
   text-decoration: none;
+  transition: color 0.18s ease, border-color 0.18s ease, text-shadow 0.18s ease;
+}
+
+.jasne-page__live:hover,
+.jasne-page__live:focus-visible {
+  border-color: var(--brand-jasne);
+  color: var(--brand-jasne);
+  text-shadow: 0 0 14px rgba(255, 214, 110, 0.2);
 }
 
 .jasne-page__facts {

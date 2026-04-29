@@ -9,6 +9,7 @@
     <StackSection />
     <TrackSection />
     <InterestsSection />
+    <AboutSection />
     <ContactSection />
   </div>
 </template>

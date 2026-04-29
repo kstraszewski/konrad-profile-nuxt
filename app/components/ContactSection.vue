@@ -103,7 +103,7 @@ const contactLinks = [profile.links.email, profile.links.phone, profile.links.gi
 .contact__links {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 32px;
+  gap: 24px;
   margin-top: 100px;
 }
 
@@ -111,6 +111,7 @@ const contactLinks = [profile.links.email, profile.links.phone, profile.links.gi
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-width: 0;
   padding-top: 18px;
   padding-bottom: 18px;
   border-top: 1px solid var(--dark-rule);
@@ -131,9 +132,10 @@ const contactLinks = [profile.links.email, profile.links.phone, profile.links.gi
 }
 
 .contact__link-value {
-  overflow-wrap: anywhere;
-  font-size: 1.375rem;
+  font-size: 1.25rem;
   letter-spacing: 0;
+  overflow-wrap: normal;
+  white-space: nowrap;
 }
 
 .contact__link-value span {
@@ -153,6 +155,12 @@ const contactLinks = [profile.links.email, profile.links.phone, profile.links.gi
   letter-spacing: 0.08em;
 }
 
+@media (max-width: 1340px) {
+  .contact__links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 1060px) {
   .contact {
     padding: 120px 6vw 84px;
@@ -162,14 +170,16 @@ const contactLinks = [profile.links.email, profile.links.phone, profile.links.gi
     font-size: 5.25rem;
   }
 
-  .contact__links {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
   .contact__footer {
     flex-direction: column;
     margin-top: 96px;
+  }
+}
+
+@media (max-width: 720px) {
+  .contact__links {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 }
 
@@ -180,6 +190,12 @@ const contactLinks = [profile.links.email, profile.links.phone, profile.links.gi
 
   .contact__heading {
     font-size: 3.5rem;
+  }
+
+  .contact__link-value {
+    font-size: 1.125rem;
+    overflow-wrap: anywhere;
+    white-space: normal;
   }
 }
 </style>

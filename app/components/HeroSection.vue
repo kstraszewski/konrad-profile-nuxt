@@ -35,10 +35,26 @@
         <NuxtLink to="/jasne.ai" class="link-underline hero__brand hero__brand--jasne">
           {{ profile.hero.intro.sideBuild }}
         </NuxtLink>.
+        {{ profile.hero.intro.mafLead }}
+        <a
+          :href="profile.links.maf.href"
+          class="hero__brand hero__brand--maf"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {{ profile.hero.intro.mafCompany }}</a>{{ profile.hero.intro.mafRest }}
       </p>
 
       <div class="hero__facts" aria-label="Profile facts">
-        <KeyValue v-for="fact in profile.hero.facts" :key="fact.label" :label="fact.label" :value="fact.value" />
+        <KeyValue
+          v-for="fact in profile.hero.facts"
+          :key="fact.label"
+          :label="fact.label"
+          :value="fact.value"
+          :href="fact.link ? profile.links[fact.link].href : ''"
+          :external="fact.link ? profile.links[fact.link].external : false"
+          :brand="fact.brand"
+        />
         <div class="hero__fact-end" />
       </div>
     </div>
@@ -181,8 +197,23 @@ onBeforeUnmount(() => {
 }
 
 .hero__brand--jasne {
+  color: var(--ink);
+}
+
+.hero__brand--jasne:hover,
+.hero__brand--jasne:focus-visible {
   color: var(--brand-jasne);
-  text-decoration-color: currentColor;
+  text-shadow: 0 0 18px rgba(255, 214, 110, 0.24);
+}
+
+.hero__brand--maf {
+  color: var(--ink);
+}
+
+.hero__brand--maf:hover,
+.hero__brand--maf:focus-visible {
+  color: var(--brand-maf);
+  text-shadow: 0 0 18px rgba(49, 38, 29, 0.22);
 }
 
 .hero__facts {
@@ -224,8 +255,15 @@ onBeforeUnmount(() => {
 }
 
 .hero__marquee-italic {
-  color: var(--brand-jasne);
+  color: var(--ink);
   font-style: italic;
+  font-weight: 600;
+  transition: color 0.18s ease, text-shadow 0.18s ease;
+}
+
+.hero__marquee-italic:hover {
+  color: var(--brand-jasne);
+  text-shadow: 0 0 18px rgba(255, 214, 110, 0.24);
 }
 
 @keyframes marquee {

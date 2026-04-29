@@ -284,15 +284,26 @@ const drawGeneralCv = (profile: Profile) => {
   doc.y = doc.textBlock(profile.jasne.intro, 142, doc.y, 396, 10, 14, { color: colors.ink })
 
   doc.y += 28
-  sectionTitle(doc, 'Stack')
-  profile.stack.groups.forEach((group) => {
-    doc.ensure(34)
-    doc.text(group.label, PAGE.margin, doc.y, 10, 'F2', colors.dim)
-    doc.text(group.items.join(' / '), 142, doc.y, 10, 'F1', colors.ink)
-    doc.y += 22
-  })
+  sectionTitle(doc, 'Technologies')
+  doc.ensure(50)
+  doc.text('Core stack', PAGE.margin, doc.y, 10, 'F2', colors.dim)
+  doc.y = doc.textBlock(profile.stack.technologies.join(' / '), 142, doc.y, 396, 10, 14, { color: colors.ink })
 
-  doc.y += 12
+  doc.y += 22
+  sectionTitle(doc, 'Personal')
+  doc.y = doc.textBlock(profile.about.copy, PAGE.margin, doc.y, 500, 10, 14, { color: colors.ink })
+  doc.y += 10
+  doc.y = doc.textBlock(
+    profile.about.items.map((item) => `${item.label}: ${item.value}`).join(' '),
+    PAGE.margin,
+    doc.y,
+    500,
+    9,
+    12.5,
+    { color: colors.dim }
+  )
+
+  doc.y += 18
   sectionTitle(doc, 'Education')
   doc.text(profile.track.education.field, PAGE.margin, doc.y, 11, 'F2')
   doc.text(profile.track.education.school, 220, doc.y, 10, 'F1', colors.dim)
@@ -300,69 +311,144 @@ const drawGeneralCv = (profile: Profile) => {
   return doc.finish()
 }
 
-const phSection = (doc: PdfDoc, label: string, title: string) => {
-  doc.ensure(70)
-  doc.text(label.toUpperCase(), PAGE.margin, doc.y, 8, 'F2', colors.phOrange)
-  doc.y = doc.textBlock(title, PAGE.margin, doc.y + 24, 500, 19, 23, { font: 'F4', color: colors.ink }) + 18
+const compactTextBlock = (
+  doc: PdfDoc,
+  text: string,
+  x: number,
+  y: number,
+  width: number,
+  size: number,
+  lineHeight: number,
+  maxLines: number,
+  options: { font?: string; color?: Color } = {}
+) => {
+  const lines = wrapText(text, width, size, options.font)
+  const visibleLines = lines.slice(0, maxLines)
+
+  if (lines.length > maxLines && visibleLines.length) {
+    const lastIndex = visibleLines.length - 1
+    const suffix = '...'
+    let shortened = visibleLines[lastIndex]
+
+    while (shortened.length > 1 && approxTextWidth(`${shortened}${suffix}`, size, options.font) > width) {
+      shortened = shortened.slice(0, -1).trim()
+    }
+
+    visibleLines[lastIndex] = `${shortened}${suffix}`
+  }
+
+  visibleLines.forEach((line, index) => {
+    doc.text(line, x, y + index * lineHeight, size, options.font ?? 'F1', options.color ?? colors.ink)
+  })
+
+  return y + visibleLines.length * lineHeight
+}
+
+const posthogHeader = (doc: PdfDoc, profile: Profile, subtitle = 'Product Engineer / PostHog CV variant') => {
+  doc.panel(PAGE.margin, 42, 32, 32, colors.phOrange, colors.ink, true)
+  doc.text(profile.person.initials, 57, 64, 11, 'F2', colors.paper)
+  doc.text(profile.person.name, 94, 60, 16, 'F2')
+  doc.text(subtitle, 94, 77, 8, 'F1', colors.dim)
+  doc.text('POSTHOG CV', 471, 58, 8, 'F2', colors.dim)
+  doc.text('2 pages', 500, 74, 7, 'F1', colors.dim)
+}
+
+const posthogCard = (doc: PdfDoc, x: number, y: number, width: number, height: number) => {
+  doc.panel(x, y, width, height, colors.paper, colors.ink, true)
 }
 
 const drawPosthogCv = (profile: Profile) => {
   const doc = new PdfDoc('posthog')
 
-  doc.panel(PAGE.margin, 52, 36, 36, colors.phOrange, colors.ink, true)
-  doc.text(profile.person.initials, 58, 75, 12, 'F2', colors.paper)
-  doc.text(profile.person.name, 98, 72, 17, 'F2')
-  doc.text('Product Engineer / PostHog CV variant', 98, 90, 9, 'F1', colors.dim)
-  doc.panel(392, 52, 155, 42, colors.phYellow, colors.ink, true)
-  doc.text('DOWNLOAD.CV', 419, 78, 10, 'F2', colors.ink)
+  posthogHeader(doc, profile)
 
-  doc.panel(PAGE.margin, 126, 499, 152, colors.paper, colors.ink, true)
-  doc.fillRect(PAGE.margin, 126, 499, 32, [0.94, 0.89, 0.78])
-  doc.line(PAGE.margin, 158, PAGE.width - PAGE.margin, 158, colors.ink, 1.5)
-  doc.text(profile.posthog.hero.kicker, 64, 147, 8, 'F2', colors.ink)
-  doc.textBlock(profile.posthog.hero.headline, 64, 190, 340, 26, 28, { font: 'F4', color: colors.ink })
-  doc.textBlock(profile.posthog.hero.lead, 64, 246, 450, 9.5, 13, { color: colors.dim })
-  doc.y = 318
+  const heroY = 96
+  posthogCard(doc, PAGE.margin, heroY, 499, 124)
+  doc.fillRect(PAGE.margin, heroY, 499, 25, [0.94, 0.89, 0.78])
+  doc.line(PAGE.margin, heroY + 25, PAGE.width - PAGE.margin, heroY + 25, colors.ink, 1.4)
+  doc.text(profile.posthog.hero.kicker, 64, heroY + 17, 7.5, 'F2', colors.ink)
+  compactTextBlock(doc, profile.posthog.hero.headline, 64, heroY + 55, 285, 18, 20, 3, {
+    font: 'F4',
+    color: colors.ink
+  })
+  doc.text('WHY', 376, heroY + 54, 7, 'F2', colors.phOrange)
+  compactTextBlock(doc, profile.posthog.hero.lead, 376, heroY + 72, 135, 8, 10.5, 5, { color: colors.dim })
 
-  phSection(doc, profile.posthog.proof.kicker, profile.posthog.proof.heading)
-  profile.posthog.proof.rows.forEach((row) => {
-    doc.ensure(76)
-    const startY = doc.y
-    doc.panel(PAGE.margin, startY - 14, 499, 60, colors.paper, colors.ink, true)
-    doc.text(row.label, 64, startY + 5, 8, 'F2', colors.phOrange)
-    doc.textBlock(row.heading, 142, startY + 5, 210, 10.5, 13, { font: 'F2', color: colors.ink })
-    doc.textBlock(row.description, 370, startY + 5, 150, 8.5, 11.5, { color: colors.dim })
-    doc.y += 78
+  doc.text(profile.posthog.proof.kicker.toUpperCase(), PAGE.margin, 252, 8, 'F2', colors.phOrange)
+  compactTextBlock(doc, profile.posthog.proof.heading, PAGE.margin, 274, 366, 15.5, 17.5, 2, {
+    font: 'F4',
+    color: colors.ink
   })
 
-  phSection(doc, profile.posthog.loop.kicker, profile.posthog.loop.heading)
-  profile.posthog.loop.steps.forEach((step) => {
-    doc.ensure(58)
-    doc.text(step.label, PAGE.margin, doc.y, 18, 'F4', colors.ink)
-    doc.y = doc.textBlock(step.description, 190, doc.y, 344, 10, 13, { color: colors.dim }) + 18
+  const proofCardWidth = 242
+  profile.posthog.proof.rows.forEach((row, index) => {
+    const column = index % 2
+    const rowIndex = Math.floor(index / 2)
+    const x = PAGE.margin + column * (proofCardWidth + 15)
+    const y = 326 + rowIndex * 80
+
+    posthogCard(doc, x, y, proofCardWidth, 66)
+    doc.text(row.label.toUpperCase(), x + 12, y + 17, 7, 'F2', colors.phOrange)
+    compactTextBlock(doc, row.heading, x + 12, y + 33, proofCardWidth - 24, 8.4, 10, 2, {
+      font: 'F2',
+      color: colors.ink
+    })
+    compactTextBlock(doc, row.description, x + 12, y + 54, proofCardWidth - 24, 7, 8.8, 1, { color: colors.dim })
   })
 
-  phSection(doc, profile.posthog.ideas.kicker, profile.posthog.ideas.heading)
-  profile.posthog.ideas.items.forEach((item) => {
-    doc.ensure(48)
-    doc.text(`> ${item.label}`, PAGE.margin, doc.y, 10, 'F2', colors.phOrange)
-    doc.y = doc.textBlock(item.description, 190, doc.y, 344, 9.5, 12.5, { color: colors.ink }) + 16
+  doc.text(profile.posthog.loop.kicker.toUpperCase(), PAGE.margin, 592, 8, 'F2', colors.phOrange)
+  compactTextBlock(doc, profile.posthog.loop.heading, PAGE.margin, 615, 190, 16, 18, 2, {
+    font: 'F4',
+    color: colors.ink
+  })
+  profile.posthog.loop.steps.forEach((step, index) => {
+    const y = 586 + index * 45
+    doc.panel(258, y, 289, 35, colors.paper, colors.ink)
+    doc.text(step.label, 272, y + 16, 9.2, 'F2', colors.ink)
+    compactTextBlock(doc, step.description, 350, y + 14, 178, 7.3, 9, 2, { color: colors.dim })
   })
 
-  phSection(doc, 'Track record', profile.track.heading)
-  profile.track.experience.forEach((item) => {
-    doc.ensure(62)
-    doc.text(item.year, PAGE.margin, doc.y, 8, 'F2', colors.dim)
-    doc.text(`${item.role} / ${item.org}`, 142, doc.y, 11, 'F2', colors.ink)
-    doc.y = doc.textBlock(item.description, 142, doc.y + 15, 392, 8.8, 11.5, { color: colors.dim }) + 16
-    doc.line(PAGE.margin, doc.y - 7, PAGE.width - PAGE.margin, doc.y - 7, colors.ink, 0.75)
+  doc.addPage()
+  posthogHeader(doc, profile, 'Product Engineer / compact CV')
+
+  doc.text(profile.posthog.ideas.kicker.toUpperCase(), PAGE.margin, 104, 8, 'F2', colors.phOrange)
+  compactTextBlock(doc, profile.posthog.ideas.heading, PAGE.margin, 126, 310, 15.5, 18, 2, {
+    font: 'F4',
+    color: colors.ink
   })
 
-  doc.ensure(80)
-  doc.panel(PAGE.margin, doc.y, 499, 58, colors.phOrange, colors.ink, true)
-  doc.text('CONTACT', 64, doc.y + 23, 8, 'F2', colors.paper)
-  doc.text(profile.person.email, 142, doc.y + 23, 10, 'F2', colors.paper)
-  doc.text(profile.links.github.value, 142, doc.y + 39, 9, 'F1', colors.paper)
+  profile.posthog.ideas.items.forEach((item, index) => {
+    const column = index % 2
+    const rowIndex = Math.floor(index / 2)
+    const x = PAGE.margin + column * (proofCardWidth + 15)
+    const y = 186 + rowIndex * 78
+
+    doc.panel(x, y, proofCardWidth, 62, colors.paper, colors.ink)
+    compactTextBlock(doc, `> ${item.label}`, x + 12, y + 18, 92, 7.8, 9.6, 2, {
+      font: 'F2',
+      color: colors.phOrange
+    })
+    compactTextBlock(doc, item.description, x + 112, y + 18, proofCardWidth - 126, 7.6, 9.4, 4, { color: colors.ink })
+  })
+
+  doc.text('TRACK RECORD', PAGE.margin, 366, 8, 'F2', colors.phOrange)
+  compactTextBlock(doc, profile.track.heading, PAGE.margin, 388, 430, 15, 17, 2, {
+    font: 'F4',
+    color: colors.ink
+  })
+
+  profile.track.experience.slice(0, 5).forEach((item, index) => {
+    const y = 448 + index * 54
+    doc.text(item.year, PAGE.margin, y, 7.2, 'F2', colors.dim)
+    doc.text(`${item.role} / ${item.org}`, 142, y, 9, 'F2', colors.ink)
+    compactTextBlock(doc, item.description, 142, y + 13, 375, 7.4, 9.2, 3, { color: colors.dim })
+    doc.line(PAGE.margin, y + 43, PAGE.width - PAGE.margin, y + 43, colors.ink, 0.65)
+  })
+
+  doc.panel(PAGE.margin, 746, 499, 54, colors.phOrange, colors.ink, true)
+  doc.text('CONTACT', 64, 768, 8, 'F2', colors.paper)
+  doc.text(profile.person.email, 142, 768, 10, 'F2', colors.paper)
+  doc.text(profile.links.github.value, 142, 784, 8.5, 'F1', colors.paper)
 
   return doc.finish()
 }

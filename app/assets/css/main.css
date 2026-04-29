@@ -2,6 +2,7 @@
   --accent: #111111;
   --brand-lendi: rgb(34, 199, 250);
   --brand-jasne: rgb(255, 214, 110);
+  --brand-maf: rgb(49, 38, 29);
   --ink: #111111;
   --bg: #ffffff;
   --dim: #666666;
@@ -139,6 +140,22 @@ select {
   border-top: 1px solid var(--rule);
   color: var(--dim);
   font-size: 0.875rem;
+}
+
+.kv--link {
+  text-decoration: none;
+  transition: color 0.18s ease, text-shadow 0.18s ease;
+}
+
+.kv--link:hover .kv__value,
+.kv--link:focus-visible .kv__value {
+  color: var(--ink);
+}
+
+.kv--maf:hover .kv__value,
+.kv--maf:focus-visible .kv__value {
+  color: var(--brand-maf);
+  text-shadow: 0 0 18px rgba(49, 38, 29, 0.22);
 }
 
 .kv--dark {

@@ -2,7 +2,9 @@
   <section id="jasne" class="jasne">
     <TwoCol :label="profile.jasne.label" :sub="profile.jasne.sub">
       <div class="jasne__title-row">
-        <SerifHeading :size="104" class="jasne__name">{{ profile.jasne.name }}</SerifHeading>
+        <NuxtLink class="jasne__name" :to="profile.links.jasne.href">
+          <SerifHeading :size="104">{{ profile.jasne.name }}</SerifHeading>
+        </NuxtLink>
         <NuxtLink class="jasne__external" :to="profile.links.jasne.href">
           &nearr; {{ profile.links.jasne.value }}
         </NuxtLink>
@@ -53,7 +55,15 @@ import { profile } from '~/data/profile'
 }
 
 .jasne__name {
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.18s ease, text-shadow 0.18s ease;
+}
+
+.jasne__name:hover,
+.jasne__name:focus-visible {
   color: var(--brand-jasne);
+  text-shadow: 0 0 24px rgba(255, 214, 110, 0.24);
 }
 
 .jasne__external {
@@ -61,6 +71,13 @@ import { profile } from '~/data/profile'
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   text-decoration: none;
+  transition: color 0.18s ease, text-shadow 0.18s ease;
+}
+
+.jasne__external:hover,
+.jasne__external:focus-visible {
+  color: var(--brand-jasne);
+  text-shadow: 0 0 14px rgba(255, 214, 110, 0.2);
 }
 
 .jasne__intro {

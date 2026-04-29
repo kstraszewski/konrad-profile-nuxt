@@ -5,8 +5,8 @@ export const profile = {
     role: 'AI Manager & Builder',
     currentRole: 'AI Manager · Lendi',
     location: 'Szczecin, Poland',
-    availability: 'Available · senior AI roles · Warsaw / remote',
-    openTo: 'Head of AI · AI Lead',
+    availability: 'Available · senior AI roles · remote',
+    openTo: 'Building products',
     stackPosture: 'vendor-agnostic',
     email: 'koonradstraszewski@gmail.com',
     phone: '+48 794 175 956',
@@ -45,6 +45,12 @@ export const profile = {
       label: 'jasne.ai',
       value: 'jasne.ai',
       href: '/jasne.ai'
+    },
+    maf: {
+      label: 'MAF',
+      value: 'majidalfuttaim.com',
+      href: 'https://www.majidalfuttaim.com/#Home',
+      external: true
     }
   },
   nav: {
@@ -53,22 +59,23 @@ export const profile = {
       { label: 'Lendi', href: '#lendi' },
       { label: 'jasne.ai', href: '/jasne.ai' },
       { label: 'Principles', href: '#principles' },
+      { label: 'Tech', href: '#technologies' },
       { label: 'Track record', href: '#track' },
       { label: 'Interests', href: '#interests' },
-      { label: 'CV', href: '/cv' },
+      { label: 'About', href: '#about' },
       { label: 'Contact', href: '#contact' }
     ],
     posthog: [
+      { label: 'Use', href: '#posthog-use' },
       { label: 'Fit', href: '#fit' },
       { label: 'Proof', href: '#proof' },
       { label: 'Ideas', href: '#ideas' },
-      { label: 'CV', href: '/cv' },
       { label: 'Contact', href: '#contact' }
     ]
   },
   hero: {
-    eyebrow: 'Available · senior AI roles · Warsaw / remote',
-    meta: 'EST. 2017 - LENDI · 2024 → AI',
+    eyebrow: 'Available · senior AI roles · remote',
+    meta: 'EST. 2017 - LENDI · 2023 → AI',
     title: {
       first: 'I rewire teams',
       around: 'around',
@@ -83,20 +90,24 @@ export const profile = {
       mandate:
         'My mandate: redefine the role of the engineer - from feature-shipper to product builder - and prove it ships.',
       side: "On the side I'm building",
-      sideBuild: 'jasne.ai'
+      sideBuild: 'jasne.ai',
+      mafLead: 'In 2024 I also collaborated with',
+      mafCompany: 'MAF',
+      mafRest: ', a Dubai mall network, on retrieval-heavy AI.'
     },
     facts: [
       { label: 'Currently', value: 'AI Manager · Lendi' },
       { label: 'Side build', value: 'jasne.ai' },
       { label: 'Based', value: 'Szczecin, Poland' },
-      { label: 'Open to', value: 'Head of AI · AI Lead' },
+      { label: 'Open to', value: 'Building products' },
       { label: 'Stack', value: 'vendor-agnostic' }
     ],
     marquee: [
       { text: 'AI Manager', strong: true },
       { text: 'Builder of jasne.ai', italicWord: 'jasne.ai' },
       { text: '8.5 yrs at Lendi', strong: true },
-      { text: 'Vendor-agnostic by design' },
+      { text: '2024 MAF vector search at scale', strong: true },
+      { text: 'Products · workflows · distribution' },
       { text: 'Programmers → product builders', strong: true }
     ]
   },
@@ -211,31 +222,31 @@ export const profile = {
     shotLabel: 'FIG. 03.01 - JASNE.AI · PRODUCT SURFACE',
     shotFooter: ['VERTICAL AI · SOLO BUILD', '2024 → NOW'],
     facts: [
-      { label: 'Role', value: 'Founder · solo build' },
-      { label: 'Stack', value: 'Next, Vercel AI SDK' },
-      { label: 'Models', value: 'Multi-vendor' },
-      { label: 'DB', value: 'Vendor-agnostic' },
+      { label: 'Role', value: 'Founder + Builder' },
+      { label: 'Stack', value: 'Expo, Nuxt, Vercel AI SDK' },
+      { label: 'Models', value: 'Gemini' },
+      { label: 'DB', value: 'Supabase' },
       { label: 'Status', value: 'Live · iterating' },
       { label: 'Started', value: '2024' }
     ],
     beats: [
       {
         number: '01',
-        heading: 'The product is the wrapper',
+        heading: 'Execution got cheap',
         description:
-          "The model changes every quarter. The product surface - the workflow, the trust, the speed - is what compounds. I optimised for the parts that don't move."
+          'The old rule was: ideas are free, execution is the moat. AI breaks that too. Building is getting cheaper; the scarce work is knowing what should exist, for whom, and why it spreads.'
       },
       {
         number: '02',
-        heading: 'Solo end-to-end',
+        heading: 'Distribution is the product',
         description:
-          'Design, code, infra, distribution. Not because I had to - because the loop is the leverage. Anything I delegate slows the loop.'
+          'jasne.ai exists to help companies turn product truth into distribution: sharper positioning, faster campaigns, stronger proof, and tighter loops between product and market.'
       },
       {
         number: '03',
-        heading: 'Proof of thesis',
+        heading: 'Human influence is the moat',
         description:
-          "I sell 'engineers as product builders' to Lendi. jasne.ai is me being the product builder. If it didn't work, I'd know."
+          'In the next few years, the unique value of human influence - taste, trust, credibility, relationships, point of view - becomes the scarce layer. jasne.ai is built to amplify it.'
       }
     ]
   },
@@ -252,38 +263,47 @@ export const profile = {
       },
       {
         number: '02',
-        heading: 'Vendor-agnostic by default',
+        heading: 'Workflow is the moat',
         description:
-          'Models, vector stores, infra - all swappable. Bet on interfaces, not providers. The wrapper is the product; the model is a commodity.'
+          'Business logic stops being trapped inside the product. When interfaces can be generated and rewired, the valuable layer is the workflow: context, decisions, proof, distribution, and the loop around them.'
       },
       {
         number: '03',
-        heading: "Replace, don't augment",
+        heading: 'AI reprices the problem',
         description:
-          "When AI eats 30% of a workflow, the move is to redesign the workflow - not wedge AI into the gaps. I redefine departments, not toolchains."
+          'Whole departments used to form because a problem was expensive to solve. AI changes the price of that problem, often drastically. Roles will change because the old org shape stops matching the new cost.'
       },
       {
         number: '04',
-        heading: 'Ship beats slides',
+        heading: 'Vendor lock-in got cheaper',
         description:
-          "An adoption strategy that doesn't end in a deployed tool is a strategy that didn't happen. The deck is a side-effect, not the artefact."
+          "I still prefer vendor-agnostic systems, but lock-in is no longer a year of work for an eight-person team. If Supabase stops fitting, migration is a product decision, not a company trauma."
       }
     ]
   },
   stack: {
-    label: '§ 05 · Daily stack',
-    sub: 'Tools, not religion',
+    label: '§ 05 · Technologies',
+    sub: 'Current build surface',
     heading:
-      "I'm vendor-agnostic on principle. The abstractions move faster than the providers - and the providers know it.",
-    groups: [
-      { label: 'Daily', items: ['Claude', 'Codex', 'Cursor', 'Superset'] },
-      { label: 'Build', items: ['Vercel AI SDK', 'Next.js', 'Nuxt', 'TypeScript'] },
-      { label: 'Posture', items: ['Vendor-agnostic', 'Interface-first', 'Replace > augment'] }
+      'The technologies I reach for when the work is product, AI, and data-heavy interfaces.',
+    technologies: [
+      'Nuxt',
+      'Vue',
+      'Expo',
+      'Supabase',
+      'AI SDK',
+      'PostHog',
+      'Neon',
+      'LangChain',
+      'OpenClaw',
+      'MCP Apps',
+      'Gemini SDK',
+      'OpenAI SDK'
     ]
   },
   track: {
     label: '§ 06 · Track record',
-    sub: '11 years · two companies',
+    sub: '11 years · product, AI, retrieval',
     heading: 'Long arcs over loud titles. I stayed where the work compounded.',
     experience: [
       {
@@ -292,6 +312,13 @@ export const profile = {
         org: 'Lendi',
         description:
           'Lead AI adoption company-wide. Redefine engineering function around the product-builder model. Ship internal tooling, agentic workflows, and the cultural shift that makes them stick.'
+      },
+      {
+        year: '2024',
+        role: 'AI retrieval collaboration',
+        org: 'MAF · Dubai mall network',
+        description:
+          'In 2024, collaborated with MAF, a Dubai-based shopping mall network, on vector search across large-scale data and knowledge bases, retrieval workflows, and practical AI surfaces for operational context.'
       },
       {
         year: '2024 → now',
@@ -332,7 +359,7 @@ export const profile = {
     sub: 'Exploration · 2026',
     heading:
       "The current edge I'm studying: when models stop being chat boxes and start becoming product surfaces.",
-    note: 'Pulled from the same thread as the PostHog page: AI-to-UI, tool access, realtime context, and model-native interfaces.',
+    note: 'Pulled from the same thread as the PostHog page: AI-to-UI, XR, tool access, sandboxed agents, realtime context, and model-native interfaces.',
     items: [
       {
         number: '01',
@@ -364,6 +391,20 @@ export const profile = {
       },
       {
         number: '05',
+        title: 'XR as a product surface',
+        description:
+          'Interfaces that move from screens into spatial context: planning, training, support, sales, and field workflows where the environment becomes part of the product.',
+        tag: 'XR'
+      },
+      {
+        number: '06',
+        title: 'Autonomous agents in sandboxes',
+        description:
+          'Agents that can plan, execute, test, and recover inside isolated workspaces: enough freedom to do real work, enough containment to keep systems observable and safe.',
+        tag: 'Agents'
+      },
+      {
+        number: '07',
         title: 'LLM-based OSes',
         description:
           'Operating systems and workspaces where the model is not an app inside the environment, but the layer that routes intent, memory, files, tools, and actions.',
@@ -371,16 +412,41 @@ export const profile = {
       }
     ]
   },
+  about: {
+    label: '§ 08 · About',
+    sub: 'Outside the work',
+    heading: 'I try to stay useful, grounded, and decent while building hard things.',
+    copy:
+      'The work matters, but so does how I show up around it. I try to be a decent person: direct, fair, reliable, and useful to the people building with me.',
+    items: [
+      {
+        label: 'Boxing',
+        value: 'I have trained boxing for seven years. It keeps the ego honest and the feedback loop immediate.'
+      },
+      {
+        label: 'Hiking',
+        value: 'I like getting outside, moving for a long time, and letting hard problems untangle without a screen.'
+      },
+      {
+        label: 'Technology',
+        value: 'I follow new interfaces, infrastructure, AI systems, XR, and the tools that change how products get built.'
+      },
+      {
+        label: 'Automotive',
+        value: 'I like cars and the mix of engineering, design, culture, and feel that makes them more than transport.'
+      }
+    ]
+  },
   contact: {
-    label: "§ 08 · Let's talk",
+    label: "§ 09 · Let's talk",
     heading: {
       first: "If you're building something",
       accent: 'serious',
       last: 'with AI, I want to hear about it.'
     },
     copy:
-      'Best for: Head of AI / AI Lead roles, founding AI engineer at a serious team, or a clear mandate to redefine an engineering function. Worst for: "we want a chatbot."',
-    footer: ['© KONRAD STRASZEWSKI · 2026', 'VENDOR-AGNOSTIC BY DESIGN', 'END OF FILE · 08 / 08']
+      'Best for: building serious products with AI - new product surfaces, workflow redesign, distribution loops, and teams that want to ship the thing. Worst for: "we want a chatbot."',
+    footer: ['© KONRAD STRASZEWSKI · 2026', 'PRODUCTS · WORKFLOWS · DISTRIBUTION', 'END OF FILE · 09 / 09']
   },
   cv: {
     title: 'CV',
@@ -392,8 +458,10 @@ export const profile = {
     highlights: [
       "Helped scale Lendi from a startup into Poland's #1 broker and the fastest-growing broker in Europe.",
       'Lead company-wide AI adoption: strategy, tooling, training, KPIs, and production workflows.',
+      'In 2024, collaborated with MAF in Dubai on vector search across large-scale data and knowledge bases for a shopping mall network.',
       'Built jasne.ai as a solo vertical AI product across design, code, infra, and distribution.',
-      'Focused on AI-to-UI, generative interfaces, MCP apps, and vendor-agnostic product architecture.'
+      'Focused on AI-to-UI, generative interfaces, MCP apps, and vendor-agnostic product architecture.',
+      'Personal: I try to be a decent person; I have trained boxing for seven years and I like hiking, technology, and automotive culture.'
     ],
     downloads: [
       {
@@ -422,10 +490,47 @@ export const profile = {
       file: 'candidate.fit',
       scoreLabel: 'Role match',
       scoreValue: 'Product Engineer',
+      pizzaBadge: {
+        question: 'Does pineapple belong on pizza?',
+        percent: '100%',
+        answer: 'YES!'
+      },
       facts: [
         { label: 'Current focus', value: 'AI-to-UI, generative UI, MCP apps' },
         { label: 'Operating mode', value: 'Prototype -> ship -> instrument -> learn' },
         { label: 'Bias', value: 'Useful product over polished theater' }
+      ]
+    },
+    relationship: {
+      kicker: 'PostHog in practice',
+      heading: 'I am already a PostHog person.',
+      copy:
+        'I have implemented PostHog in two organizations, used the MCP heavily, and spent more than a year advocating for it internally. The reason is simple: it changes product work from opinions and status meetings into shared evidence, faster questions, and cleaner loops between Product Owners, engineers, and users.',
+      cards: [
+        {
+          label: '2 orgs',
+          title: 'Implemented in real teams',
+          description:
+            'I have rolled PostHog into two organizations, not as a dashboard nobody opens, but as part of how product and engineering decide what to build next.'
+        },
+        {
+          label: 'MCP',
+          title: 'Heavy user of PostHog MCP',
+          description:
+            'I have spent real time using PostHog through MCP: asking questions against product data, pulling context into workflows, and treating analytics as an operational surface.'
+        },
+        {
+          label: '1+ year',
+          title: 'Internal advocate',
+          description:
+            'For over a year I have been the person pushing teams toward PostHog when the discussion needed facts: funnels, cohorts, recordings, flags, and product evidence.'
+        },
+        {
+          label: 'PO work',
+          title: 'Changed how Product Owners worked',
+          description:
+            'A lot of Product Owners I worked with moved from narrative-first decisions to evidence-first loops because PostHog made the user behavior visible enough to act on.'
+        }
       ]
     },
     fit: {
@@ -470,6 +575,11 @@ export const profile = {
           label: 'AI Manager',
           heading: 'Moved AI from hype into operating practice.',
           description: 'Tooling, training, adoption loops, KPIs, and pragmatic implementation.'
+        },
+        {
+          label: 'MAF',
+          heading: 'In 2024, collaborated on retrieval-heavy AI for a Dubai shopping mall network.',
+          description: 'Vector search, large knowledge bases, operational context, and practical AI delivery.'
         },
         {
           label: 'Vue / Nuxt',

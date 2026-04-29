@@ -39,6 +39,26 @@
           <span class="posthog-score__label">{{ profile.posthog.panel.scoreLabel }}</span>
           <span class="posthog-score__value">{{ profile.posthog.panel.scoreValue }}</span>
         </div>
+
+        <div class="posthog-pizza-badge" aria-label="Pineapple pizza poll">
+          <p>{{ profile.posthog.panel.pizzaBadge.question }}</p>
+          <div class="posthog-pizza-badge__row">
+            <svg class="posthog-pizza-badge__icon" viewBox="0 0 48 48" aria-hidden="true">
+              <path d="M14 12c1-5 4-8 9-10 1 4 1 7-1 10 3-4 7-6 12-6-1 5-4 8-8 10 4-2 8-2 12 0-3 4-7 6-12 6" fill="#93c764" stroke="#40396e" stroke-linejoin="round" stroke-width="2" />
+              <path d="M9 24c2-8 9-13 17-11 8 2 12 9 10 17-2 9-10 15-18 13S7 32 9 24Z" fill="#f3a23c" stroke="#40396e" stroke-width="2.4" />
+              <path d="m13 20 19 15M20 15l17 13M10 28l15 13M33 19 15 38M25 14 10 30" fill="none" stroke="#d47f56" stroke-linecap="round" stroke-width="1.7" />
+              <circle cx="35" cy="35" r="10" fill="#fff8e8" stroke="#40396e" stroke-width="2.2" />
+              <path d="M33 37h5c1 0 2-1 2-2v-5h-4v5l-4 5c-1 1-3 0-3-1l1-4h-3c-1 0-2-1-2-2l1-5c0-1 1-2 2-2h8v11Z" fill="#31a85f" />
+              <path d="M36 27v9" fill="none" stroke="#fff8e8" stroke-linecap="round" stroke-width="1.4" />
+            </svg>
+            <span>
+              <strong>{{ profile.posthog.panel.pizzaBadge.percent }}</strong>
+              say
+              <strong class="posthog-pizza-badge__yes">{{ profile.posthog.panel.pizzaBadge.answer }}</strong>
+            </span>
+          </div>
+        </div>
+
         <dl class="posthog-facts">
           <div v-for="fact in profile.posthog.panel.facts" :key="fact.label">
             <dt>{{ fact.label }}</dt>
@@ -46,6 +66,24 @@
           </div>
         </dl>
       </aside>
+    </section>
+
+    <section id="posthog-use" class="posthog-section posthog-relationship">
+      <div class="posthog-section__intro">
+        <p class="posthog-kicker">{{ profile.posthog.relationship.kicker }}</p>
+        <h2>{{ profile.posthog.relationship.heading }}</h2>
+        <p class="posthog-relationship__copy">
+          {{ profile.posthog.relationship.copy }}
+        </p>
+      </div>
+
+      <div class="posthog-relationship__grid">
+        <article v-for="card in profile.posthog.relationship.cards" :key="card.label" class="posthog-card">
+          <span class="posthog-card__index">{{ card.label }}</span>
+          <h3>{{ card.title }}</h3>
+          <p>{{ card.description }}</p>
+        </article>
+      </div>
     </section>
 
     <section id="fit" class="posthog-section posthog-section--grid">
@@ -133,6 +171,10 @@
         </a>
       </div>
     </section>
+
+    <footer class="posthog-footer">
+      <span v-for="item in profile.contact.footer" :key="item">{{ item }}</span>
+    </footer>
   </main>
 </template>
 
@@ -244,11 +286,12 @@ useHead({
 
 .posthog-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.75fr);
-  gap: 44px;
-  align-items: end;
-  padding-top: 86px;
-  padding-bottom: 76px;
+  grid-template-columns: minmax(0, 0.98fr) minmax(360px, 0.72fr);
+  gap: 70px;
+  align-items: center;
+  min-height: calc(100svh - 74px);
+  padding-top: 54px;
+  padding-bottom: 58px;
 }
 
 .posthog-kicker {
@@ -278,7 +321,9 @@ useHead({
 }
 
 .posthog-hero h1 {
-  font-size: clamp(4.2rem, 8vw, 8.8rem);
+  max-width: 720px;
+  font-size: clamp(4rem, 6.15vw, 6.7rem);
+  line-height: 0.94;
 }
 
 .posthog-section h2 {
@@ -286,18 +331,18 @@ useHead({
 }
 
 .posthog-hero__lead {
-  max-width: 760px;
-  margin: 30px 0 0;
+  max-width: 620px;
+  margin: 26px 0 0;
   color: var(--ph-muted);
-  font-size: 1.22rem;
-  line-height: 1.55;
+  font-size: 1.08rem;
+  line-height: 1.48;
 }
 
 .posthog-hero__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 34px;
+  gap: 12px;
+  margin-top: 24px;
 }
 
 .posthog-button {
@@ -337,8 +382,9 @@ useHead({
 }
 
 .posthog-panel--hero {
-  align-self: stretch;
-  min-height: 420px;
+  align-self: center;
+  width: min(100%, 430px);
+  justify-self: end;
 }
 
 .posthog-panel__bar {
@@ -379,8 +425,8 @@ useHead({
 }
 
 .posthog-score {
-  margin: 22px;
-  padding: 22px;
+  margin: 22px 22px 18px;
+  padding: 20px;
   border: 2px solid var(--ph-line);
   background: var(--ph-orange);
   color: var(--ph-paper);
@@ -405,25 +451,61 @@ useHead({
 .posthog-score__value {
   margin-top: 10px;
   font-family: var(--font-headline);
-  font-size: 2.4rem;
+  font-size: 2.15rem;
   font-weight: 600;
   letter-spacing: 0;
   line-height: 1;
 }
 
+.posthog-pizza-badge {
+  margin: 0 22px 18px;
+  padding: 14px 16px 16px;
+  border: 2px solid #373a46;
+  background: #202129;
+  box-shadow: 4px 4px 0 rgba(21, 19, 15, 0.9);
+  color: #f4f0ea;
+}
+
+.posthog-pizza-badge p {
+  margin: 0 0 8px;
+  font-size: 0.98rem;
+  font-weight: 800;
+  line-height: 1.18;
+}
+
+.posthog-pizza-badge__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #f4f0ea;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.posthog-pizza-badge__icon {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+}
+
+.posthog-pizza-badge__yes {
+  color: #4dc878;
+}
+
 .posthog-facts {
   display: grid;
   gap: 0;
-  margin: 22px;
+  margin: 18px 22px 22px;
   border: 2px solid var(--ph-line);
   border-bottom: 0;
 }
 
 .posthog-facts div {
   display: grid;
-  grid-template-columns: 120px minmax(0, 1fr);
-  gap: 16px;
-  padding: 14px;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 14px;
+  padding: 13px 14px;
   border-bottom: 2px solid var(--ph-line);
 }
 
@@ -447,6 +529,32 @@ useHead({
   grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.15fr);
   gap: 40px;
   align-items: start;
+}
+
+.posthog-relationship {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.1fr);
+  gap: 40px;
+  align-items: start;
+  padding-top: 34px;
+}
+
+.posthog-relationship__copy {
+  max-width: 560px;
+  margin: 24px 0 0;
+  color: var(--ph-muted);
+  font-size: 1.04rem;
+  line-height: 1.55;
+}
+
+.posthog-relationship__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.posthog-relationship__grid .posthog-card {
+  min-height: 230px;
 }
 
 .posthog-section__intro {
@@ -645,12 +753,30 @@ useHead({
 }
 
 .posthog-contact__links strong {
-  overflow-wrap: anywhere;
   font-size: 1.05rem;
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+.posthog-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 28px 5vw 44px;
+  border-top: 2px solid var(--ph-line);
+  color: var(--ph-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 
 @media (max-width: 980px) {
   .posthog-hero,
+  .posthog-relationship,
   .posthog-section--grid,
   .posthog-loop,
   .posthog-ideas,
@@ -663,12 +789,18 @@ useHead({
   }
 
   .posthog-panel--hero {
+    width: 100%;
+    justify-self: stretch;
     min-height: auto;
   }
 
   .posthog-table__row {
     grid-template-columns: 1fr;
     gap: 10px;
+  }
+
+  .posthog-contact__links strong {
+    white-space: normal;
   }
 }
 
@@ -686,6 +818,7 @@ useHead({
   }
 
   .posthog-hero {
+    min-height: auto;
     padding-top: 58px;
     padding-bottom: 44px;
   }
@@ -704,17 +837,23 @@ useHead({
   }
 
   .posthog-facts div,
+  .posthog-relationship__grid,
   .posthog-loop__steps {
     grid-template-columns: 1fr;
   }
 
   .posthog-card,
+  .posthog-relationship__grid .posthog-card,
   .posthog-loop__steps li {
     min-height: auto;
   }
 
   .posthog-loop__steps p {
     margin-top: 28px;
+  }
+
+  .posthog-footer {
+    flex-direction: column;
   }
 }
 
@@ -724,6 +863,7 @@ useHead({
   }
 
   .posthog-score,
+  .posthog-pizza-badge,
   .posthog-facts {
     margin: 14px;
   }
