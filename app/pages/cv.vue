@@ -75,8 +75,8 @@
 import { profile } from '~/data/profile'
 
 const downloadName = (label) =>
-  label === 'PostHog style' ? 'Konrad-Straszewski-CV-PostHog.pdf' : 'Konrad-Straszewski-CV.pdf'
-const isPosthogDownload = (label) => label === 'PostHog style'
+  label.includes('PostHog') ? 'Konrad-Straszewski-CV-PostHog.pdf' : 'Konrad-Straszewski-CV.pdf'
+const isPosthogDownload = (label) => label.includes('PostHog')
 
 useHead({
   title: 'CV - Konrad Straszewski',

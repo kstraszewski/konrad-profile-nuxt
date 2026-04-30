@@ -231,7 +231,7 @@ const buildPdf = (pages: string[]) => {
 const drawGeneralHeader = (doc: PdfDoc, profile: Profile) => {
   doc.text('CV', PAGE.margin, 54, 9, 'F2', colors.accent)
   doc.text(profile.person.name, PAGE.margin, 90, 30, 'F4')
-  doc.text(profile.person.role, PAGE.margin, 112, 12, 'F1', colors.dim)
+  doc.text('Product Engineer / AI-native Builder', PAGE.margin, 112, 12, 'F1', colors.dim)
   doc.text(profile.person.email, 356, 66, 9, 'F1', colors.dim)
   doc.text(profile.person.phone, 356, 82, 9, 'F1', colors.dim)
   doc.text(profile.links.linkedin.value, 356, 98, 9, 'F1', colors.dim)

@@ -22,6 +22,9 @@
           <a class="posthog-button posthog-button--primary" :href="profile.links.email.href">
             Email me
           </a>
+          <a class="posthog-button" href="/api/cv/posthog.pdf" download="Konrad-Straszewski-CV-PostHog.pdf">
+            Download CV
+          </a>
           <a class="posthog-button" :href="profile.links.github.href" target="_blank" rel="noreferrer">
             GitHub
           </a>
@@ -54,7 +57,7 @@
             <span>
               <strong>{{ profile.posthog.panel.pizzaBadge.percent }}</strong>
               say
-              <strong class="posthog-pizza-badge__yes">{{ profile.posthog.panel.pizzaBadge.answer }}</strong>
+              <strong class="posthog-pizza-badge__answer">{{ profile.posthog.panel.pizzaBadge.answer }}</strong>
             </span>
           </div>
         </div>
@@ -181,7 +184,7 @@
 <script setup>
 import { profile } from '~/data/profile'
 
-const posthogContactLinks = [profile.links.email, profile.links.github, profile.links.linkedin]
+const posthogContactLinks = [profile.links.email, profile.links.github, profile.links.linkedin, profile.links.jasne]
 
 useHead({
   title: profile.posthog.title,
@@ -489,7 +492,7 @@ useHead({
   height: 42px;
 }
 
-.posthog-pizza-badge__yes {
+.posthog-pizza-badge__answer {
   color: #4dc878;
 }
 
