@@ -450,18 +450,18 @@ export const profile = {
   },
   cv: {
     title: 'CV',
-    headline: 'Product-minded AI leader who still ships the interface.',
+    headline: 'Product engineer and AI-native builder who still ships the interface.',
     subhead:
-      'A compact version of the same profile: Lendi, jasne.ai, AI adoption, product-builder operating model, and the stack I use to ship.',
+      'A compact PostHog-ready version: product ownership, AI-native building, PostHog practice, jasne.ai, and the stack I use to ship.',
     summary:
-      'AI Manager & Builder with 11 years across product engineering and AI adoption. I spent 8.5 years inside Lendi, moving from Vue/Nuxt frontend developer to frontend lead, R&D, and now AI Manager. My work is practical: define the operating model, build the tools, ship product surfaces, instrument the loop, and make the change visible in how teams work.',
+      'Product Engineer and AI-native builder with 11 years across product engineering, frontend leadership, and AI adoption. I spent 8.5 years inside Lendi, moving from Vue/Nuxt developer to frontend lead, R&D, and now AI Manager. My work is practical: own the product surface, build the tool, ship the workflow, instrument the loop, write the context, and keep iterating with users and teams.',
     highlights: [
       "Helped scale Lendi from a startup into Poland's #1 broker and the fastest-growing broker in Europe.",
-      'Lead company-wide AI adoption: strategy, tooling, training, KPIs, and production workflows.',
-      'In 2024, collaborated with MAF in Dubai on vector search across large-scale data and knowledge bases for a shopping mall network.',
-      'Built jasne.ai as a solo vertical AI product across design, code, infra, and distribution.',
-      'Focused on AI-to-UI, generative interfaces, MCP apps, and vendor-agnostic product architecture.',
-      'Personal: I try to be a decent person; I have trained boxing for seven years and I like hiking, technology, and automotive culture.'
+      'Progressed from frontend developer to lead, R&D, and AI Manager while staying close to product surfaces, UX, tooling, and shipping.',
+      'Lead practical AI adoption at Lendi: strategy, tooling, training, KPIs, production workflows, and the product-builder operating model.',
+      'Implemented PostHog in two organizations, used PostHog MCP heavily, and advocated for evidence-first product loops.',
+      'Built jasne.ai as a solo 0->1 vertical AI product across product, UX, code, infra, AI integration, and distribution.',
+      'Based in Szczecin, Poland (GMT+2), inside PostHog timezone range; strong async writing, docs, and product-context habits.'
     ],
     downloads: [
       {
@@ -470,7 +470,7 @@ export const profile = {
         href: '/api/cv/general.pdf'
       },
       {
-        label: 'PostHog style',
+        label: 'PostHog Product Engineer',
         description: 'PDF w stylu podstrony PostHog',
         href: '/api/cv/posthog.pdf'
       }
@@ -479,147 +479,167 @@ export const profile = {
   posthog: {
     title: 'Konrad Straszewski for PostHog Product Engineer',
     description:
-      'A PostHog-inspired product pitch from Konrad Straszewski for the Product Engineer role, focused on AI-native UI, product ownership, and shipping loops.',
+      'A PostHog-inspired product pitch from Konrad Straszewski for the Product Engineer role: ownership, users, docs, support, shipping, and AI-native product loops.',
     hero: {
       kicker: 'Application page / Product Engineer',
-      headline: 'I build product surfaces where AI turns intent into shipped UI.',
+      headline: 'I build the product, instrument the truth, then keep shipping.',
       lead:
-        'I am applying to PostHog because the role reads like the kind of engineering I care about: talk to users, ship the product, instrument the truth, write the docs, support the thing in production, and keep the loop tight.'
+        'I care about the loop PostHog describes: originate the idea, talk to users, ship the MVP, instrument the truth, write docs, support production, and iterate.'
     },
     panel: {
       file: 'candidate.fit',
       scoreLabel: 'Role match',
-      scoreValue: 'Product Engineer',
+      scoreValue: 'Product Engineer + AI builder',
       pizzaBadge: {
         question: 'Does pineapple belong on pizza?',
         percent: '100%',
-        answer: 'YES!'
+        answer: 'NO!'
       },
       facts: [
-        { label: 'Current focus', value: 'AI-to-UI, generative UI, MCP apps' },
-        { label: 'Operating mode', value: 'Prototype -> ship -> instrument -> learn' },
+        { label: 'Location', value: 'Szczecin, Poland - GMT+2' },
+        { label: 'Mode', value: 'Prototype -> ship -> instrument -> learn' },
+        { label: 'Current', value: 'AI Manager at Lendi; solo builder of jasne.ai' },
         { label: 'Bias', value: 'Useful product over polished theater' }
       ]
     },
     relationship: {
       kicker: 'PostHog in practice',
-      heading: 'I am already a PostHog person.',
+      heading: 'I already work in PostHog-shaped loops.',
       copy:
-        'I have implemented PostHog in two organizations, used the MCP heavily, and spent more than a year advocating for it internally. The reason is simple: it changes product work from opinions and status meetings into shared evidence, faster questions, and cleaner loops between Product Owners, engineers, and users.',
+        'I have implemented PostHog in two organizations, used the MCP heavily, and spent more than a year pushing teams from narrative-first product decisions into shared evidence. The appeal is simple: PostHog turns product work into a tighter loop between user behavior, engineering decisions, support context, and what ships next.',
       cards: [
         {
           label: '2 orgs',
-          title: 'Implemented in real teams',
+          title: 'Rolled into real teams',
           description:
-            'I have rolled PostHog into two organizations, not as a dashboard nobody opens, but as part of how product and engineering decide what to build next.'
+            'I have rolled PostHog into two organizations as an operating surface for product and engineering, not as a dashboard that sits outside the work.'
         },
         {
           label: 'MCP',
-          title: 'Heavy user of PostHog MCP',
+          title: 'Used as workflow input',
           description:
-            'I have spent real time using PostHog through MCP: asking questions against product data, pulling context into workflows, and treating analytics as an operational surface.'
+            'I have used PostHog through MCP to pull product context into real workflows: asking questions, reading behavior, and shortening the path from insight to action.'
         },
         {
           label: '1+ year',
-          title: 'Internal advocate',
+          title: 'Advocated evidence',
           description:
-            'For over a year I have been the person pushing teams toward PostHog when the discussion needed facts: funnels, cohorts, recordings, flags, and product evidence.'
+            'For over a year I have been the person pushing conversations toward funnels, cohorts, recordings, feature flags, and observable product evidence.'
         },
         {
           label: 'PO work',
-          title: 'Changed how Product Owners worked',
+          title: 'Changed product habits',
           description:
-            'A lot of Product Owners I worked with moved from narrative-first decisions to evidence-first loops because PostHog made the user behavior visible enough to act on.'
+            'The useful change was behavioral: Product Owners and engineers could argue from what users actually did, then decide faster and iterate cleaner.'
         }
       ]
     },
     fit: {
       kicker: 'Why PostHog',
-      heading: 'The job description sounds like a product operating system.',
+      heading: 'The role reads like a product operating system. That is the job I want.',
       cards: [
         {
           index: '01',
-          heading: 'End-to-end ownership',
+          heading: 'Own the work end to end',
           description:
-            'I like the whole loop: define the problem, design the interaction, write the code, ship the release, watch the data, talk to users, and fix what breaks.'
+            'The part I like is the full loop: choose the problem, design the basic UX, write the code, ship the release, read the data, talk to users, price the tradeoffs, and fix what breaks.'
         },
         {
           index: '02',
-          heading: 'User contact as a feature',
+          heading: 'Users are part of the build system',
           description:
-            'The best product decisions I have made came from proximity to messy workflows, not from clean assumptions. I want more of that, not less.'
+            'The best product decisions I have made came from proximity to messy workflows, support context, and real behavior. I want more of that, not a cleaner layer of assumptions.'
         },
         {
           index: '03',
-          heading: 'AI-native product thinking',
+          heading: 'AI-native without theater',
           description:
-            'I am interested in interfaces that are generated around intent, context, and tool access instead of frozen around static screens.'
+            'I care about AI when it changes the product surface: generated UI, workflow automation, retrieval, tool access, and faster loops between question, evidence, and action.'
+        },
+        {
+          index: '04',
+          heading: 'Writing and docs are shipping',
+          description:
+            'I write notes, specs, internal memos, and product context because async teams need durable thinking. The person who builds the feature should be able to explain it.'
         }
       ]
     },
     proof: {
       kicker: 'Proof points',
-      heading: 'Evidence that I can build, scale, and keep product work grounded.',
+      heading: 'Evidence that I can build, own, explain, and keep the product grounded.',
       rows: [
         {
-          label: 'Lendi',
-          heading: "Scaled from startup to the #1 broker in Poland and the fastest-growing broker in Europe.",
-          description: 'Product, engineering, AI adoption, org-level change, real business pressure.'
+          label: '8.5 yrs / Lendi',
+          heading: 'Grew from frontend developer to lead, R&D, and AI Manager inside one product company.',
+          description:
+            'Long-term ownership across B2B/B2C financial product surfaces, mentoring, frontend stack decisions, AI prototypes, and org-level adoption.'
         },
         {
-          label: 'jasne.ai',
-          heading: 'Built a vertical AI product end-to-end.',
-          description: 'Solo product work across UX, engineering, positioning, systems, and iteration.'
+          label: '0->1 / jasne.ai',
+          heading: 'Built a vertical AI product end-to-end as a solo founder-builder.',
+          description:
+            'Product strategy, UX, code, infrastructure, AI integration, distribution, and iteration without a handoff between builder and owner.'
         },
         {
-          label: 'AI Manager',
+          label: 'AI adoption',
           heading: 'Moved AI from hype into operating practice.',
-          description: 'Tooling, training, adoption loops, KPIs, and pragmatic implementation.'
+          description:
+            'Company-wide adoption work: tooling, training, workflows, KPIs, internal copilots, and redefining engineering from tickets toward outcomes.'
         },
         {
-          label: 'MAF',
-          heading: 'In 2024, collaborated on retrieval-heavy AI for a Dubai shopping mall network.',
-          description: 'Vector search, large knowledge bases, operational context, and practical AI delivery.'
+          label: 'PostHog',
+          heading: 'Used PostHog as a product operating surface, not a reporting afterthought.',
+          description:
+            'Two implementations, heavy MCP usage, internal advocacy, and a practical bias toward funnels, cohorts, recordings, flags, and fast questions.'
         },
         {
-          label: 'Vue / Nuxt',
-          heading: 'Comfortable building product surfaces in the stack this page runs on.',
-          description: 'Fast frontend iteration, component systems, deployment discipline, and product polish.'
+          label: 'MAF / retrieval',
+          heading: 'Collaborated on retrieval-heavy AI for a Dubai shopping mall network.',
+          description:
+            'Vector search, large knowledge bases, operational context, and practical AI delivery for complex real-world data.'
+        },
+        {
+          label: 'Stack',
+          heading: 'TypeScript product engineer with enough full-stack range to own the loop.',
+          description:
+            'Vue/Nuxt, Expo, Supabase, SQL/data flows, Vercel AI SDK, Gemini/OpenAI, LangChain, PostHog, deployment, instrumentation, and product UX.'
         }
       ]
     },
     loop: {
       kicker: 'How I work',
-      heading: 'A tight loop beats a large plan.',
+      heading: 'A tight product loop beats a perfect plan.',
       steps: [
-        { label: 'Talk', description: 'Start with users and support context before inventing the answer.' },
-        { label: 'Prototype', description: 'Make the interaction concrete enough to create disagreement.' },
-        { label: 'Ship', description: 'Release the smallest useful version with clear instrumentation.' },
-        { label: 'Dogfood', description: 'Use the thing, write the docs, handle feedback, and keep improving it.' }
+        { label: 'Read', description: 'Start with user feedback, support context, recordings, data, and the strategy around the product.' },
+        { label: 'Shape', description: 'Turn the problem into a concrete interaction, workflow, or thin MVP that can create useful disagreement.' },
+        { label: 'Ship', description: 'Release the smallest useful version with clear instrumentation, visible docs, and a support path.' },
+        { label: 'Loop', description: 'Dogfood it, talk to users, watch the evidence, fix what breaks, and keep the product moving.' }
       ]
     },
     ideas: {
       kicker: 'What I would explore',
-      heading: 'AI features that feel like product, not decoration.',
+      heading: 'AI ideas I would want to test with real PostHog users.',
       file: 'posthog/product-ideas.md',
       items: [
         {
           label: 'Generative UI for analysis',
           description:
-            "let the interface reshape itself around the user's question, funnel, cohort, workflow, or debugging context."
+            "let the interface reshape itself around the user's question, funnel, cohort, workflow, or debugging context instead of forcing every answer into a fixed screen."
         },
         {
           label: 'MCP-powered product actions',
           description:
-            'connect PostHog insight to real operational systems so users can move from analysis to action without losing context.'
+            'connect PostHog insight to operational systems so users can move from analysis to action without losing product context.'
         },
         {
-          label: 'Workflow automation with feedback loops',
-          description: 'make automation observable, editable, and measurable by default.'
+          label: 'Workflow debugger',
+          description:
+            'for the Workflows team: make event delivery, campaigns, and automations inspectable as timelines with clear failure reasons and suggested fixes.'
         },
         {
-          label: 'AI that explains the product',
-          description: 'docs, support, and product surfaces that teach users while they work.'
+          label: 'Docs from the support loop',
+          description:
+            'turn repeated support investigations, recordings, and user confusion into docs and product affordances that teach users while they work.'
         }
       ]
     },
