@@ -51,6 +51,7 @@ import { profile } from '~/data/profile'
   align-items: baseline;
   flex-wrap: wrap;
   gap: 24px;
+  min-width: 0;
   margin-bottom: 8px;
 }
 
@@ -91,11 +92,13 @@ import { profile } from '~/data/profile'
 .jasne__facts {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
+  min-width: 0;
   margin-top: 0;
   border: 1px solid var(--rule);
 }
 
 .jasne__fact {
+  min-width: 0;
   padding: 20px 18px;
   border-right: 1px solid var(--rule);
 }
@@ -125,6 +128,7 @@ import { profile } from '~/data/profile'
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 48px;
+  min-width: 0;
   margin-top: 32px;
 }
 
@@ -184,6 +188,21 @@ import { profile } from '~/data/profile'
 
   .jasne__fact:last-child {
     border-bottom: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .jasne__title-row {
+    gap: 12px;
+  }
+
+  .jasne__intro {
+    margin-bottom: 40px;
+    font-size: 1.0625rem;
+  }
+
+  .jasne__beats-wrap {
+    margin-top: 56px;
   }
 }
 </style>

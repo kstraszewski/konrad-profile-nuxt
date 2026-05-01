@@ -45,6 +45,7 @@ import { profile } from '~/data/profile'
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
   gap: 80px;
+  min-width: 0;
   max-width: 1280px;
   margin: 0 auto;
 }
@@ -69,6 +70,7 @@ import { profile } from '~/data/profile'
   display: grid;
   grid-template-columns: 80px 1fr 1fr;
   gap: 32px;
+  min-width: 0;
   padding: 40px 0;
   border-top: 1px solid var(--dark-rule);
 }
@@ -139,6 +141,27 @@ import { profile } from '~/data/profile'
 
   .principles__item p {
     grid-column: auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .principles__outer {
+    padding: 58px 18px;
+  }
+
+  .principles__heading {
+    margin-bottom: 42px;
+    font-size: 2.35rem;
+    line-height: 1.08;
+  }
+
+  .principles__item {
+    gap: 14px;
+    padding: 30px 0;
+  }
+
+  .principles__item h3 {
+    font-size: 1.75rem;
   }
 }
 </style>

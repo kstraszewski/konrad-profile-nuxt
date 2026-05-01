@@ -37,6 +37,7 @@ import { profile } from '~/data/profile'
   grid-template-columns: minmax(0, 1fr) 260px;
   gap: 48px;
   align-items: end;
+  min-width: 0;
   margin-bottom: 60px;
 }
 
@@ -63,13 +64,16 @@ import { profile } from '~/data/profile'
   grid-template-columns: 120px minmax(0, 1fr) 170px;
   gap: 32px;
   align-items: start;
+  min-width: 0;
   padding: 28px 0;
   border-bottom: 1px solid var(--rule);
   transition: padding-left 0.15s ease;
 }
 
-.interests__item:hover {
-  padding-left: 12px;
+@media (hover: hover) {
+  .interests__item:hover {
+    padding-left: 12px;
+  }
 }
 
 .interests__number,
@@ -121,6 +125,20 @@ import { profile } from '~/data/profile'
   .interests__tag {
     padding-top: 0;
     text-align: left;
+  }
+}
+
+@media (max-width: 420px) {
+  .interests__head {
+    margin-bottom: 36px;
+  }
+
+  .interests__copy h3 {
+    font-size: 1.45rem;
+  }
+
+  .interests__item {
+    padding: 24px 0;
   }
 }
 </style>

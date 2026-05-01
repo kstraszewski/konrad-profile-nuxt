@@ -54,6 +54,7 @@ const hovered = ref(null)
   display: grid;
   grid-template-columns: 160px 1fr 1.2fr;
   gap: 40px;
+  min-width: 0;
   padding: 36px 0;
   border-top: 1px solid var(--rule);
   cursor: default;
@@ -101,6 +102,7 @@ const hovered = ref(null)
   display: grid;
   grid-template-columns: 160px 1fr;
   gap: 40px;
+  min-width: 0;
   margin-top: 60px;
   font-size: 0.9375rem;
 }
@@ -126,6 +128,30 @@ const hovered = ref(null)
   .track__education {
     grid-template-columns: 1fr;
     gap: 16px;
+  }
+}
+
+@media (hover: none) {
+  .track__item--dim {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 420px) {
+  .track__heading {
+    margin-bottom: 36px;
+  }
+
+  .track__item {
+    padding: 28px 0;
+  }
+
+  .track__role {
+    font-size: 1.4rem;
+  }
+
+  .track__education {
+    margin-top: 42px;
   }
 }
 </style>
