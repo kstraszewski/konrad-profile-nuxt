@@ -52,6 +52,7 @@ const contactLinks = [profile.links.email, profile.links.phone, profile.links.gi
 }
 
 .contact__inner {
+  min-width: 0;
   max-width: 1280px;
   margin: 0 auto;
 }
@@ -104,6 +105,7 @@ const contactLinks = [profile.links.email, profile.links.phone, profile.links.gi
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 24px;
+  min-width: 0;
   margin-top: 100px;
 }
 
@@ -146,6 +148,7 @@ const contactLinks = [profile.links.email, profile.links.phone, profile.links.gi
   display: flex;
   justify-content: space-between;
   gap: 24px;
+  min-width: 0;
   margin-top: 140px;
   padding-top: 24px;
   border-top: 1px solid var(--dark-rule);
@@ -189,13 +192,37 @@ const contactLinks = [profile.links.email, profile.links.phone, profile.links.gi
   }
 
   .contact__heading {
-    font-size: 3.5rem;
+    font-size: 3rem;
+    line-height: 1.04;
   }
 
   .contact__link-value {
     font-size: 1.125rem;
     overflow-wrap: anywhere;
     white-space: normal;
+  }
+}
+
+@media (max-width: 420px) {
+  .contact {
+    padding: 68px 18px 56px;
+  }
+
+  .contact__label {
+    margin-bottom: 42px;
+  }
+
+  .contact__heading {
+    font-size: 2.45rem;
+  }
+
+  .contact__copy {
+    margin-top: 28px;
+    font-size: 1.0625rem;
+  }
+
+  .contact__links {
+    margin-top: 64px;
   }
 }
 </style>

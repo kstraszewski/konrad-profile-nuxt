@@ -30,6 +30,7 @@ import { profile } from '~/data/profile'
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 32px;
+  min-width: 0;
 }
 
 .now__item {
@@ -73,6 +74,16 @@ import { profile } from '~/data/profile'
 @media (max-width: 720px) {
   .now__grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .now__heading {
+    margin-bottom: 36px;
+  }
+
+  .now__grid {
+    gap: 26px;
   }
 }
 </style>

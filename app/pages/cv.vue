@@ -78,15 +78,7 @@ const downloadName = (label) =>
   label.includes('PostHog') ? 'Konrad-Straszewski-CV-PostHog.pdf' : 'Konrad-Straszewski-CV.pdf'
 const isPosthogDownload = (label) => label.includes('PostHog')
 
-useHead({
-  title: 'CV - Konrad Straszewski',
-  meta: [
-    {
-      name: 'description',
-      content: 'Downloadable CV variants for Konrad Straszewski.'
-    }
-  ]
-})
+useRouteSeo('/cv')
 </script>
 
 <style scoped>
@@ -102,6 +94,7 @@ useHead({
   align-items: center;
   justify-content: space-between;
   gap: 32px;
+  min-width: 0;
   max-width: 1280px;
   margin: 0 auto;
   padding: 24px 8vw;
@@ -111,9 +104,16 @@ useHead({
   display: inline-flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
   color: var(--ink);
   font-weight: 500;
   text-decoration: none;
+}
+
+.cv-top__brand span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cv-top__dot {
@@ -144,6 +144,7 @@ useHead({
   grid-template-columns: 220px minmax(0, 1fr);
   gap: 80px;
   align-items: end;
+  min-width: 0;
   margin-bottom: 38px;
 }
 
@@ -167,6 +168,7 @@ useHead({
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 32px;
+  min-width: 0;
 }
 
 .cv-preview {
@@ -181,8 +183,13 @@ useHead({
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
+  min-width: 0;
   padding: 22px;
   border-bottom: 1px solid var(--rule);
+}
+
+.cv-preview__header > div {
+  min-width: 0;
 }
 
 .cv-preview__header h2 {
@@ -219,6 +226,7 @@ useHead({
 
 .cv-preview__paper {
   position: relative;
+  min-width: 0;
   min-height: 600px;
   padding: 38px;
   border-top: 1px solid var(--rule);
@@ -264,6 +272,7 @@ useHead({
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1;
+  overflow-wrap: anywhere;
 }
 
 .cv-mini-general__head small {
@@ -364,6 +373,7 @@ useHead({
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1.02;
+  overflow-wrap: anywhere;
 }
 
 .cv-mini-ph__rows {
@@ -418,11 +428,52 @@ useHead({
 
   .cv-preview__header {
     flex-direction: column;
+    gap: 18px;
+  }
+
+  .cv-preview__header a {
+    width: 100%;
   }
 
   .cv-preview__paper {
     min-height: 460px;
     padding: 28px;
+  }
+}
+
+@media (max-width: 420px) {
+  .cv-top {
+    padding: 20px 18px;
+  }
+
+  .cv-previews {
+    padding: 24px 18px 56px;
+  }
+
+  .cv-previews__intro h1 {
+    font-size: 2rem;
+    line-height: 1.08;
+  }
+
+  .cv-preview__header,
+  .cv-preview__paper {
+    padding: 20px;
+  }
+
+  .cv-preview__paper {
+    min-height: 390px;
+  }
+
+  .cv-preview__paper::after {
+    inset: 14px;
+  }
+
+  .cv-mini-general__head strong {
+    font-size: 1.65rem;
+  }
+
+  .cv-mini-ph__panel strong {
+    font-size: 1.6rem;
   }
 }
 </style>

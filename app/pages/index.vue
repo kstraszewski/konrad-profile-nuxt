@@ -13,3 +13,7 @@
     <ContactSection />
   </div>
 </template>
+
+<script setup>
+useRouteSeo('/')
+</script>

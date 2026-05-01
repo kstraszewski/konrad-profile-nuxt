@@ -186,15 +186,7 @@ import { profile } from '~/data/profile'
 
 const posthogContactLinks = [profile.links.email, profile.links.github, profile.links.linkedin, profile.links.jasne]
 
-useHead({
-  title: profile.posthog.title,
-  meta: [
-    {
-      name: 'description',
-      content: profile.posthog.description
-    }
-  ]
-})
+useRouteSeo('/posthog')
 </script>
 
 <style scoped>
@@ -208,6 +200,7 @@ useHead({
   --ph-yellow: #f4c84b;
   --ph-green: #4d8d5a;
   min-height: 100vh;
+  overflow-x: clip;
   background:
     linear-gradient(rgba(21, 19, 15, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(21, 19, 15, 0.035) 1px, transparent 1px),
@@ -225,6 +218,7 @@ useHead({
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+  min-width: 0;
   padding: 18px 5vw;
   border-bottom: 2px solid var(--ph-line);
   background: rgba(247, 240, 223, 0.92);
@@ -240,9 +234,16 @@ useHead({
 
 .posthog-nav__brand {
   gap: 12px;
+  min-width: 0;
   color: var(--ph-ink);
   font-weight: 700;
   text-decoration: none;
+}
+
+.posthog-nav__brand span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .posthog-nav__mark {
@@ -260,9 +261,11 @@ useHead({
 
 .posthog-nav__links {
   gap: 8px;
+  min-width: 0;
 }
 
 .posthog-nav__links a {
+  flex: 0 0 auto;
   min-height: 34px;
   padding: 0 12px;
   border: 2px solid transparent;
@@ -282,6 +285,7 @@ useHead({
 
 .posthog-hero,
 .posthog-section {
+  width: 100%;
   max-width: 1240px;
   margin: 0 auto;
   padding-inline: 5vw;
@@ -292,6 +296,7 @@ useHead({
   grid-template-columns: minmax(0, 0.98fr) minmax(360px, 0.72fr);
   gap: 70px;
   align-items: center;
+  min-width: 0;
   min-height: calc(100svh - 74px);
   padding-top: 54px;
   padding-bottom: 58px;
@@ -299,6 +304,7 @@ useHead({
 
 .posthog-kicker {
   display: inline-flex;
+  max-width: 100%;
   margin: 0 0 16px;
   padding: 6px 10px;
   border: 2px solid var(--ph-line);
@@ -309,6 +315,8 @@ useHead({
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
   text-transform: uppercase;
 }
 
@@ -325,12 +333,12 @@ useHead({
 
 .posthog-hero h1 {
   max-width: 720px;
-  font-size: clamp(4rem, 6.15vw, 6.7rem);
+  font-size: 6.3rem;
   line-height: 0.94;
 }
 
 .posthog-section h2 {
-  font-size: clamp(2.6rem, 5vw, 5.5rem);
+  font-size: 4.8rem;
 }
 
 .posthog-hero__lead {
@@ -353,6 +361,7 @@ useHead({
   align-items: center;
   justify-content: center;
   min-height: 48px;
+  min-width: 0;
   padding: 0 20px;
   border: 2px solid var(--ph-line);
   background: var(--ph-paper);
@@ -382,6 +391,7 @@ useHead({
   border: 2px solid var(--ph-line);
   background: var(--ph-paper);
   box-shadow: 6px 6px 0 var(--ph-line);
+  min-width: 0;
 }
 
 .posthog-panel--hero {
@@ -458,6 +468,7 @@ useHead({
   font-weight: 600;
   letter-spacing: 0;
   line-height: 1;
+  overflow-wrap: anywhere;
 }
 
 .posthog-pizza-badge {
@@ -520,6 +531,7 @@ useHead({
   margin: 0;
   font-weight: 700;
   line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .posthog-section {
@@ -532,6 +544,7 @@ useHead({
   grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.15fr);
   gap: 40px;
   align-items: start;
+  min-width: 0;
 }
 
 .posthog-relationship {
@@ -539,6 +552,7 @@ useHead({
   grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.1fr);
   gap: 40px;
   align-items: start;
+  min-width: 0;
   padding-top: 34px;
 }
 
@@ -554,6 +568,7 @@ useHead({
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+  min-width: 0;
 }
 
 .posthog-relationship__grid .posthog-card {
@@ -628,6 +643,7 @@ useHead({
   grid-template-columns: 150px minmax(260px, 0.9fr) minmax(0, 1fr);
   gap: 24px;
   align-items: start;
+  min-width: 0;
   padding: 22px;
   border-bottom: 2px solid var(--ph-line);
 }
@@ -652,12 +668,14 @@ useHead({
   display: grid;
   grid-template-columns: minmax(260px, 0.75fr) minmax(0, 1.25fr);
   gap: 40px;
+  min-width: 0;
 }
 
 .posthog-loop__steps {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+  min-width: 0;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -681,6 +699,7 @@ useHead({
   display: grid;
   grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.28fr);
   gap: 40px;
+  min-width: 0;
 }
 
 .posthog-terminal {
@@ -700,6 +719,7 @@ useHead({
   margin: 0;
   padding: 28px;
   list-style: none;
+  min-width: 0;
 }
 
 .posthog-terminal li {
@@ -724,12 +744,13 @@ useHead({
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr);
   gap: 40px;
+  min-width: 0;
   padding-bottom: 110px;
 }
 
 .posthog-contact h2 {
   max-width: 760px;
-  font-size: clamp(2.7rem, 5.6vw, 6rem);
+  font-size: 5.4rem;
 }
 
 .posthog-contact__links {
@@ -757,7 +778,7 @@ useHead({
 
 .posthog-contact__links strong {
   font-size: 1.05rem;
-  overflow-wrap: normal;
+  overflow-wrap: anywhere;
   white-space: nowrap;
 }
 
@@ -805,6 +826,15 @@ useHead({
   .posthog-contact__links strong {
     white-space: normal;
   }
+
+  .posthog-hero h1 {
+    font-size: 4.8rem;
+  }
+
+  .posthog-section h2,
+  .posthog-contact h2 {
+    font-size: 3.8rem;
+  }
 }
 
 @media (max-width: 720px) {
@@ -817,7 +847,13 @@ useHead({
   .posthog-nav__links {
     width: 100%;
     overflow-x: auto;
+    scrollbar-width: none;
     padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .posthog-nav__links::-webkit-scrollbar {
+    display: none;
   }
 
   .posthog-hero {
@@ -832,7 +868,8 @@ useHead({
   }
 
   .posthog-hero h1 {
-    font-size: clamp(3.2rem, 17vw, 4.8rem);
+    font-size: 3.7rem;
+    line-height: 0.98;
   }
 
   .posthog-hero__lead {
@@ -879,6 +916,64 @@ useHead({
     font-size: 2rem;
   }
 
+  .posthog-hero,
+  .posthog-section {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .posthog-hero {
+    gap: 34px;
+    padding-top: 44px;
+  }
+
+  .posthog-hero h1,
+  .posthog-section h2,
+  .posthog-contact h2 {
+    font-size: 2.55rem;
+    line-height: 1.04;
+  }
+
+  .posthog-hero__actions {
+    display: grid;
+  }
+
+  .posthog-button {
+    width: 100%;
+  }
+
+  .posthog-card {
+    padding: 20px;
+  }
+
+  .posthog-card h3 {
+    font-size: 1.65rem;
+  }
+
+  .posthog-table__row,
+  .posthog-terminal ul,
+  .posthog-loop__steps li,
+  .posthog-contact__links a {
+    padding: 20px;
+  }
+
+  .posthog-table__row strong {
+    font-size: 1.25rem;
+  }
+
+  .posthog-loop__steps span {
+    font-size: 2.05rem;
+  }
+
+  .posthog-contact {
+    padding-bottom: 72px;
+  }
+
+  .posthog-footer {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
   .posthog-panel,
   .posthog-card,
   .posthog-table,
@@ -889,6 +984,18 @@ useHead({
   .posthog-kicker,
   .posthog-nav__mark {
     box-shadow: 3px 3px 0 var(--ph-line);
+  }
+}
+
+@media (max-width: 360px) {
+  .posthog-hero h1,
+  .posthog-section h2,
+  .posthog-contact h2 {
+    font-size: 2.25rem;
+  }
+
+  .posthog-facts div {
+    padding: 12px;
   }
 }
 </style>

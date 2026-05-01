@@ -31,6 +31,7 @@ import { profile } from '~/data/profile'
 .stack__tech-list {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-width: 0;
   border-top: 1px solid var(--rule);
   border-left: 1px solid var(--rule);
 }
@@ -43,7 +44,7 @@ import { profile } from '~/data/profile'
   border-right: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
   font-family: var(--font-headline);
-  font-size: clamp(1.55rem, 2.2vw, 2.35rem);
+  font-size: 2.1rem;
   letter-spacing: 0;
   line-height: 1.05;
   overflow-wrap: anywhere;
@@ -63,6 +64,7 @@ import { profile } from '~/data/profile'
   .stack__tech {
     min-height: 96px;
     padding: 18px;
+    font-size: 1.85rem;
   }
 }
 
@@ -73,6 +75,18 @@ import { profile } from '~/data/profile'
 
   .stack__tech {
     min-height: 74px;
+    font-size: 1.55rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .stack__heading {
+    margin-bottom: 36px;
+  }
+
+  .stack__tech {
+    min-height: 64px;
+    padding: 16px;
   }
 }
 </style>

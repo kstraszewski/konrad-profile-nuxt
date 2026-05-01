@@ -23,6 +23,7 @@ body,
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
@@ -32,10 +33,31 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;
+  overflow-x: clip;
 }
 
 * {
   box-sizing: border-box;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+p,
+li,
+dt,
+dd,
+a,
+strong,
+span {
+  min-width: 0;
 }
 
 ::selection {
@@ -165,6 +187,7 @@ select {
 
 .kv__value {
   color: var(--ink);
+  overflow-wrap: anywhere;
   text-align: right;
 }
 
@@ -216,5 +239,31 @@ select {
 
   .serif-heading {
     font-size: calc(var(--serif-size, 3.5rem) * 0.62);
+  }
+}
+
+@media (max-width: 420px) {
+  .two-col {
+    padding: 48px 18px;
+  }
+
+  .kv {
+    display: grid;
+    gap: 4px;
+  }
+
+  .kv__value {
+    text-align: left;
+  }
+
+  .section-label,
+  .eyebrow {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .serif-heading {
+    font-size: calc(var(--serif-size, 3.5rem) * 0.52);
+    line-height: 1.08;
   }
 }

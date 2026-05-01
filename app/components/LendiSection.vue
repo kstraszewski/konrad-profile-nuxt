@@ -87,6 +87,7 @@ import { profile } from '~/data/profile'
 .lendi__phases {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-width: 0;
   margin-top: 80px;
   border: 1px solid var(--rule);
   background: var(--bg);
@@ -94,6 +95,7 @@ import { profile } from '~/data/profile'
 
 .lendi__phase {
   position: relative;
+  min-width: 0;
   padding: 28px 24px;
   border-right: 1px solid var(--rule);
 }
@@ -156,6 +158,7 @@ import { profile } from '~/data/profile'
 @media (max-width: 680px) {
   .lendi__phases {
     grid-template-columns: 1fr;
+    margin-top: 52px;
   }
 
   .lendi__phase,
@@ -168,5 +171,20 @@ import { profile } from '~/data/profile'
     border-bottom: 0;
   }
 
+}
+
+@media (max-width: 420px) {
+  .lendi__intro {
+    font-size: 1.0625rem;
+  }
+
+  .lendi__pride {
+    padding-left: 16px;
+    font-size: 1.125rem;
+  }
+
+  .lendi__phase {
+    padding: 24px 18px;
+  }
 }
 </style>

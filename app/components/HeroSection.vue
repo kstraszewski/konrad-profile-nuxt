@@ -108,6 +108,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
+  min-width: 0;
   margin-bottom: 80px;
 }
 
@@ -120,6 +121,7 @@ onBeforeUnmount(() => {
 }
 
 .hero__title {
+  max-width: 100%;
   margin: 0;
   font-family: var(--font-headline);
   font-size: 8.25rem;
@@ -163,6 +165,7 @@ onBeforeUnmount(() => {
   grid-template-columns: 1.2fr 1fr;
   gap: 96px;
   align-items: start;
+  min-width: 0;
   margin-top: 80px;
 }
 
@@ -217,6 +220,7 @@ onBeforeUnmount(() => {
 }
 
 .hero__facts {
+  min-width: 0;
   color: var(--dim);
   font-family: var(--font-body);
   font-size: 0.875rem;
@@ -317,8 +321,19 @@ onBeforeUnmount(() => {
     padding: 6vh 5vw 8vh;
   }
 
+  .hero__meta-row {
+    gap: 16px;
+    margin-bottom: 44px;
+  }
+
   .hero__title {
-    font-size: 3.45rem;
+    font-size: 3.05rem;
+    line-height: 1.02;
+  }
+
+  .hero__intro-grid {
+    gap: 32px;
+    margin-top: 44px;
   }
 
   .hero__intro {
@@ -331,6 +346,31 @@ onBeforeUnmount(() => {
 
   .hero__marquee-track {
     font-size: 1.375rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero {
+    padding: 42px 18px 56px;
+  }
+
+  .hero__title {
+    font-size: 2.68rem;
+  }
+
+  .hero__intro {
+    font-size: 1.0625rem;
+  }
+
+  .hero__marquee {
+    margin-top: 54px;
+    padding: 16px 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero__title {
+    font-size: 2.35rem;
   }
 }
 </style>

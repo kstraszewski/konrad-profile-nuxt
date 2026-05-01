@@ -34,20 +34,12 @@
 <script setup>
 import { profile } from '~/data/profile'
 
-useHead({
-  title: 'jasne.ai - Konrad Straszewski',
-  meta: [
-    {
-      name: 'description',
-      content:
-        'jasne.ai case study: a vertical AI product built end-to-end by Konrad Straszewski.'
-    }
-  ]
-})
+useRouteSeo('/jasne.ai')
 </script>
 
 <style scoped>
 .jasne-page {
+  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
   padding: 72px 8vw 120px;
@@ -82,10 +74,11 @@ useHead({
   margin: 0;
   color: var(--ink);
   font-family: var(--font-headline);
-  font-size: clamp(5rem, 13vw, 11rem);
+  font-size: 9rem;
   font-weight: 600;
   letter-spacing: 0;
   line-height: 0.95;
+  overflow-wrap: anywhere;
 }
 
 .jasne-page__hero p {
@@ -117,11 +110,13 @@ useHead({
 .jasne-page__facts {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
+  min-width: 0;
   margin-top: 72px;
   border: 1px solid var(--rule);
 }
 
 .jasne-page__fact {
+  min-width: 0;
   padding: 20px 18px;
   border-right: 1px solid var(--rule);
 }
@@ -143,6 +138,7 @@ useHead({
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 32px;
+  min-width: 0;
   margin-top: 96px;
 }
 
@@ -173,6 +169,10 @@ useHead({
 }
 
 @media (max-width: 1060px) {
+  .jasne-page h1 {
+    font-size: 7rem;
+  }
+
   .jasne-page__facts {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -191,12 +191,20 @@ useHead({
     padding: 56px 6vw 96px;
   }
 
+  .jasne-page h1 {
+    font-size: 5rem;
+  }
+
   .jasne-page__grid {
     grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 620px) {
+  .jasne-page h1 {
+    font-size: 4rem;
+  }
+
   .jasne-page__hero p {
     font-size: 1.1875rem;
   }
@@ -213,6 +221,44 @@ useHead({
 
   .jasne-page__fact:last-child {
     border-bottom: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .jasne-page {
+    padding: 44px 18px 72px;
+  }
+
+  .jasne-page__back {
+    margin-bottom: 40px;
+  }
+
+  .jasne-page h1 {
+    font-size: 3.25rem;
+  }
+
+  .jasne-page__hero p {
+    margin-top: 28px;
+    font-size: 1.0625rem;
+  }
+
+  .jasne-page__facts {
+    margin-top: 52px;
+  }
+
+  .jasne-page__grid {
+    gap: 28px;
+    margin-top: 64px;
+  }
+
+  .jasne-page__card h2 {
+    font-size: 1.65rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .jasne-page h1 {
+    font-size: 2.9rem;
   }
 }
 </style>

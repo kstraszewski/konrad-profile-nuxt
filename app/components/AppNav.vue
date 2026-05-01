@@ -74,6 +74,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: space-between;
   gap: 32px;
+  min-width: 0;
   max-width: 1280px;
   margin: 0 auto;
   padding: 20px 8vw;
@@ -83,7 +84,8 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  min-width: max-content;
+  min-width: 0;
+  max-width: 100%;
   color: var(--ink);
   font-size: 0.875rem;
   text-decoration: none;
@@ -98,7 +100,10 @@ onBeforeUnmount(() => {
 }
 
 .nav__name {
+  overflow: hidden;
   font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nav__role {
@@ -110,9 +115,11 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 24px;
+  min-width: 0;
 }
 
 .nav__link {
+  flex: 0 0 auto;
   color: var(--dim);
   font-size: 0.8125rem;
   text-decoration: none;
@@ -125,6 +132,7 @@ onBeforeUnmount(() => {
 }
 
 .nav__cta {
+  flex: 0 0 auto;
   border-radius: 4px;
   background: var(--ink);
   color: var(--bg);
@@ -156,11 +164,22 @@ onBeforeUnmount(() => {
     width: 100%;
     gap: 18px;
     overflow-x: auto;
+    scrollbar-width: none;
     padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav__links::-webkit-scrollbar {
+    display: none;
   }
 }
 
 @media (max-width: 560px) {
+  .nav__inner {
+    gap: 12px;
+    padding: 16px 5vw;
+  }
+
   .nav__role {
     display: none;
   }
@@ -171,6 +190,21 @@ onBeforeUnmount(() => {
 
   .nav__cta {
     padding: 7px 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .nav__inner {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .nav__brand {
+    font-size: 0.8125rem;
+  }
+
+  .nav__links {
+    gap: 12px;
   }
 }
 </style>

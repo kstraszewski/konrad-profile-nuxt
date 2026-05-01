@@ -2,9 +2,21 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-04-29',
   devtools: { enabled: false },
   css: ['~/assets/css/main.css'],
+  runtimeConfig: {
+    public: {
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://konradstraszewski.com'
+    }
+  },
+  routeRules: {
+    '/posthog': {
+      headers: {
+        'X-Robots-Tag': 'noindex, nofollow'
+      }
+    }
+  },
   nitro: {
     prerender: {
-      routes: ['/api/cv/general.pdf', '/api/cv/posthog.pdf']
+      routes: ['/api/cv/general.pdf', '/api/cv/posthog.pdf', '/robots.txt', '/sitemap.xml']
     }
   },
   app: {
@@ -12,15 +24,10 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: 'en'
       },
-      title: 'Konrad Straszewski - AI Manager & Builder',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        {
-          name: 'description',
-          content:
-            'AI Manager and Builder profile for Konrad Straszewski: Lendi, jasne.ai, product-builder operating principles and contact details.'
-        }
+        { name: 'theme-color', content: '#fafaf7' }
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
