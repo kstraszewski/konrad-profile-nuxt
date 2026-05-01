@@ -34,16 +34,7 @@
 <script setup>
 import { profile } from '~/data/profile'
 
-useHead({
-  title: 'jasne.ai - Konrad Straszewski',
-  meta: [
-    {
-      name: 'description',
-      content:
-        'jasne.ai case study: a vertical AI product built end-to-end by Konrad Straszewski.'
-    }
-  ]
-})
+useRouteSeo('/jasne.ai')
 </script>
 
 <style scoped>

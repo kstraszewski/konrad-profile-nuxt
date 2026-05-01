@@ -186,15 +186,7 @@ import { profile } from '~/data/profile'
 
 const posthogContactLinks = [profile.links.email, profile.links.github, profile.links.linkedin, profile.links.jasne]
 
-useHead({
-  title: profile.posthog.title,
-  meta: [
-    {
-      name: 'description',
-      content: profile.posthog.description
-    }
-  ]
-})
+useRouteSeo('/posthog')
 </script>
 
 <style scoped>

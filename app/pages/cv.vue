@@ -78,15 +78,7 @@ const downloadName = (label) =>
   label.includes('PostHog') ? 'Konrad-Straszewski-CV-PostHog.pdf' : 'Konrad-Straszewski-CV.pdf'
 const isPosthogDownload = (label) => label.includes('PostHog')
 
-useHead({
-  title: 'CV - Konrad Straszewski',
-  meta: [
-    {
-      name: 'description',
-      content: 'Downloadable CV variants for Konrad Straszewski.'
-    }
-  ]
-})
+useRouteSeo('/cv')
 </script>
 
 <style scoped>
