@@ -1,17 +1,38 @@
 <template>
   <header class="nav" :class="{ 'nav--scrolled': scrolled }">
     <div class="nav__inner">
-      <a class="nav__brand" :href="homeHref" aria-label="Back to top">
-        <span class="nav__brand-dot" aria-hidden="true" />
-        <span class="nav__name">{{ profile.person.name }}</span>
-        <span class="nav__role">&middot; {{ profile.person.role }}</span>
-      </a>
+      <div class="nav__top">
+        <a class="nav__brand" :href="homeHref" aria-label="Back to top" @click="mobileMenuOpen = false">
+          <span class="nav__brand-dot" aria-hidden="true" />
+          <span class="nav__name">{{ profile.person.name }}</span>
+          <span class="nav__role">&middot; {{ profile.person.role }}</span>
+        </a>
 
-      <nav class="nav__links" aria-label="Page sections">
-        <a v-for="item in items" :key="item.href" :href="navHref(item.href)" class="nav__link">
+        <button
+          class="nav__menu-button"
+          :class="{ 'nav__menu-button--open': mobileMenuOpen }"
+          type="button"
+          aria-controls="site-nav"
+          :aria-expanded="mobileMenuOpen"
+          :aria-label="mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'"
+          @click="mobileMenuOpen = !mobileMenuOpen"
+        >
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+        </button>
+      </div>
+
+      <nav
+        id="site-nav"
+        class="nav__links"
+        :class="{ 'nav__links--open': mobileMenuOpen }"
+        aria-label="Page sections"
+      >
+        <a v-for="item in items" :key="item.href" :href="navHref(item.href)" class="nav__link" @click="mobileMenuOpen = false">
           {{ item.label }}
         </a>
-        <a class="nav__cta" :href="sectionHref('#contact')">Let's talk &rarr;</a>
+        <a class="nav__cta" :href="sectionHref('#contact')" @click="mobileMenuOpen = false">Let's talk &rarr;</a>
       </nav>
     </div>
 
@@ -25,6 +46,7 @@ import { profile } from '~/data/profile'
 const route = useRoute()
 const scrolled = ref(false)
 const progress = ref(0)
+const mobileMenuOpen = ref(false)
 
 const items = profile.nav.main
 
@@ -33,6 +55,7 @@ const sectionHref = (hash) => (route.path === '/' ? hash : `/${hash}`)
 const navHref = (href) => (href.startsWith('#') ? sectionHref(href) : href)
 
 let removeScrollListener = null
+let removeKeydownListener = null
 
 onMounted(() => {
   const onScroll = () => {
@@ -42,14 +65,22 @@ onMounted(() => {
     scrolled.value = y > 24
     progress.value = h > 0 ? Math.min(1, y / h) : 0
   }
+  const onKeydown = (event) => {
+    if (event.key === 'Escape') {
+      mobileMenuOpen.value = false
+    }
+  }
 
   onScroll()
   window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('keydown', onKeydown)
   removeScrollListener = () => window.removeEventListener('scroll', onScroll)
+  removeKeydownListener = () => window.removeEventListener('keydown', onKeydown)
 })
 
 onBeforeUnmount(() => {
   removeScrollListener?.()
+  removeKeydownListener?.()
 })
 </script>
 
@@ -78,6 +109,14 @@ onBeforeUnmount(() => {
   max-width: 1280px;
   margin: 0 auto;
   padding: 20px 8vw;
+}
+
+.nav__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
 }
 
 .nav__brand {
@@ -111,6 +150,10 @@ onBeforeUnmount(() => {
   font-weight: 400;
 }
 
+.nav__menu-button {
+  display: none;
+}
+
 .nav__links {
   display: flex;
   align-items: center;
@@ -132,7 +175,10 @@ onBeforeUnmount(() => {
 }
 
 .nav__cta {
+  display: inline-flex;
+  align-items: center;
   flex: 0 0 auto;
+  justify-content: center;
   border-radius: 4px;
   background: var(--ink);
   color: var(--bg);
@@ -160,6 +206,10 @@ onBeforeUnmount(() => {
     padding: 18px 6vw;
   }
 
+  .nav__top {
+    width: 100%;
+  }
+
   .nav__links {
     width: 100%;
     gap: 18px;
@@ -176,28 +226,92 @@ onBeforeUnmount(() => {
 
 @media (max-width: 560px) {
   .nav__inner {
-    gap: 16px;
-    padding: 18px 5vw;
+    gap: 0;
+    padding: 16px 5vw;
   }
 
   .nav__role {
     display: none;
   }
 
+  .nav__menu-button {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    width: 38px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--bg);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .nav__menu-button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .nav__menu-button span {
+    display: block;
+    width: 16px;
+    height: 1px;
+    margin: 0 auto;
+    background: currentColor;
+    transform-origin: center;
+    transition: opacity 0.16s ease, transform 0.16s ease;
+  }
+
+  .nav__menu-button--open span:first-child {
+    transform: translateY(5px) rotate(45deg);
+  }
+
+  .nav__menu-button--open span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .nav__menu-button--open span:last-child {
+    transform: translateY(-5px) rotate(-45deg);
+  }
+
   .nav__links {
-    flex-wrap: wrap;
-    gap: 10px 16px;
-    overflow-x: visible;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    width: 100%;
+    max-height: 0;
+    margin-top: 0;
+    border-top: 0 solid transparent;
+    overflow: hidden;
     padding-bottom: 0;
+    visibility: hidden;
+    transition: max-height 0.22s ease, margin-top 0.22s ease, border-color 0.22s ease, visibility 0s linear 0.22s;
+  }
+
+  .nav__links--open {
+    max-height: 420px;
+    margin-top: 14px;
+    border-top-width: 1px;
+    border-top-color: var(--rule);
+    visibility: visible;
+    transition-delay: 0s;
   }
 
   .nav__link {
-    line-height: 1.2;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.9375rem;
+    line-height: 1;
     white-space: normal;
   }
 
   .nav__cta {
-    display: none;
+    justify-content: center;
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px 12px;
   }
 }
 
@@ -212,7 +326,7 @@ onBeforeUnmount(() => {
   }
 
   .nav__links {
-    gap: 12px;
+    gap: 0;
   }
 }
 </style>
