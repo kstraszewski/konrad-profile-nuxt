@@ -45,6 +45,7 @@
                 <span>Proof points</span>
                 <span>How I work</span>
                 <span>Track record</span>
+                <span>Outside work</span>
               </div>
             </template>
 
@@ -56,12 +57,13 @@
               </div>
               <div class="cv-mini-general__section">
                 <span>Profile</span>
-                <p>{{ profile.cv.summary }}</p>
+                <p>{{ generalPreviewSummary }}</p>
               </div>
               <div class="cv-mini-general__rows">
-                <span v-for="item in profile.track.experience.slice(0, 3)" :key="`${item.year}-${item.role}`">
+                <span v-for="item in profile.track.experience.slice(0, 2)" :key="`${item.year}-${item.role}`">
                   {{ item.year }} · {{ item.role }}
                 </span>
+                <span>Outside work · boxing, cars, technology, science</span>
               </div>
             </template>
           </div>
@@ -75,6 +77,9 @@
 import { profile } from '~/data/profile'
 
 const posthog = usePostHog()
+
+const generalPreviewSummary =
+  'Product Engineer and AI-native builder with 11 years across product engineering, frontend leadership, and AI adoption.'
 
 const downloadName = (label) => {
   if (label.includes('Product Manager')) {

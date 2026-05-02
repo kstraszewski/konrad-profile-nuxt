@@ -421,19 +421,19 @@ export const profile = {
     items: [
       {
         label: 'Boxing',
-        value: 'I have trained boxing for seven years. It keeps the ego honest and the feedback loop immediate.'
+        value: 'I train boxing. It keeps the feedback loop immediate: discipline, composure, humility, and no room for pretending.'
       },
       {
-        label: 'Hiking',
-        value: 'I like getting outside, moving for a long time, and letting hard problems untangle without a screen.'
+        label: 'Automotive',
+        value: 'I follow cars through engineering, design, culture, and the feel of well-built machines.'
       },
       {
         label: 'Technology',
         value: 'I follow new interfaces, infrastructure, AI systems, XR, and the tools that change how products get built.'
       },
       {
-        label: 'Automotive',
-        value: 'I like cars and the mix of engineering, design, culture, and feel that makes them more than transport.'
+        label: 'Science',
+        value: 'I like scientific thinking: models, evidence, systems, and changing your mind when reality disagrees.'
       }
     ]
   },

@@ -413,6 +413,20 @@ const drawPosthogCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>)
     doc.line(PAGE.margin, y + 74, PAGE.width - PAGE.margin, y + 74, colors.ink, 0.65)
   })
 
+  doc.panel(PAGE.margin, 674, 499, 44, colors.paper, colors.ink)
+  doc.text('OUTSIDE WORK', 64, 694, 8, 'F2', colors.phOrange)
+  compactTextBlock(
+    doc,
+    'Boxing training / automotive / technology / science - grounded interests where feedback, systems, and craft matter.',
+    174,
+    693,
+    342,
+    8.2,
+    10.2,
+    2,
+    { color: colors.ink }
+  )
+
   doc.panel(PAGE.margin, 746, 499, 54, colors.phOrange, colors.ink, true)
   doc.text('CONTACT', 64, 768, 8, 'F2', colors.paper)
   doc.text(profile.person.email, 142, 768, 10, 'F2', colors.paper)
