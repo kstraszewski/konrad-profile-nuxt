@@ -359,7 +359,7 @@ const drawPosthogCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>)
         ? 'Product Manager'
         : 'Product Engineer'
 
-  posthogHeader(doc, profile, `${roleLabel} / PostHog CV variant`)
+  posthogHeader(doc, profile, roleLabel)
 
   const heroY = 96
   posthogCard(doc, PAGE.margin, heroY, 499, 124)
@@ -407,7 +407,7 @@ const drawPosthogCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>)
   })
 
   doc.addPage()
-  posthogHeader(doc, profile, `${roleLabel} / compact CV`)
+  posthogHeader(doc, profile, roleLabel)
 
   doc.text('TRACK RECORD', PAGE.margin, 104, 8, 'F2', colors.phOrange)
   compactTextBlock(doc, profile.track.heading, PAGE.margin, 126, 430, 15, 17, 2, {
