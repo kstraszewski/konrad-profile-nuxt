@@ -176,8 +176,8 @@ onBeforeUnmount(() => {
 
 @media (max-width: 560px) {
   .nav__inner {
-    gap: 12px;
-    padding: 16px 5vw;
+    gap: 16px;
+    padding: 18px 5vw;
   }
 
   .nav__role {
@@ -185,11 +185,19 @@ onBeforeUnmount(() => {
   }
 
   .nav__links {
-    gap: 14px;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    overflow-x: visible;
+    padding-bottom: 0;
+  }
+
+  .nav__link {
+    line-height: 1.2;
+    white-space: normal;
   }
 
   .nav__cta {
-    padding: 7px 12px;
+    display: none;
   }
 }
 
