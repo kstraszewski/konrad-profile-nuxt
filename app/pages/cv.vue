@@ -6,7 +6,7 @@
         <span>{{ profile.person.name }}</span>
       </NuxtLink>
 
-      <span class="cv-top__meta">2 PDF variants</span>
+      <span class="cv-top__meta">{{ profile.cv.downloads.length }} PDF files</span>
     </header>
 
     <section class="cv-previews" aria-labelledby="cv-previews-title">
@@ -19,7 +19,7 @@
         <article v-for="option in profile.cv.downloads" :key="option.href" class="cv-preview">
           <div class="cv-preview__header">
             <div>
-              <p class="cv-preview__label">PDF variant</p>
+              <p class="cv-preview__label">PDF</p>
               <h2>{{ option.label }}</h2>
               <p>{{ option.description }}</p>
             </div>
@@ -38,8 +38,8 @@
                 <strong>Konrad Straszewski</strong>
               </div>
               <div class="cv-mini-ph__panel">
-                <small>Application page / Product Engineer</small>
-                <strong>I build product surfaces where AI turns intent into shipped UI.</strong>
+                <small>{{ posthogPreview(option.label).small }}</small>
+                <strong>{{ posthogPreview(option.label).headline }}</strong>
               </div>
               <div class="cv-mini-ph__rows">
                 <span>Proof points</span>
@@ -76,13 +76,39 @@ import { profile } from '~/data/profile'
 
 const posthog = usePostHog()
 
-const downloadName = (label) =>
-  label.includes('PostHog') ? 'Konrad-Straszewski-CV-PostHog.pdf' : 'Konrad-Straszewski-CV.pdf'
+const downloadName = (label) => {
+  if (label.includes('Product Manager')) {
+    return 'Konrad-Straszewski-CV-PostHog-PM.pdf'
+  }
+
+  if (label.includes('Product Engineer')) {
+    return 'Konrad-Straszewski-CV-PostHog-PE.pdf'
+  }
+
+  return 'Konrad-Straszewski-CV.pdf'
+}
 const isPosthogDownload = (label) => label.includes('PostHog')
+const isPosthogPmDownload = (label) => label.includes('Product Manager')
+const posthogPreview = (label) =>
+  isPosthogPmDownload(label)
+    ? {
+        small: 'Application page / Product Manager',
+        headline: 'I turn users, data, and commercial context into better product bets.'
+      }
+    : {
+        small: 'Application page / Product Engineer',
+        headline: 'I build the product, instrument the truth, then keep shipping.'
+      }
 
 const onDownload = (label) => {
+  const variant = isPosthogPmDownload(label)
+    ? 'posthog-pm'
+    : label.includes('Product Engineer')
+      ? 'posthog-pe'
+      : 'general'
+
   posthog?.capture('cv_downloaded', {
-    variant: isPosthogDownload(label) ? 'posthog' : 'general',
+    variant,
     label,
   })
 }
@@ -179,8 +205,8 @@ useRouteSeo('/cv')
 
 .cv-preview-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 32px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
   min-width: 0;
 }
 
@@ -194,8 +220,9 @@ useRouteSeo('/cv')
 .cv-preview__header {
   display: flex;
   align-items: flex-start;
+  flex-direction: column;
   justify-content: space-between;
-  gap: 24px;
+  gap: 18px;
   min-width: 0;
   padding: 22px;
   border-bottom: 1px solid var(--rule);
@@ -208,7 +235,7 @@ useRouteSeo('/cv')
 .cv-preview__header h2 {
   margin: 6px 0;
   font-family: var(--font-headline);
-  font-size: 1.7rem;
+  font-size: 1.45rem;
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1.05;
@@ -240,8 +267,8 @@ useRouteSeo('/cv')
 .cv-preview__paper {
   position: relative;
   min-width: 0;
-  min-height: 600px;
-  padding: 38px;
+  min-height: 520px;
+  padding: 30px;
   border-top: 1px solid var(--rule);
   background: #fbfbfa;
   overflow: hidden;
@@ -382,7 +409,7 @@ useRouteSeo('/cv')
   max-width: 320px;
   padding: 22px 14px 28px;
   font-family: var(--font-headline);
-  font-size: 2rem;
+  font-size: 1.7rem;
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1.02;
@@ -403,6 +430,12 @@ useRouteSeo('/cv')
   font-size: 0.75rem;
   font-weight: 800;
   text-transform: uppercase;
+}
+
+@media (max-width: 1180px) {
+  .cv-preview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 1060px) {

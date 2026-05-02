@@ -24,7 +24,7 @@ export const seoPages: SeoPage[] = [
     path: '/',
     title: 'Konrad Straszewski | AI Manager, Product Builder & Nuxt/Vue Engineer',
     description:
-      'AI Manager at Lendi and founder-builder of jasne.ai. Konrad Straszewski leads AI adoption, Nuxt/Vue product engineering, and AI-native workflows.',
+      'AI Manager at Lendi and founder of jasne.ai. Konrad Straszewski leads AI adoption, Nuxt/Vue product engineering, and AI-native workflows.',
     lastmod: '2026-04-30',
     type: 'profile'
   },
@@ -39,7 +39,7 @@ export const seoPages: SeoPage[] = [
     path: '/cv',
     title: 'CV | Konrad Straszewski - AI Manager & Product Engineer',
     description:
-      'Download CV variants for Konrad Straszewski: AI Manager, product engineer, Nuxt/Vue frontend lead, jasne.ai founder-builder, and AI adoption lead.',
+      'Download CV files for Konrad Straszewski: AI Manager, product engineer, Nuxt/Vue frontend lead, jasne.ai founder, and AI adoption lead.',
     lastmod: '2026-04-30'
   },
   {

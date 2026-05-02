@@ -126,7 +126,7 @@ export const profile = {
       {
         heading: 'Building jasne.ai',
         description:
-          'A vertical AI product. Solo, end-to-end. Vendor-agnostic stack. The proof that the model I sell at Lendi works in the wild.',
+          'A vertical AI product built end-to-end across product, UX, code, infra, AI integration, and distribution. The proof that the model I sell at Lendi works in the wild.',
         tag: 'Side build'
       },
       {
@@ -220,9 +220,9 @@ export const profile = {
     intro:
       "A vertical AI product I'm building end-to-end - design, code, infra, distribution. The thesis I sell at Lendi, proven on my own time.",
     shotLabel: 'FIG. 03.01 - JASNE.AI · PRODUCT SURFACE',
-    shotFooter: ['VERTICAL AI · SOLO BUILD', '2024 → NOW'],
+    shotFooter: ['VERTICAL AI · 0→1 PRODUCT', '2024 → NOW'],
     facts: [
-      { label: 'Role', value: 'Founder + Builder' },
+      { label: 'Role', value: 'Founder + Product lead' },
       { label: 'Stack', value: 'Expo, Nuxt, Vercel AI SDK' },
       { label: 'Models', value: 'Gemini' },
       { label: 'DB', value: 'Supabase' },
@@ -325,7 +325,7 @@ export const profile = {
         role: 'Founder',
         org: 'jasne.ai',
         description:
-          'Vertical AI product. Solo end-to-end: design, code, infra, distribution. Vendor-agnostic stack on Vercel AI SDK.'
+          'Vertical AI product: design, code, infra, distribution. Vendor-agnostic stack on Vercel AI SDK.'
       },
       {
         year: '2023 - 2024',
@@ -452,7 +452,7 @@ export const profile = {
     title: 'CV',
     headline: 'Product engineer and AI-native builder who still ships the interface.',
     subhead:
-      'A compact PostHog-ready version: product ownership, AI-native building, PostHog practice, jasne.ai, and the stack I use to ship.',
+      'A focused product-engineering CV: product ownership, AI-native building, PostHog practice, jasne.ai, and the stack I use to ship.',
     summary:
       'Product Engineer and AI-native builder with 11 years across product engineering, frontend leadership, and AI adoption. I spent 8.5 years inside Lendi, moving from Vue/Nuxt developer to frontend lead, R&D, and now AI Manager. My work is practical: own the product surface, build the tool, ship the workflow, instrument the loop, write the context, and keep iterating with users and teams.',
     highlights: [
@@ -460,7 +460,7 @@ export const profile = {
       'Progressed from frontend developer to lead, R&D, and AI Manager while staying close to product surfaces, UX, tooling, and shipping.',
       'Lead practical AI adoption at Lendi: strategy, tooling, training, KPIs, production workflows, and the product-builder operating model.',
       'Implemented PostHog in two organizations, used PostHog MCP heavily, and advocated for evidence-first product loops.',
-      'Built jasne.ai as a solo 0->1 vertical AI product across product, UX, code, infra, AI integration, and distribution.',
+      'Built jasne.ai as a 0->1 vertical AI product across product, UX, code, infra, AI integration, and distribution.',
       'Based in Szczecin, Poland (GMT+2), inside PostHog timezone range; strong async writing, docs, and product-context habits.'
     ],
     downloads: [
@@ -472,7 +472,12 @@ export const profile = {
       {
         label: 'PostHog Product Engineer',
         description: 'PDF w stylu podstrony PostHog',
-        href: '/api/cv/posthog.pdf'
+        href: '/api/cv/posthog-pe.pdf'
+      },
+      {
+        label: 'PostHog Product Manager',
+        description: 'PDF pod rolę PM ex-founder / ex-product engineer',
+        href: '/api/cv/posthog-pm.pdf'
       }
     ]
   },
@@ -498,7 +503,7 @@ export const profile = {
       facts: [
         { label: 'Location', value: 'Szczecin, Poland - GMT+2' },
         { label: 'Mode', value: 'Prototype -> ship -> instrument -> learn' },
-        { label: 'Current', value: 'AI Manager at Lendi; solo builder of jasne.ai' },
+        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
         { label: 'Bias', value: 'Useful product over polished theater' }
       ]
     },
@@ -576,7 +581,7 @@ export const profile = {
         },
         {
           label: '0->1 / jasne.ai',
-          heading: 'Built a vertical AI product end-to-end as a solo founder-builder.',
+          heading: 'Built a vertical AI product end-to-end from product strategy to shipped implementation.',
           description:
             'Product strategy, UX, code, infrastructure, AI integration, distribution, and iteration without a handoff between builder and owner.'
         },
@@ -644,5 +649,174 @@ export const profile = {
       ]
     },
     contactHeading: 'If this is the kind of product engineering PostHog wants, we should talk.'
+  },
+  posthogPm: {
+    title: 'Konrad Straszewski for PostHog Product Manager',
+    description:
+      'A PostHog-inspired product pitch from Konrad Straszewski for the Product Manager ex-founder or ex-product engineer role: research, data, users, commercial context, and coaching product engineers.',
+    hero: {
+      kicker: 'Application page / Product Manager',
+      headline: 'I turn users, data, and commercial context into better product bets.',
+      lead:
+        'Builder background; PM focus: growth reviews, data research, user interviews, competitive context, and coaching engineers.'
+    },
+    panel: {
+      file: 'candidate.pm-fit',
+      scoreLabel: 'Role match',
+      scoreValue: 'PM + ex-product engineer',
+      pizzaBadge: {
+        question: 'Does pineapple belong on pizza?',
+        percent: '100%',
+        answer: 'NO!'
+      },
+      facts: [
+        { label: 'Location', value: 'Szczecin, Poland - GMT+2' },
+        { label: 'Mode', value: 'Research -> data -> users -> context -> bets' },
+        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
+        { label: 'Bias', value: 'Commercial truth over product theater' }
+      ]
+    },
+    relationship: {
+      kicker: 'PostHog in practice',
+      heading: 'I already use PostHog the way this PM role works.',
+      copy:
+        'I have implemented PostHog in two organizations, used the MCP heavily, and pushed teams toward shared evidence. That maps directly to the PM shape PostHog describes: understand behavior, ask better questions, interview users, and give engineers context instead of tickets.',
+      cards: [
+        {
+          label: '2 orgs',
+          title: 'Implemented in product teams',
+          description:
+            'Rolled PostHog into real teams as a way to make product decisions from user behavior, funnels, recordings, and feature flags.'
+        },
+        {
+          label: 'MCP',
+          title: 'Used data in workflows',
+          description:
+            'Used PostHog MCP to pull product context into working loops instead of treating analytics as a dashboard outside the product conversation.'
+        },
+        {
+          label: 'PM loop',
+          title: 'Helped teams ask better questions',
+          description:
+            'Moved conversations from narrative-first to evidence-first: what changed, who churned, what users actually did, and what should we learn next?'
+        },
+        {
+          label: 'Founder',
+          title: 'Built and positioned jasne.ai',
+          description:
+            'As jasne.ai founder, I own the messy product work too: target user, problem shape, positioning, distribution, pricing questions, and iteration.'
+        }
+      ]
+    },
+    fit: {
+      kicker: 'Why this PM role',
+      heading: 'I want to help product engineers make better bets, not manage their backlog.',
+      cards: [
+        {
+          index: '01',
+          heading: 'Research and data before opinion',
+          description:
+            'I like product work when the question is not obvious: segment users, read behavior, talk to customers, compare alternatives, and decide what needs deeper research.'
+        },
+        {
+          index: '02',
+          heading: 'Commercial context matters',
+          description:
+            'The useful PM work is not only UX taste. It is understanding retention, churn, pricing, packaging, competitors, and where the product has untapped leverage.'
+        },
+        {
+          index: '03',
+          heading: 'Ex-builder empathy',
+          description:
+            'I have shipped the interfaces and lived inside engineering tradeoffs. That makes me useful as a PM who gives context, feedback, and product coaching without turning into a project manager.'
+        },
+        {
+          index: '04',
+          heading: 'Async product clarity',
+          description:
+            'I write memos, notes, product context, and decision framing because distributed teams need durable thinking and crisp recommendations.'
+        }
+      ]
+    },
+    proof: {
+      kicker: 'Proof points',
+      heading: 'Research, data, commercial context, and ex-builder judgment.',
+      rows: [
+        {
+          label: 'Ex-builder',
+          heading: '11 years in product engineering, frontend leadership, R&D, and AI adoption.',
+          description:
+            'I know how product engineering actually works because I have owned product surfaces, mentoring, stack decisions, prototypes, and delivery pressure.'
+        },
+        {
+          label: 'PostHog',
+          heading: 'Implemented PostHog in two organizations and used it as a product operating surface.',
+          description:
+            'Funnels, cohorts, recordings, feature flags, MCP workflows, and evidence-first product conversations with product and engineering teams.'
+        },
+        {
+          label: 'Growth loops',
+          heading: 'Led practical adoption work with KPIs, training, workflows, and visible behavior change.',
+          description:
+            'AI adoption at Lendi required product sense, stakeholder context, workflow analysis, measurement, and helping teams change how they work.'
+        },
+        {
+          label: 'Founder',
+          heading: 'Built jasne.ai as a 0->1 product, including positioning and distribution.',
+          description:
+            'A 0->1 founder track across problem discovery, UX, product narrative, code, AI integration, infrastructure, and market loops.'
+        },
+        {
+          label: 'AI product',
+          heading: 'Worked on AI products, retrieval-heavy systems, and AI-native product surfaces.',
+          description:
+            'jasne.ai, Lendi AI workflows, and MAF retrieval work map well to PostHog AI, data products, workflow, support, and CRM ambitions.'
+        },
+        {
+          label: 'SQL / data',
+          heading: 'Comfortable with product data flows, SQL-backed systems, analytics, and instrumentation.',
+          description:
+            'Supabase, PostHog, SQL/data flows, product instrumentation, cohorts/funnels, and the habit of turning ambiguous questions into queryable ones.'
+        }
+      ]
+    },
+    loop: {
+      kicker: 'How I work',
+      heading: 'The PM loop I would bring to PostHog.',
+      steps: [
+        { label: 'Measure', description: 'Read activation, retention, churn, usage, revenue, and where the product story breaks by segment.' },
+        { label: 'Interview', description: 'Talk to users, bring engineers in, and connect qualitative friction to observed behavior.' },
+        { label: 'Compare', description: 'Map competitors, pricing, packaging, parity, and adjacent product opportunities.' },
+        { label: 'Frame', description: 'Turn research into crisp context, recommendations, and product feedback for better bets.' }
+      ]
+    },
+    ideas: {
+      kicker: 'What I would explore',
+      heading: 'PM projects I would want to pick up with real PostHog data.',
+      file: 'posthog/pm-projects.md',
+      items: [
+        {
+          label: 'Growth review system',
+          description:
+            'a repeatable monthly readout for one product: activation, retention, churn, expansion, surprising segments, and the next research question.'
+        },
+        {
+          label: 'Retention and churn map',
+          description:
+            'find which behaviors, integrations, team sizes, and setup paths correlate with long-term retention or early churn.'
+        },
+        {
+          label: 'Packaging and pricing map',
+          description:
+            'compare PostHog product packaging against incumbents and identify where pricing, limits, or bundling could unlock adoption.'
+        },
+        {
+          label: 'AI analyst research loop',
+          description:
+            'study PostHog AI questions, failed answers, SQL edits, and support cases to find the next high-leverage product improvements.'
+        }
+      ]
+    },
+    contactHeading: 'If PostHog needs a PM who used to build the product, we should talk.'
   }
 } as const

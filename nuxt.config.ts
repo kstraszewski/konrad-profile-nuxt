@@ -22,6 +22,8 @@ export default defineNuxtConfig({
       routes: [
         '/api/cv/general.pdf',
         '/api/cv/posthog.pdf',
+        '/api/cv/posthog-pe.pdf',
+        '/api/cv/posthog-pm.pdf',
         '/robots.txt',
         '/sitemap.xml'
       ]

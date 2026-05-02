@@ -1,5 +1,6 @@
 type Profile = typeof import('../../app/data/profile').profile
-type CvVariant = 'general' | 'posthog'
+type CvVariant = 'general' | 'posthog-pe' | 'posthog-pm'
+type PosthogCvContent = Profile['posthog'] | Profile['posthogPm']
 type Color = [number, number, number]
 
 const PAGE = {
@@ -103,9 +104,9 @@ class PdfDoc {
 
     this.ops = []
     this.y = 60
-    this.fillRect(0, 0, PAGE.width, PAGE.height, this.variant === 'posthog' ? colors.phBg : colors.bg)
+    this.fillRect(0, 0, PAGE.width, PAGE.height, this.variant === 'general' ? colors.bg : colors.phBg)
 
-    if (this.variant === 'posthog') {
+    if (this.variant !== 'general') {
       for (let x = 0; x <= PAGE.width; x += 36) {
         this.line(x, 0, x, PAGE.height, [0.89, 0.86, 0.78], 0.35)
       }
@@ -325,18 +326,6 @@ const compactTextBlock = (
   const lines = wrapText(text, width, size, options.font)
   const visibleLines = lines.slice(0, maxLines)
 
-  if (lines.length > maxLines && visibleLines.length) {
-    const lastIndex = visibleLines.length - 1
-    const suffix = '...'
-    let shortened = visibleLines[lastIndex]
-
-    while (shortened.length > 1 && approxTextWidth(`${shortened}${suffix}`, size, options.font) > width) {
-      shortened = shortened.slice(0, -1).trim()
-    }
-
-    visibleLines[lastIndex] = `${shortened}${suffix}`
-  }
-
   visibleLines.forEach((line, index) => {
     doc.text(line, x, y + index * lineHeight, size, options.font ?? 'F1', options.color ?? colors.ink)
   })
@@ -344,44 +333,44 @@ const compactTextBlock = (
   return y + visibleLines.length * lineHeight
 }
 
-const posthogHeader = (doc: PdfDoc, profile: Profile, subtitle = 'Product Engineer / PostHog CV variant') => {
+const posthogHeader = (doc: PdfDoc, profile: Profile, subtitle = 'Product Engineer') => {
   doc.panel(PAGE.margin, 42, 32, 32, colors.phOrange, colors.ink, true)
   doc.text(profile.person.initials, 57, 64, 11, 'F2', colors.paper)
   doc.text(profile.person.name, 94, 60, 16, 'F2')
   doc.text(subtitle, 94, 77, 8, 'F1', colors.dim)
-  doc.text('POSTHOG CV', 471, 58, 8, 'F2', colors.dim)
-  doc.text('2 pages', 500, 74, 7, 'F1', colors.dim)
 }
 
 const posthogCard = (doc: PdfDoc, x: number, y: number, width: number, height: number) => {
   doc.panel(x, y, width, height, colors.paper, colors.ink, true)
 }
 
-const drawPosthogCv = (profile: Profile) => {
-  const doc = new PdfDoc('posthog')
+const drawPosthogCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>) => {
+  const doc = new PdfDoc(variant)
+  const content: PosthogCvContent = variant === 'posthog-pm' ? profile.posthogPm : profile.posthog
+  const roleLabel = variant === 'posthog-pm' ? 'Product Manager' : 'Product Engineer'
 
-  posthogHeader(doc, profile)
+  posthogHeader(doc, profile, `${roleLabel} / PostHog CV variant`)
 
   const heroY = 96
   posthogCard(doc, PAGE.margin, heroY, 499, 124)
   doc.fillRect(PAGE.margin, heroY, 499, 25, [0.94, 0.89, 0.78])
   doc.line(PAGE.margin, heroY + 25, PAGE.width - PAGE.margin, heroY + 25, colors.ink, 1.4)
-  doc.text(profile.posthog.hero.kicker, 64, heroY + 17, 7.5, 'F2', colors.ink)
-  compactTextBlock(doc, profile.posthog.hero.headline, 64, heroY + 55, 285, 18, 20, 3, {
+  doc.text(content.hero.kicker, 64, heroY + 17, 7.5, 'F2', colors.ink)
+  compactTextBlock(doc, content.hero.headline, 64, heroY + 55, 285, 18, 20, 3, {
     font: 'F4',
     color: colors.ink
   })
   doc.text('WHY', 376, heroY + 54, 7, 'F2', colors.phOrange)
-  compactTextBlock(doc, profile.posthog.hero.lead, 376, heroY + 72, 135, 8, 10.5, 5, { color: colors.dim })
+  compactTextBlock(doc, content.hero.lead, 376, heroY + 72, 135, 8, 10.5, 5, { color: colors.dim })
 
-  doc.text(profile.posthog.proof.kicker.toUpperCase(), PAGE.margin, 252, 8, 'F2', colors.phOrange)
-  compactTextBlock(doc, profile.posthog.proof.heading, PAGE.margin, 274, 366, 15.5, 17.5, 2, {
+  doc.text(content.proof.kicker.toUpperCase(), PAGE.margin, 252, 8, 'F2', colors.phOrange)
+  compactTextBlock(doc, content.proof.heading, PAGE.margin, 274, 366, 15.5, 17.5, 2, {
     font: 'F4',
     color: colors.ink
   })
 
   const proofCardWidth = 242
-  profile.posthog.proof.rows.forEach((row, index) => {
+  content.proof.rows.forEach((row, index) => {
     const column = index % 2
     const rowIndex = Math.floor(index / 2)
     const x = PAGE.margin + column * (proofCardWidth + 15)
@@ -389,60 +378,39 @@ const drawPosthogCv = (profile: Profile) => {
 
     posthogCard(doc, x, y, proofCardWidth, 66)
     doc.text(row.label.toUpperCase(), x + 12, y + 17, 7, 'F2', colors.phOrange)
-    compactTextBlock(doc, row.heading, x + 12, y + 33, proofCardWidth - 24, 8.4, 10, 2, {
+    compactTextBlock(doc, row.heading, x + 12, y + 33, proofCardWidth - 24, 8.4, 10, 3, {
       font: 'F2',
       color: colors.ink
     })
-    compactTextBlock(doc, row.description, x + 12, y + 54, proofCardWidth - 24, 7, 8.8, 1, { color: colors.dim })
   })
 
-  doc.text(profile.posthog.loop.kicker.toUpperCase(), PAGE.margin, 592, 8, 'F2', colors.phOrange)
-  compactTextBlock(doc, profile.posthog.loop.heading, PAGE.margin, 615, 190, 16, 18, 2, {
+  doc.text(content.loop.kicker.toUpperCase(), PAGE.margin, 592, 8, 'F2', colors.phOrange)
+  compactTextBlock(doc, content.loop.heading, PAGE.margin, 615, 190, 16, 18, 2, {
     font: 'F4',
     color: colors.ink
   })
-  profile.posthog.loop.steps.forEach((step, index) => {
-    const y = 586 + index * 45
-    doc.panel(258, y, 289, 35, colors.paper, colors.ink)
+  content.loop.steps.forEach((step, index) => {
+    const y = 584 + index * 48
+    doc.panel(258, y, 289, 42, colors.paper, colors.ink)
     doc.text(step.label, 272, y + 16, 9.2, 'F2', colors.ink)
-    compactTextBlock(doc, step.description, 350, y + 14, 178, 7.3, 9, 2, { color: colors.dim })
+    compactTextBlock(doc, step.description, 350, y + 14, 178, 7.3, 9, 3, { color: colors.dim })
   })
 
   doc.addPage()
-  posthogHeader(doc, profile, 'Product Engineer / compact CV')
+  posthogHeader(doc, profile, `${roleLabel} / compact CV`)
 
-  doc.text(profile.posthog.ideas.kicker.toUpperCase(), PAGE.margin, 104, 8, 'F2', colors.phOrange)
-  compactTextBlock(doc, profile.posthog.ideas.heading, PAGE.margin, 126, 310, 15.5, 18, 2, {
-    font: 'F4',
-    color: colors.ink
-  })
-
-  profile.posthog.ideas.items.forEach((item, index) => {
-    const column = index % 2
-    const rowIndex = Math.floor(index / 2)
-    const x = PAGE.margin + column * (proofCardWidth + 15)
-    const y = 186 + rowIndex * 78
-
-    doc.panel(x, y, proofCardWidth, 62, colors.paper, colors.ink)
-    compactTextBlock(doc, `> ${item.label}`, x + 12, y + 18, 92, 7.8, 9.6, 2, {
-      font: 'F2',
-      color: colors.phOrange
-    })
-    compactTextBlock(doc, item.description, x + 112, y + 18, proofCardWidth - 126, 7.6, 9.4, 4, { color: colors.ink })
-  })
-
-  doc.text('TRACK RECORD', PAGE.margin, 366, 8, 'F2', colors.phOrange)
-  compactTextBlock(doc, profile.track.heading, PAGE.margin, 388, 430, 15, 17, 2, {
+  doc.text('TRACK RECORD', PAGE.margin, 104, 8, 'F2', colors.phOrange)
+  compactTextBlock(doc, profile.track.heading, PAGE.margin, 126, 430, 15, 17, 2, {
     font: 'F4',
     color: colors.ink
   })
 
   profile.track.experience.slice(0, 5).forEach((item, index) => {
-    const y = 448 + index * 54
+    const y = 190 + index * 94
     doc.text(item.year, PAGE.margin, y, 7.2, 'F2', colors.dim)
     doc.text(`${item.role} / ${item.org}`, 142, y, 9, 'F2', colors.ink)
-    compactTextBlock(doc, item.description, 142, y + 13, 375, 7.4, 9.2, 3, { color: colors.dim })
-    doc.line(PAGE.margin, y + 43, PAGE.width - PAGE.margin, y + 43, colors.ink, 0.65)
+    compactTextBlock(doc, item.description, 142, y + 14, 375, 7.4, 9.2, 6, { color: colors.dim })
+    doc.line(PAGE.margin, y + 74, PAGE.width - PAGE.margin, y + 74, colors.ink, 0.65)
   })
 
   doc.panel(PAGE.margin, 746, 499, 54, colors.phOrange, colors.ink, true)
@@ -454,4 +422,4 @@ const drawPosthogCv = (profile: Profile) => {
 }
 
 export const buildCvPdf = (profile: Profile, variant: CvVariant) =>
-  variant === 'posthog' ? drawPosthogCv(profile) : drawGeneralCv(profile)
+  variant === 'general' ? drawGeneralCv(profile) : drawPosthogCv(profile, variant)
