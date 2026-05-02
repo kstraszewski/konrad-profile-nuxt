@@ -4,7 +4,10 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
     public: {
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://konradstraszewski.com'
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://konradstraszewski.com',
+      posthogPublicKey: 'phc_B4WbaRJdBKtTZgC6QQhPJN2uN8HzCfxDXE8HkjqjVuWW',
+      posthogHost: 'https://eu.i.posthog.com',
+      posthogDefaults: '2026-01-30'
     }
   },
   routeRules: {
@@ -16,7 +19,12 @@ export default defineNuxtConfig({
   },
   nitro: {
     prerender: {
-      routes: ['/api/cv/general.pdf', '/api/cv/posthog.pdf', '/robots.txt', '/sitemap.xml']
+      routes: [
+        '/api/cv/general.pdf',
+        '/api/cv/posthog.pdf',
+        '/robots.txt',
+        '/sitemap.xml'
+      ]
     }
   },
   app: {
