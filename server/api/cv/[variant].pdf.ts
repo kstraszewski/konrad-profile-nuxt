@@ -5,16 +5,20 @@ export default defineEventHandler((event) => {
   const requestPath = event.node.req.url ?? ''
   const rawVariant = `${event.context.params?.variant ?? ''} ${requestPath}`.toLowerCase()
   const variant = rawVariant.includes('posthog')
-    ? rawVariant.includes('pm')
-      ? 'posthog-pm'
-      : 'posthog-pe'
+    ? rawVariant.includes('ai-research') || rawVariant.includes('research')
+      ? 'posthog-ai-research'
+      : rawVariant.includes('pm')
+        ? 'posthog-pm'
+        : 'posthog-pe'
     : 'general'
   const filename =
-    variant === 'posthog-pm'
-      ? 'Konrad-Straszewski-CV-PostHog-PM.pdf'
-      : variant === 'posthog-pe'
-        ? 'Konrad-Straszewski-CV-PostHog-PE.pdf'
-        : 'Konrad-Straszewski-CV.pdf'
+    variant === 'posthog-ai-research'
+      ? 'Konrad-Straszewski-CV-PostHog-AI-Research-Engineer.pdf'
+      : variant === 'posthog-pm'
+        ? 'Konrad-Straszewski-CV-PostHog-PM.pdf'
+        : variant === 'posthog-pe'
+          ? 'Konrad-Straszewski-CV-PostHog-PE.pdf'
+          : 'Konrad-Straszewski-CV.pdf'
   const disposition = requestPath.includes('preview=1') || requestPath.includes('inline=1') ? 'inline' : 'attachment'
 
   setHeader(event, 'Content-Type', 'application/pdf')

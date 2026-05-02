@@ -1,6 +1,6 @@
 type Profile = typeof import('../../app/data/profile').profile
-type CvVariant = 'general' | 'posthog-pe' | 'posthog-pm'
-type PosthogCvContent = Profile['posthog'] | Profile['posthogPm']
+type CvVariant = 'general' | 'posthog-pe' | 'posthog-pm' | 'posthog-ai-research'
+type PosthogCvContent = Profile['posthog'] | Profile['posthogPm'] | Profile['posthogAiResearch']
 type Color = [number, number, number]
 
 const PAGE = {
@@ -346,8 +346,18 @@ const posthogCard = (doc: PdfDoc, x: number, y: number, width: number, height: n
 
 const drawPosthogCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>) => {
   const doc = new PdfDoc(variant)
-  const content: PosthogCvContent = variant === 'posthog-pm' ? profile.posthogPm : profile.posthog
-  const roleLabel = variant === 'posthog-pm' ? 'Product Manager' : 'Product Engineer'
+  const content: PosthogCvContent =
+    variant === 'posthog-ai-research'
+      ? profile.posthogAiResearch
+      : variant === 'posthog-pm'
+        ? profile.posthogPm
+        : profile.posthog
+  const roleLabel =
+    variant === 'posthog-ai-research'
+      ? 'AI Research Engineer'
+      : variant === 'posthog-pm'
+        ? 'Product Manager'
+        : 'Product Engineer'
 
   posthogHeader(doc, profile, `${roleLabel} / PostHog CV variant`)
 

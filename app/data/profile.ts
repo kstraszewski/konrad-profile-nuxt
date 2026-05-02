@@ -478,6 +478,11 @@ export const profile = {
         label: 'PostHog Product Manager',
         description: 'PDF pod rolę PM ex-founder / ex-product engineer',
         href: '/api/cv/posthog-pm.pdf'
+      },
+      {
+        label: 'PostHog AI Research Engineer',
+        description: 'PDF pod applied AI, product data i research loops',
+        href: '/api/cv/posthog-ai-research.pdf'
       }
     ]
   },
@@ -818,5 +823,174 @@ export const profile = {
       ]
     },
     contactHeading: 'If PostHog needs a PM who used to build the product, we should talk.'
+  },
+  posthogAiResearch: {
+    title: 'Konrad Straszewski for PostHog AI Research Engineer',
+    description:
+      'A PostHog-inspired CV variant for the AI Research Engineer role: applied AI systems, retrieval, product data loops, evals, MCP, and AI-native product surfaces.',
+    hero: {
+      kicker: 'Application page / AI Research Engineer',
+      headline: 'I build the product-data loops that make AI systems useful.',
+      lead:
+        'Applied AI systems fit: retrieval, evals, instrumentation, MCP/tool access, user behavior evidence, and product surfaces around models.'
+    },
+    panel: {
+      file: 'candidate.ai-research-fit',
+      scoreLabel: 'Role match',
+      scoreValue: 'Applied AI systems + product data',
+      pizzaBadge: {
+        question: 'Does pineapple belong on pizza?',
+        percent: '100%',
+        answer: 'NO!'
+      },
+      facts: [
+        { label: 'Location', value: 'Szczecin, Poland - GMT+1/+2' },
+        { label: 'Mode', value: 'Data -> evals -> prototype -> ship -> learn' },
+        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
+        { label: 'Bias', value: 'Research should survive contact with users' }
+      ]
+    },
+    relationship: {
+      kicker: 'PostHog AI fit',
+      heading: 'The role maps to the edge I am already studying and building around.',
+      copy:
+        'PostHog describes self-driving product, session replay analysis, user behavior prediction, and synthetic user testing. My strongest fit is the applied AI layer around that: turning product behavior, recordings, events, retrieval, evals, and tool access into systems that can be tested, shipped, and improved with real users.',
+      cards: [
+        {
+          label: 'Replay/data',
+          title: 'I understand product behavior loops',
+          description:
+            'I have used PostHog recordings, funnels, cohorts, and instrumentation as an operating surface for product and engineering decisions.'
+        },
+        {
+          label: 'Retrieval',
+          title: 'Worked on large knowledge systems',
+          description:
+            'Collaborated on retrieval-heavy AI for a Dubai shopping mall network, with vector search, large knowledge bases, and practical operational context.'
+        },
+        {
+          label: 'Agents',
+          title: 'Studying sandboxed and tool-using agents',
+          description:
+            'My current research thread is MCP apps, agent sandboxes, model-native interfaces, realtime context, and AI-to-UI product surfaces.'
+        },
+        {
+          label: 'Shipping',
+          title: 'I care about models in the product loop',
+          description:
+            'The useful question is not only model quality. It is what data it sees, how it is evaluated, how users correct it, and how the product changes.'
+        }
+      ]
+    },
+    fit: {
+      kicker: 'Why this AI role',
+      heading: 'I want to work where AI research meets product behavior at massive scale.',
+      cards: [
+        {
+          index: '01',
+          heading: 'Session replay as a learning surface',
+          description:
+            'PostHog has DOM mutations, recordings, errors, events, and customer context. That is unusually rich material for finding friction, breakage, and intent.'
+        },
+        {
+          index: '02',
+          heading: 'Prediction should stay grounded',
+          description:
+            'Behavior prediction is only useful if it connects back to observed product reality: cohorts, drop-offs, revenue, recordings, and the next user-visible change.'
+        },
+        {
+          index: '03',
+          heading: 'Synthetic users are product infrastructure',
+          description:
+            'If synthetic user testing works, it becomes part of how teams ship. That needs evals, product taste, instrumentation, and feedback loops.'
+        },
+        {
+          index: '04',
+          heading: 'Research has to ship',
+          description:
+            'I am strongest where AI work becomes a system: data, prototype, eval, product surface, support path, and iteration from real usage.'
+        }
+      ]
+    },
+    proof: {
+      kicker: 'Proof points',
+      heading: 'Applied AI, retrieval, product data, and shipping judgment.',
+      rows: [
+        {
+          label: 'AI adoption',
+          heading: 'Lead practical AI adoption across a product organization.',
+          description:
+            'Strategy, tooling, training, KPIs, internal copilots, workflows, and changing how teams actually build with AI.'
+        },
+        {
+          label: 'Retrieval',
+          heading: 'Collaborated on retrieval-heavy AI across large knowledge bases.',
+          description:
+            'Vector search, operational context, large-scale knowledge systems, and real-world AI delivery for MAF in Dubai.'
+        },
+        {
+          label: 'PostHog',
+          heading: 'Implemented PostHog and used behavior data as product evidence.',
+          description:
+            'Funnels, cohorts, recordings, feature flags, MCP workflows, instrumentation, and evidence-first decisions.'
+        },
+        {
+          label: 'AI product',
+          heading: 'Built jasne.ai as a 0->1 vertical AI product.',
+          description:
+            'Product strategy, UX, code, infrastructure, Gemini, Vercel AI SDK, Supabase, distribution, and iteration.'
+        },
+        {
+          label: 'Agents',
+          heading: 'Focused on MCP apps, sandboxed agents, and AI-native interfaces.',
+          description:
+            'The same product direction PostHog AI is moving toward: tool access, skills, traces, context, and model-native workflows.'
+        },
+        {
+          label: 'Data / stack',
+          heading: 'Comfortable around SQL/data flows, instrumentation, and AI SDKs.',
+          description:
+            'TypeScript, Vue/Nuxt, Expo, Supabase, SQL/data flows, PostHog, LangChain, Gemini/OpenAI SDKs, and product UX.'
+        }
+      ]
+    },
+    loop: {
+      kicker: 'How I work',
+      heading: 'The AI research loop I would bring.',
+      steps: [
+        { label: 'Frame', description: 'Start from the product behavior: what users do, where they fail, and what signal could make the product smarter.' },
+        { label: 'Instrument', description: 'Make the loop observable with events, recordings, traces, cohorts, and the smallest useful dataset.' },
+        { label: 'Evaluate', description: 'Compare outputs against real tasks, edge cases, user corrections, and product-quality thresholds.' },
+        { label: 'Ship', description: 'Turn research into a product surface, then keep improving it from usage, support context, and failures.' }
+      ]
+    },
+    ideas: {
+      kicker: 'What I would explore',
+      heading: 'AI research directions I would want to test with PostHog data.',
+      file: 'posthog/ai-research-notes.md',
+      items: [
+        {
+          label: 'Replay friction model',
+          description:
+            'learn from DOM mutations, errors, recordings, and events to classify confusing flows, broken states, and likely user intent.'
+        },
+        {
+          label: 'Behavior prediction evals',
+          description:
+            'build eval sets around drop-offs, activation, conversion, and retention so predictions are judged against product reality.'
+        },
+        {
+          label: 'Synthetic user runs',
+          description:
+            'simulate critical workflows, compare synthetic behavior to real users, and surface regressions before teams ship.'
+        },
+        {
+          label: 'Model-to-product traces',
+          description:
+            'connect model outputs, tool calls, user corrections, and product events so AI features improve from real usage.'
+        }
+      ]
+    },
+    contactHeading: 'If PostHog wants applied AI research close to product behavior, we should talk.'
   }
 } as const

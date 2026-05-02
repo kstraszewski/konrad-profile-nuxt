@@ -24,6 +24,7 @@ export default defineNuxtConfig({
         '/api/cv/posthog.pdf',
         '/api/cv/posthog-pe.pdf',
         '/api/cv/posthog-pm.pdf',
+        '/api/cv/posthog-ai-research.pdf',
         '/robots.txt',
         '/sitemap.xml'
       ]

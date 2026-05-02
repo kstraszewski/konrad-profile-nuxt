@@ -82,6 +82,10 @@ const generalPreviewSummary =
   'Product Engineer and AI-native builder with 11 years across product engineering, frontend leadership, and AI adoption.'
 
 const downloadName = (label) => {
+  if (label.includes('AI Research')) {
+    return 'Konrad-Straszewski-CV-PostHog-AI-Research-Engineer.pdf'
+  }
+
   if (label.includes('Product Manager')) {
     return 'Konrad-Straszewski-CV-PostHog-PM.pdf'
   }
@@ -93,24 +97,37 @@ const downloadName = (label) => {
   return 'Konrad-Straszewski-CV.pdf'
 }
 const isPosthogDownload = (label) => label.includes('PostHog')
+const isPosthogAiResearchDownload = (label) => label.includes('AI Research')
 const isPosthogPmDownload = (label) => label.includes('Product Manager')
-const posthogPreview = (label) =>
-  isPosthogPmDownload(label)
-    ? {
-        small: 'Application page / Product Manager',
-        headline: 'I turn users, data, and commercial context into better product bets.'
-      }
-    : {
-        small: 'Application page / Product Engineer',
-        headline: 'I build the product, instrument the truth, then keep shipping.'
-      }
+const posthogPreview = (label) => {
+  if (isPosthogAiResearchDownload(label)) {
+    return {
+      small: 'Application page / AI Research Engineer',
+      headline: 'I build the product-data loops that make AI systems useful.'
+    }
+  }
+
+  if (isPosthogPmDownload(label)) {
+    return {
+      small: 'Application page / Product Manager',
+      headline: 'I turn users, data, and commercial context into better product bets.'
+    }
+  }
+
+  return {
+    small: 'Application page / Product Engineer',
+    headline: 'I build the product, instrument the truth, then keep shipping.'
+  }
+}
 
 const onDownload = (label) => {
-  const variant = isPosthogPmDownload(label)
-    ? 'posthog-pm'
-    : label.includes('Product Engineer')
-      ? 'posthog-pe'
-      : 'general'
+  const variant = isPosthogAiResearchDownload(label)
+    ? 'posthog-ai-research'
+    : isPosthogPmDownload(label)
+      ? 'posthog-pm'
+      : label.includes('Product Engineer')
+        ? 'posthog-pe'
+        : 'general'
 
   posthog?.capture('cv_downloaded', {
     variant,
@@ -139,7 +156,7 @@ useRouteSeo('/cv')
   justify-content: space-between;
   gap: 32px;
   min-width: 0;
-  max-width: 1280px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 24px 8vw;
 }
@@ -178,7 +195,7 @@ useRouteSeo('/cv')
 }
 
 .cv-previews {
-  max-width: 1280px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 46px 8vw 96px;
 }
@@ -210,8 +227,8 @@ useRouteSeo('/cv')
 
 .cv-preview-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
   min-width: 0;
 }
 
@@ -229,7 +246,7 @@ useRouteSeo('/cv')
   justify-content: space-between;
   gap: 18px;
   min-width: 0;
-  padding: 22px;
+  padding: 20px;
   border-bottom: 1px solid var(--rule);
 }
 
@@ -240,7 +257,7 @@ useRouteSeo('/cv')
 .cv-preview__header h2 {
   margin: 6px 0;
   font-family: var(--font-headline);
-  font-size: 1.45rem;
+  font-size: 1.32rem;
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1.05;
@@ -273,7 +290,7 @@ useRouteSeo('/cv')
   position: relative;
   min-width: 0;
   min-height: 520px;
-  padding: 30px;
+  padding: 26px;
   border-top: 1px solid var(--rule);
   background: #fbfbfa;
   overflow: hidden;
@@ -313,7 +330,7 @@ useRouteSeo('/cv')
 .cv-mini-general__head strong {
   max-width: 280px;
   font-family: var(--font-headline);
-  font-size: 2.05rem;
+  font-size: 1.8rem;
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1;
@@ -414,7 +431,7 @@ useRouteSeo('/cv')
   max-width: 320px;
   padding: 22px 14px 28px;
   font-family: var(--font-headline);
-  font-size: 1.7rem;
+  font-size: 1.46rem;
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1.02;
@@ -437,7 +454,7 @@ useRouteSeo('/cv')
   text-transform: uppercase;
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1280px) {
   .cv-preview-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
