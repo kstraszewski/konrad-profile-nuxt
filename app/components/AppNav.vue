@@ -32,7 +32,7 @@
         <a v-for="item in items" :key="item.href" :href="navHref(item.href)" class="nav__link" @click="mobileMenuOpen = false">
           {{ item.label }}
         </a>
-        <a class="nav__cta" :href="sectionHref('#contact')" @click="mobileMenuOpen = false">Let's talk &rarr;</a>
+        <a class="nav__cta" :href="sectionHref('#contact')" @click="onLetsTalkClick">Let's talk &rarr;</a>
       </nav>
     </div>
 
@@ -43,6 +43,7 @@
 <script setup>
 import { profile } from '~/data/profile'
 
+const posthog = usePostHog()
 const route = useRoute()
 const scrolled = ref(false)
 const progress = ref(0)
@@ -53,6 +54,11 @@ const items = profile.nav.main
 const homeHref = computed(() => (route.path === '/' ? '#top' : '/'))
 const sectionHref = (hash) => (route.path === '/' ? hash : `/${hash}`)
 const navHref = (href) => (href.startsWith('#') ? sectionHref(href) : href)
+
+const onLetsTalkClick = () => {
+  mobileMenuOpen.value = false
+  posthog?.capture('nav_lets_talk_clicked')
+}
 
 let removeScrollListener = null
 let removeKeydownListener = null

@@ -24,7 +24,7 @@
               <p>{{ option.description }}</p>
             </div>
 
-            <a :href="option.href" :download="downloadName(option.label)">Download</a>
+            <a :href="option.href" :download="downloadName(option.label)" @click="onDownload(option.label)">Download</a>
           </div>
 
           <div
@@ -74,9 +74,22 @@
 <script setup>
 import { profile } from '~/data/profile'
 
+const posthog = usePostHog()
+
 const downloadName = (label) =>
   label.includes('PostHog') ? 'Konrad-Straszewski-CV-PostHog.pdf' : 'Konrad-Straszewski-CV.pdf'
 const isPosthogDownload = (label) => label.includes('PostHog')
+
+const onDownload = (label) => {
+  posthog?.capture('cv_downloaded', {
+    variant: isPosthogDownload(label) ? 'posthog' : 'general',
+    label,
+  })
+}
+
+onMounted(() => {
+  posthog?.capture('cv_page_viewed')
+})
 
 useRouteSeo('/cv')
 </script>

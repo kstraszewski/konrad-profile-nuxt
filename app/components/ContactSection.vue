@@ -24,6 +24,7 @@
           :target="item.external ? '_blank' : undefined"
           :rel="item.external ? 'noreferrer' : undefined"
           class="contact__link"
+          @click="onContactLinkClick(item)"
         >
           <span class="contact__link-label">{{ item.label }}</span>
           <span class="contact__link-value">{{ item.value }} <span aria-hidden="true">&nearr;</span></span>
@@ -40,7 +41,16 @@
 <script setup>
 import { profile } from '~/data/profile'
 
+const posthog = usePostHog()
+
 const contactLinks = [profile.links.email, profile.links.phone, profile.links.github, profile.links.linkedin]
+
+const onContactLinkClick = (item) => {
+  posthog?.capture('contact_link_clicked', {
+    label: item.label,
+    href: item.href,
+  })
+}
 </script>
 
 <style scoped>

@@ -32,7 +32,7 @@
         {{ profile.hero.intro.path }}
         <strong>{{ profile.hero.intro.role }}</strong>. {{ profile.hero.intro.mandate }}
         {{ profile.hero.intro.side }}
-        <NuxtLink to="/jasne.ai" class="link-underline hero__brand hero__brand--jasne">
+        <NuxtLink to="/jasne.ai" class="link-underline hero__brand hero__brand--jasne" @click="onJasneLinkClick">
           {{ profile.hero.intro.sideBuild }}
         </NuxtLink>.
         {{ profile.hero.intro.mafLead }}
@@ -79,6 +79,12 @@
 
 <script setup>
 import { profile } from '~/data/profile'
+
+const posthog = usePostHog()
+
+const onJasneLinkClick = () => {
+  posthog?.capture('hero_jasne_link_clicked')
+}
 
 const tick = ref(0)
 let intervalId = null

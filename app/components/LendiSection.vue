@@ -7,6 +7,7 @@
           class="lendi__accent"
           target="_blank"
           rel="noreferrer"
+          @click="onLendiClick"
         >
           {{ profile.lendi.heading.accent }}
         </a>
@@ -41,6 +42,12 @@
 
 <script setup>
 import { profile } from '~/data/profile'
+
+const posthog = usePostHog()
+
+const onLendiClick = () => {
+  posthog?.capture('lendi_website_clicked')
+}
 </script>
 
 <style scoped>

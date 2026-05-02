@@ -8,7 +8,7 @@
         <div class="jasne-page__kicker">Case study &middot; 2024 &rarr; now</div>
         <h1>{{ profile.jasne.name }}</h1>
         <p>{{ profile.jasne.intro }}</p>
-        <a class="jasne-page__live" href="https://jasne.ai" target="_blank" rel="noreferrer">
+        <a class="jasne-page__live" href="https://jasne.ai" target="_blank" rel="noreferrer" @click="onLiveProductClick">
           Live product &nearr;
         </a>
       </section>
@@ -33,6 +33,16 @@
 
 <script setup>
 import { profile } from '~/data/profile'
+
+const posthog = usePostHog()
+
+const onLiveProductClick = () => {
+  posthog?.capture('jasne_live_product_clicked')
+}
+
+onMounted(() => {
+  posthog?.capture('jasne_case_study_viewed')
+})
 
 useRouteSeo('/jasne.ai')
 </script>

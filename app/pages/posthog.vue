@@ -19,13 +19,13 @@
           {{ profile.posthog.hero.lead }}
         </p>
         <div class="posthog-hero__actions">
-          <a class="posthog-button posthog-button--primary" :href="profile.links.email.href">
+          <a class="posthog-button posthog-button--primary" :href="profile.links.email.href" @click="onHeroCta('email')">
             Email me
           </a>
-          <a class="posthog-button" href="/api/cv/posthog.pdf" download="Konrad-Straszewski-CV-PostHog.pdf">
+          <a class="posthog-button" href="/api/cv/posthog.pdf" download="Konrad-Straszewski-CV-PostHog.pdf" @click="onHeroCta('download_cv')">
             Download CV
           </a>
-          <a class="posthog-button" :href="profile.links.github.href" target="_blank" rel="noreferrer">
+          <a class="posthog-button" :href="profile.links.github.href" target="_blank" rel="noreferrer" @click="onHeroCta('github')">
             GitHub
           </a>
         </div>
@@ -168,6 +168,7 @@
           :href="item.href"
           :target="item.external ? '_blank' : undefined"
           :rel="item.external ? 'noreferrer' : undefined"
+          @click="onContactLinkClick(item)"
         >
           <span>{{ item.label }}</span>
           <strong>{{ item.value }}</strong>
@@ -184,7 +185,24 @@
 <script setup>
 import { profile } from '~/data/profile'
 
+const posthog = usePostHog()
+
 const posthogContactLinks = [profile.links.email, profile.links.github, profile.links.linkedin, profile.links.jasne]
+
+const onHeroCta = (action) => {
+  posthog?.capture('posthog_hero_cta_clicked', { action })
+}
+
+const onContactLinkClick = (item) => {
+  posthog?.capture('posthog_contact_link_clicked', {
+    label: item.label,
+    href: item.href,
+  })
+}
+
+onMounted(() => {
+  posthog?.capture('posthog_page_viewed')
+})
 
 useRouteSeo('/posthog')
 </script>
