@@ -72,6 +72,14 @@ export const seoPages: SeoPage[] = [
     lastmod: '2026-05-04',
     index: false,
     sitemap: false
+  },
+  {
+    path: '/n8n',
+    title: profile.n8n.title,
+    description: profile.n8n.description,
+    lastmod: '2026-05-04',
+    index: false,
+    sitemap: false
   }
 ]
 

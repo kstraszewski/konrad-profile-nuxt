@@ -22,14 +22,29 @@
           <a class="job-pitch-button job-pitch-button--primary" :href="profile.links.email.href" @click="onHeroCta('email')">
             Email me
           </a>
-          <a class="job-pitch-button" :href="cvHref" :download="cvDownload" @click="onHeroCta('download_cv')">
-            {{ cvLabel }}
+          <a
+            v-for="(option, index) in resolvedCvOptions"
+            :key="option.href"
+            class="job-pitch-button"
+            :href="option.href"
+            :download="option.download"
+            @click="onHeroCta(option.action || `download_cv_${index + 1}`)"
+          >
+            {{ option.label }}
           </a>
           <NuxtLink class="job-pitch-button" to="/mcp" @click="onHeroCta('mcp')">
             MCP CV
           </NuxtLink>
-          <a v-if="jobHref" class="job-pitch-button" :href="jobHref" target="_blank" rel="noreferrer" @click="onHeroCta('job_link')">
-            {{ jobLabel }}
+          <a
+            v-for="(option, index) in resolvedJobLinks"
+            :key="option.href"
+            class="job-pitch-button"
+            :href="option.href"
+            target="_blank"
+            rel="noreferrer"
+            @click="onHeroCta(option.action || `job_link_${index + 1}`)"
+          >
+            {{ option.label }}
           </a>
           <a class="job-pitch-button" :href="profile.links.github.href" target="_blank" rel="noreferrer" @click="onHeroCta('github')">
             GitHub
@@ -218,6 +233,10 @@ const props = defineProps({
     type: String,
     default: '/api/cv/general.pdf'
   },
+  cvOptions: {
+    type: Array,
+    default: () => []
+  },
   cvLabel: {
     type: String,
     default: 'CV'
@@ -229,6 +248,10 @@ const props = defineProps({
   jobHref: {
     type: String,
     default: ''
+  },
+  jobLinks: {
+    type: Array,
+    default: () => []
   },
   jobLabel: {
     type: String,
@@ -247,6 +270,35 @@ const props = defineProps({
 const posthog = usePostHog()
 
 const contactLinks = [profile.links.email, profile.links.github, profile.links.linkedin, profile.links.jasne]
+const resolvedCvOptions = computed(() => {
+  if (props.cvOptions.length) {
+    return props.cvOptions
+  }
+
+  return [
+    {
+      href: props.cvHref,
+      label: props.cvLabel,
+      download: props.cvDownload,
+      action: 'download_cv'
+    }
+  ]
+})
+const resolvedJobLinks = computed(() => {
+  if (props.jobLinks.length) {
+    return props.jobLinks
+  }
+
+  return props.jobHref
+    ? [
+        {
+          href: props.jobHref,
+          label: props.jobLabel,
+          action: 'job_link'
+        }
+      ]
+    : []
+})
 
 const onHeroCta = (action) => {
   posthog?.capture(`${props.analyticsPrefix}_hero_cta_clicked`, { action })

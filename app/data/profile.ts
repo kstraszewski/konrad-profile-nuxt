@@ -64,6 +64,7 @@ export const profile = {
       { label: 'Lendi', href: '#lendi' },
       { label: 'jasne.ai', href: '/jasne.ai' },
       { label: 'MCP', href: '/mcp' },
+      { label: 'n8n', href: '/n8n' },
       { label: 'Linear', href: '/linear' },
       { label: 'Medusa', href: '/medusa' },
       { label: 'Principles', href: '#principles' },
@@ -500,6 +501,16 @@ export const profile = {
         label: 'PostHog AI Research Engineer',
         description: 'PDF pod applied AI, product data i research loops',
         href: '/api/cv/posthog-ai-research.pdf'
+      },
+      {
+        label: 'n8n Sr AI Engineer',
+        description: 'PDF pod AI orchestration, agents, Claude/Codex workflows i TS/Vue/Node',
+        href: '/api/cv/n8n-ai-engineer.pdf'
+      },
+      {
+        label: 'n8n Senior Product Engineer',
+        description: 'PDF pod Product Engineer TS/Node/Vue w open workflow orchestration',
+        href: '/api/cv/n8n-product-engineer.pdf'
       }
     ]
   },
@@ -1355,5 +1366,334 @@ export const profile = {
       ]
     },
     contactHeading: 'If Medusa needs a product engineer who can build the platform and the workflow around it, we should talk.'
+  },
+  n8n: {
+    company: 'n8n',
+    title: 'Konrad Straszewski for n8n AI and Product Engineering',
+    description:
+      'An n8n-tailored application page for AI orchestration, product engineering, agents, workflow automation, TypeScript/Vue/Node, and AI-native builder work.',
+    roles: {
+      aiEngineer: {
+        href: 'https://jobs.ashbyhq.com/n8n/d195a389-6af5-4b95-82e5-2258953c7297/'
+      },
+      productEngineer: {
+        href: 'https://jobs.ashbyhq.com/n8n/896c58a8-0388-4037-b265-82b15633a568/'
+      }
+    },
+    hero: {
+      kicker: 'Application page / Sr AI Engineer + Senior Product Engineer',
+      headline: 'I build AI workflows, product surfaces, and the operating habits that make them real.',
+      lead:
+        'n8n sits exactly where my current work is pointed: workflow orchestration, AI agents, developer-grade automation, and product engineers who use AI tools as leverage without lowering the engineering bar.'
+    },
+    panel: {
+      file: 'candidate.n8n-fit',
+      scoreLabel: 'Role match',
+      scoreValue: 'AI orchestration builder + TS/Vue product engineer',
+      badge: {
+        label: 'n8n-shaped signal',
+        value: 'AI workflows in production',
+        description:
+          'I am already working on the shift from isolated AI demos to real company workflows: tools, agents, MCP, product surfaces, and measurable adoption.'
+      },
+      facts: [
+        { label: 'Location', value: 'Szczecin, Poland - Europe remote' },
+        { label: 'Stack', value: 'TypeScript, Vue/Nuxt, Node-adjacent product systems, Supabase, PostHog, AI SDKs' },
+        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
+        { label: 'Mode', value: 'Prototype -> orchestrate -> ship -> instrument -> improve' }
+      ]
+    },
+    relationship: {
+      kicker: 'n8n fit',
+      heading: 'The company is building the category I have been moving teams toward.',
+      copy:
+        'n8n is not just workflow automation. It is the operating layer for technical teams that need code-level flexibility, no-code speed, integrations, and AI-native orchestration. That matches my Lendi work: practical adoption, internal copilots, agents, training, workflows, and turning engineers into product builders.',
+      cards: [
+        {
+          label: 'AI',
+          title: 'I make AI operational',
+          description:
+            'My current job is to move AI from hype into daily work: tooling, training, workflows, internal copilots, adoption KPIs, and production habits.'
+        },
+        {
+          label: 'Flow',
+          title: 'I think in workflows',
+          description:
+            'The useful product question is often not the model. It is the chain of tools, data, approvals, retries, fallbacks, and product UI around it.'
+        },
+        {
+          label: 'Stack',
+          title: 'Vue/Nuxt is home territory',
+          description:
+            'Seven years of Vue/Nuxt product work and frontend leadership give me a strong base for n8n product engineering without becoming frontend-only.'
+        },
+        {
+          label: 'Builder',
+          title: 'I ship without a handoff',
+          description:
+            'jasne.ai is a 0->1 vertical AI product I own across product strategy, UX, code, infra, AI integration, distribution, and iteration.'
+        }
+      ]
+    },
+    fit: {
+      kicker: 'Why n8n',
+      heading: 'Workflow orchestration is where AI becomes company behavior.',
+      cards: [
+        {
+          index: '01',
+          heading: 'AI needs orchestration',
+          description:
+            'Prompting is not enough. Useful AI products need tools, context, memory, evals, fallbacks, observability, and a workflow surface people can trust.'
+        },
+        {
+          index: '02',
+          heading: 'Builders need both code and speed',
+          description:
+            'n8n is interesting because it gives technical teams a middle path: fast composition without hiding the power and precision builders need.'
+        },
+        {
+          index: '03',
+          heading: 'I already coach this transition',
+          description:
+            'At Lendi, my work is not only building AI artifacts. It is changing how teams decide, build, measure, and use AI-assisted engineering responsibly.'
+        },
+        {
+          index: '04',
+          heading: 'Product taste still matters',
+          description:
+            'AI workflows only stick when the product makes state, confidence, failure, and next action obvious. That is product engineering work, not just backend plumbing.'
+        }
+      ]
+    },
+    proof: {
+      kicker: 'Proof points',
+      heading: 'Evidence that I can build and operationalize AI-native workflow products.',
+      rows: [
+        {
+          label: 'AI adoption',
+          heading: 'Lead company-wide AI adoption at Lendi.',
+          description:
+            'Strategy, tooling, training, workflows, KPIs, internal copilots, and the product-builder operating model for real teams.'
+        },
+        {
+          label: 'Vue/Nuxt',
+          heading: 'Grew from Vue/Nuxt developer to frontend lead and AI Manager.',
+          description:
+            'Long-term ownership across product surfaces, frontend architecture, mentorship, Nuxt 2/3 migration experience, and production UI.'
+        },
+        {
+          label: 'Agents/MCP',
+          heading: 'Currently exploring agent-native interfaces and MCP apps.',
+          description:
+            'MCP apps, AI-to-UI, sandboxed agents, generated interfaces, tool access, and model-native workflows are part of my current research edge.'
+        },
+        {
+          label: 'jasne.ai',
+          heading: 'Built a vertical AI product end-to-end.',
+          description:
+            'Product strategy, UX, code, infrastructure, AI integration, distribution, and iteration without a product-engineering handoff.'
+        },
+        {
+          label: 'PostHog',
+          heading: 'Use product analytics and MCP as working inputs.',
+          description:
+            'Implemented PostHog in two organizations, used MCP heavily, and pushed product teams toward observable evidence and faster loops.'
+        },
+        {
+          label: 'MAF',
+          heading: 'Worked around retrieval-heavy AI in a real operational context.',
+          description:
+            'Vector search, large knowledge bases, operational context, and practical AI delivery for a Dubai shopping mall network.'
+        }
+      ]
+    },
+    loop: {
+      kicker: 'How I work',
+      heading: 'The n8n-shaped loop I would bring.',
+      steps: [
+        { label: 'Map', description: 'Understand the human workflow, tools, handoffs, data, and where the process fails today.' },
+        { label: 'Build', description: 'Prototype the automation or product surface quickly with strong judgment around scope and reliability.' },
+        { label: 'Harden', description: 'Add evals, validation, retries, observability, and product affordances so the workflow can survive real use.' },
+        { label: 'Adopt', description: 'Measure usage, train the team, improve the workflow, and make the new behavior stick.' }
+      ]
+    },
+    ideas: {
+      kicker: 'What I would explore',
+      heading: 'Product and AI workflow directions I would want to test with n8n users.',
+      file: 'n8n/workflow-notes.md',
+      items: [
+        {
+          label: 'Agent workflow debugger',
+          description:
+            'make tool calls, branches, model outputs, retries, and failure reasons inspectable as a product surface, not hidden logs.'
+        },
+        {
+          label: 'AI-assisted node authoring',
+          description:
+            'help technical users create, test, and harden custom workflow nodes from API docs, examples, and existing company context.'
+        },
+        {
+          label: 'Workflow eval harness',
+          description:
+            'turn production runs, user corrections, and edge cases into repeatable evals for AI-powered automations.'
+        },
+        {
+          label: 'Builder onboarding loops',
+          description:
+            'instrument where technical users get stuck and turn those moments into docs, templates, examples, and product affordances.'
+        }
+      ]
+    },
+    cv: {
+      aiEngineer: {
+        title: 'Konrad Straszewski for n8n Sr AI Engineer',
+        description:
+          'A CV variant for n8n Sr AI Engineer: AI orchestration, agents, Claude/Codex workflows, evals, MCP, product judgment, TypeScript/Vue/Node-adjacent systems.',
+        hero: {
+          kicker: 'CV variant / n8n Sr AI Engineer',
+          headline: 'I turn AI tools, agents, and workflows into production habits.',
+          lead:
+            'Fit for the AI engineering role: practical AI adoption, agent workflows, MCP apps, product instrumentation, and the judgment to use Claude Code/Codex for reliable systems rather than novelty.'
+        },
+        proof: {
+          kicker: 'AI engineer proof',
+          heading: 'Applied AI work close to workflows, tools, evals, and product adoption.',
+          rows: [
+            {
+              label: 'AI adoption',
+              heading: 'Lead company-wide AI adoption at Lendi.',
+              description:
+                'Strategy, tooling, training, KPIs, workflows, internal copilots, and turning AI usage into durable company behavior.'
+            },
+            {
+              label: 'Agents',
+              heading: 'Work on MCP apps, sandboxed agents, and AI-to-UI surfaces.',
+              description:
+                'Current research and building focus: tool access, generated interfaces, agent sandboxes, and model-native workflows.'
+            },
+            {
+              label: 'Claude/Codex',
+              heading: 'Use AI coding agents as part of product engineering practice.',
+              description:
+                'Comfortable with the new builder workflow where judgment, review, evals, and architecture matter more because code generation is cheap.'
+            },
+            {
+              label: 'jasne.ai',
+              heading: 'Built a vertical AI product from zero.',
+              description:
+                'Product strategy, UX, code, infra, AI integration, distribution, and iteration in one loop.'
+            },
+            {
+              label: 'Retrieval',
+              heading: 'Collaborated on retrieval-heavy AI for MAF.',
+              description:
+                'Vector search, large knowledge bases, operational context, and real-world AI delivery.'
+            },
+            {
+              label: 'Stack',
+              heading: 'TypeScript/Vue/Nuxt product builder with AI SDK range.',
+              description:
+                'Vue/Nuxt, TypeScript, Expo, Supabase, PostHog, Vercel AI SDK, Gemini/OpenAI SDKs, LangChain, MCP.'
+            }
+          ]
+        },
+        loop: {
+          kicker: 'How I work',
+          heading: 'The AI workflow loop I would bring to n8n.',
+          steps: [
+            { label: 'Frame', description: 'Start from the workflow: user intent, tools, data, failure modes, and what should be automated.' },
+            { label: 'Prototype', description: 'Use AI-assisted development to get a real path working fast without confusing speed for quality.' },
+            { label: 'Evaluate', description: 'Add examples, assertions, traces, user corrections, and fallback behavior so the system can be trusted.' },
+            { label: 'Ship', description: 'Turn the prototype into a product surface, instrument usage, and iterate from real runs.' }
+          ]
+        },
+        ideas: {
+          kicker: 'n8n ideas',
+          heading: 'AI engineering areas I would want to explore.',
+          file: 'n8n/ai-engineer-notes.md',
+          items: [
+            { label: 'Workflow evals', description: 'use production runs and user corrections as a living eval set for AI-powered workflow nodes.' },
+            { label: 'Tool-call traces', description: 'make agent decisions, inputs, outputs, retries, and confidence visible to builders.' },
+            { label: 'AI node hardening', description: 'help users move from a working prompt to a reliable automation with validation and fallbacks.' },
+            { label: 'MCP patterns', description: 'package common MCP server/app patterns for builders who want model-accessible workflows.' }
+          ]
+        }
+      },
+      productEngineer: {
+        title: 'Konrad Straszewski for n8n Senior Product Engineer',
+        description:
+          'A CV variant for n8n Senior Product Engineer: TypeScript, Vue/Nuxt, product ownership, workflow automation, AI-native builder practice, and end-to-end shipping.',
+        hero: {
+          kicker: 'CV variant / n8n Senior Product Engineer',
+          headline: 'I build product surfaces for technical users and keep the workflow honest.',
+          lead:
+            'Fit for the TS/Node/Vue product role: deep Vue/Nuxt history, product ownership, workflow thinking, AI-native tooling, and enough full-stack range to own features end-to-end.'
+        },
+        proof: {
+          kicker: 'Product engineer proof',
+          heading: 'Product engineering range across UI, workflows, AI, and adoption.',
+          rows: [
+            {
+              label: 'Vue/Nuxt',
+              heading: 'Seven years on Vue/Nuxt product surfaces before moving into AI.',
+              description:
+                'Frontend development, frontend leadership, Nuxt 2/3 migration experience, mentoring, and production UX ownership.'
+            },
+            {
+              label: 'Lendi',
+              heading: 'Helped scale Lendi through long-term product engineering ownership.',
+              description:
+                "B2B/B2C financial product surfaces, stack decisions, mentoring, R&D, and later AI adoption inside Poland's #1 broker."
+            },
+            {
+              label: 'AI adoption',
+              heading: 'Moved teams from tickets toward product-builder workflows.',
+              description:
+                'Training, tooling, workflows, internal copilots, and operating model changes for engineers using AI responsibly.'
+            },
+            {
+              label: 'jasne.ai',
+              heading: 'Built a vertical AI product end-to-end.',
+              description:
+                'Product strategy, UX, code, infrastructure, AI integration, distribution, and iteration.'
+            },
+            {
+              label: 'PostHog',
+              heading: 'Use product data and MCP to keep decisions grounded.',
+              description:
+                'Two implementations, MCP usage, funnels, cohorts, recordings, flags, and product evidence as part of the build loop.'
+            },
+            {
+              label: 'Systems',
+              heading: 'Comfortable around product data, SQL-backed systems, and AI SDKs.',
+              description:
+                'Supabase, PostHog, SQL/data flows, Vercel AI SDK, Gemini/OpenAI, LangChain, deployment, instrumentation.'
+            }
+          ]
+        },
+        loop: {
+          kicker: 'How I work',
+          heading: 'The product engineering loop I would bring to n8n.',
+          steps: [
+            { label: 'Understand', description: 'Get close to the technical user and the real automation problem they are trying to solve.' },
+            { label: 'Shape', description: 'Turn the workflow into an interface, node behavior, docs, and product constraints that make sense.' },
+            { label: 'Ship', description: 'Build across the product surface, instrument the path, and release the smallest useful version.' },
+            { label: 'Improve', description: 'Use user behavior, support context, and product analytics to tighten the workflow.' }
+          ]
+        },
+        ideas: {
+          kicker: 'n8n ideas',
+          heading: 'Product areas I would want to explore.',
+          file: 'n8n/product-engineer-notes.md',
+          items: [
+            { label: 'Node creation UX', description: 'make custom node creation faster without hiding the API and schema details technical users need.' },
+            { label: 'Workflow debugging', description: 'turn failed runs into clear timelines with inputs, outputs, retries, and next actions.' },
+            { label: 'Templates from usage', description: 'detect repeated workflow shapes and turn them into high-quality templates and docs.' },
+            { label: 'AI-assisted docs', description: 'turn support patterns and run failures into docs that teach users while they build.' }
+          ]
+        }
+      }
+    },
+    contactHeading: 'If n8n wants a builder who can bridge product engineering and AI orchestration, we should talk.'
   }
 } as const
