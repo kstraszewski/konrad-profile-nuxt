@@ -10,6 +10,7 @@ export default defineEventHandler((event) => {
     'User-agent: *',
     'Allow: /',
     'Disallow: /api/',
+    'Disallow: /mcp/server',
     '',
     `Sitemap: ${getAbsoluteUrl(siteUrl, '/sitemap.xml')}`,
     ''

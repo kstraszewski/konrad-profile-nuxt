@@ -46,6 +46,11 @@ export const profile = {
       value: 'jasne.ai',
       href: '/jasne.ai'
     },
+    mcp: {
+      label: 'MCP',
+      value: 'Talk to my CV',
+      href: '/mcp'
+    },
     maf: {
       label: 'MAF',
       value: 'majidalfuttaim.com',
@@ -58,6 +63,7 @@ export const profile = {
       { label: 'Now', href: '#now' },
       { label: 'Lendi', href: '#lendi' },
       { label: 'jasne.ai', href: '/jasne.ai' },
+      { label: 'MCP', href: '/mcp' },
       { label: 'Principles', href: '#principles' },
       { label: 'Tech', href: '#technologies' },
       { label: 'Track record', href: '#track' },
@@ -70,6 +76,7 @@ export const profile = {
       { label: 'Fit', href: '#fit' },
       { label: 'Proof', href: '#proof' },
       { label: 'Ideas', href: '#ideas' },
+      { label: 'MCP', href: '/mcp' },
       { label: 'Contact', href: '#contact' }
     ]
   },

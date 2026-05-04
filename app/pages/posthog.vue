@@ -25,6 +25,9 @@
           <a class="posthog-button" href="/api/cv/posthog-pe.pdf" download="Konrad-Straszewski-CV-PostHog-PE.pdf" @click="onHeroCta('download_cv_pe')">
             PE CV
           </a>
+          <NuxtLink class="posthog-button" to="/mcp" @click="onHeroCta('mcp')">
+            MCP CV
+          </NuxtLink>
           <a class="posthog-button" :href="profile.links.github.href" target="_blank" rel="noreferrer" @click="onHeroCta('github')">
             GitHub
           </a>

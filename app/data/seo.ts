@@ -43,6 +43,13 @@ export const seoPages: SeoPage[] = [
     lastmod: '2026-04-30'
   },
   {
+    path: '/mcp',
+    title: 'MCP Server | Talk to Konrad Straszewski CV',
+    description:
+      'Connect a public read-only MCP server for Konrad Straszewski and ask AI clients about his CV, AI leadership, product engineering, jasne.ai, Lendi, and fit for roles.',
+    lastmod: '2026-05-04'
+  },
+  {
     path: '/posthog',
     title: profile.posthog.title,
     description: profile.posthog.description,

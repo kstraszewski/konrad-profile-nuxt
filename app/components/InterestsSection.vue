@@ -18,6 +18,11 @@
           <span class="interests__tag">{{ item.tag }}</span>
         </article>
       </div>
+
+      <NuxtLink class="interests__mcp-link" to="/mcp">
+        <span>Public MCP</span>
+        <strong>Connect an AI client and talk to my CV.</strong>
+      </NuxtLink>
     </TwoCol>
   </section>
 </template>
@@ -57,6 +62,44 @@ import { profile } from '~/data/profile'
 
 .interests__list {
   border-top: 1px solid var(--rule);
+}
+
+.interests__mcp-link {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 32px;
+  align-items: center;
+  min-width: 0;
+  margin-top: 28px;
+  padding: 24px 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  color: var(--ink);
+  text-decoration: none;
+  transition: padding-left 0.15s ease;
+}
+
+.interests__mcp-link span {
+  color: var(--dim);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.interests__mcp-link strong {
+  font-family: var(--font-headline);
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.1;
+}
+
+@media (hover: hover) {
+  .interests__mcp-link:hover {
+    padding-left: 12px;
+  }
 }
 
 .interests__item {
@@ -110,7 +153,8 @@ import { profile } from '~/data/profile'
 
 @media (max-width: 900px) {
   .interests__head,
-  .interests__item {
+  .interests__item,
+  .interests__mcp-link {
     grid-template-columns: 1fr;
   }
 
@@ -135,6 +179,10 @@ import { profile } from '~/data/profile'
 
   .interests__copy h3 {
     font-size: 1.45rem;
+  }
+
+  .interests__mcp-link strong {
+    font-size: 1.55rem;
   }
 
   .interests__item {

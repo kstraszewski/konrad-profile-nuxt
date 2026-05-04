@@ -1,7 +1,18 @@
 export default defineNuxtConfig({
   compatibilityDate: '2026-04-29',
   devtools: { enabled: false },
+  modules: ['@nuxtjs/mcp-toolkit'],
   css: ['~/assets/css/main.css'],
+  mcp: {
+    name: 'Konrad Profile MCP',
+    route: '/mcp/server',
+    browserRedirect: '/mcp',
+    defaultHandlerStrategy: 'all',
+    description:
+      "Public read-only MCP server for recruiters who want to talk to Konrad Straszewski's CV, profile, projects, and AI/product work.",
+    instructions:
+      'Use this server as a read-only profile and CV source. Prefer get_profile_context for direct recruiter questions. Use search and fetch when a ChatGPT connector or research flow needs citation-shaped context. Use the konrad-cv app when the host supports MCP Apps UI and the user wants an interactive CV panel.'
+  },
   runtimeConfig: {
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://konradstraszewski.com',
@@ -12,6 +23,16 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/posthog': {
+      headers: {
+        'X-Robots-Tag': 'noindex, nofollow'
+      }
+    },
+    '/mcp/server': {
+      headers: {
+        'X-Robots-Tag': 'noindex, nofollow'
+      }
+    },
+    '/mcp/server/**': {
       headers: {
         'X-Robots-Tag': 'noindex, nofollow'
       }
