@@ -15,6 +15,8 @@ export const profileFocusOptions = [
   'ai',
   'projects',
   'posthog',
+  'linear',
+  'medusa',
   'contact'
 ] as const
 
@@ -66,6 +68,24 @@ const posthogRoleContexts = [
     summary: profile.posthogAiResearch.description,
     proof: profile.posthogAiResearch.proof.rows,
     ideas: profile.posthogAiResearch.ideas.items
+  }
+]
+
+const targetedRoleContexts = [
+  ...posthogRoleContexts,
+  {
+    id: 'linear-fullstack-engineer',
+    title: profile.linear.title,
+    summary: profile.linear.description,
+    proof: profile.linear.proof.rows,
+    ideas: profile.linear.ideas.items
+  },
+  {
+    id: 'medusa-product-engineer',
+    title: profile.medusa.title,
+    summary: profile.medusa.description,
+    proof: profile.medusa.proof.rows,
+    ideas: profile.medusa.ideas.items
   }
 ]
 
@@ -122,6 +142,14 @@ const allSections = {
     title: 'PostHog-tailored contexts',
     roles: posthogRoleContexts
   },
+  linear: {
+    title: 'Linear-tailored context',
+    role: targetedRoleContexts.find((role) => role.id === 'linear-fullstack-engineer')
+  },
+  medusa: {
+    title: 'Medusa-tailored context',
+    role: targetedRoleContexts.find((role) => role.id === 'medusa-product-engineer')
+  },
   contact: {
     title: 'Contact',
     availability: profile.person.availability,
@@ -136,9 +164,11 @@ const sectionIdsByFocus: Record<ProfileFocus, (keyof typeof allSections)[]> = {
   overview: ['overview', 'experience', 'projects', 'stack', 'contact'],
   cv: ['cv', 'experience', 'stack', 'contact'],
   experience: ['experience', 'projects', 'ai'],
-  ai: ['ai', 'projects', 'stack', 'posthog'],
+  ai: ['ai', 'projects', 'stack', 'posthog', 'linear', 'medusa'],
   projects: ['projects', 'experience', 'stack'],
   posthog: ['posthog', 'experience', 'ai', 'cv', 'contact'],
+  linear: ['linear', 'experience', 'ai', 'cv', 'contact'],
+  medusa: ['medusa', 'experience', 'ai', 'cv', 'contact'],
   contact: ['contact', 'cv']
 }
 
@@ -268,6 +298,30 @@ export const profileDocuments: ProfileDocument[] = [
       )
     ),
     metadata: { section: 'posthog' }
+  },
+  {
+    id: 'linear-context',
+    title: 'Linear-tailored role context',
+    url: absoluteUrl('/linear'),
+    text: lines([
+      profile.linear.title,
+      profile.linear.description,
+      ...profile.linear.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`),
+      ...profile.linear.ideas.items.map((idea) => `${idea.label}: ${idea.description}`)
+    ]),
+    metadata: { section: 'linear' }
+  },
+  {
+    id: 'medusa-context',
+    title: 'Medusa-tailored role context',
+    url: absoluteUrl('/medusa'),
+    text: lines([
+      profile.medusa.title,
+      profile.medusa.description,
+      ...profile.medusa.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`),
+      ...profile.medusa.ideas.items.map((idea) => `${idea.label}: ${idea.description}`)
+    ]),
+    metadata: { section: 'medusa' }
   },
   {
     id: 'contact',

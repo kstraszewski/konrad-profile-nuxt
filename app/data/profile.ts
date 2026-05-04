@@ -64,6 +64,8 @@ export const profile = {
       { label: 'Lendi', href: '#lendi' },
       { label: 'jasne.ai', href: '/jasne.ai' },
       { label: 'MCP', href: '/mcp' },
+      { label: 'Linear', href: '/linear' },
+      { label: 'Medusa', href: '/medusa' },
       { label: 'Principles', href: '#principles' },
       { label: 'Tech', href: '#technologies' },
       { label: 'Track record', href: '#track' },
@@ -73,6 +75,14 @@ export const profile = {
     ],
     posthog: [
       { label: 'Use', href: '#posthog-use' },
+      { label: 'Fit', href: '#fit' },
+      { label: 'Proof', href: '#proof' },
+      { label: 'Ideas', href: '#ideas' },
+      { label: 'MCP', href: '/mcp' },
+      { label: 'Contact', href: '#contact' }
+    ],
+    rolePitch: [
+      { label: 'Use', href: '#role-use' },
       { label: 'Fit', href: '#fit' },
       { label: 'Proof', href: '#proof' },
       { label: 'Ideas', href: '#ideas' },
@@ -999,5 +1009,351 @@ export const profile = {
       ]
     },
     contactHeading: 'If PostHog wants applied AI research close to product behavior, we should talk.'
+  },
+  linear: {
+    company: 'Linear',
+    title: 'Konrad Straszewski for Linear Senior / Staff Fullstack Engineer',
+    description:
+      'A Linear-tailored product engineering pitch from Konrad Straszewski: end-to-end product ownership, TypeScript product systems, async writing, AI-native workflows, and craft.',
+    role: {
+      href: 'https://linear.app/careers/cd5ae036-0223-427a-b038-ba16ef9dcb32?ashby_jid=d3bc1ced-3ce4-4086-a050-555055dbb1ff'
+    },
+    hero: {
+      kicker: 'Application page / Senior or Staff Fullstack Engineer',
+      headline: 'I build product systems with ownership, speed, and taste.',
+      lead:
+        'Linear is looking for a self-directed builder who can shape the problem, work across the stack, care about UX and speed, and operate well in a remote async team. That maps closely to how I have grown inside Lendi and how I build jasne.ai.'
+    },
+    panel: {
+      file: 'candidate.linear-fit',
+      scoreLabel: 'Role match',
+      scoreValue: 'Full-stack product builder',
+      badge: {
+        label: 'Linear-shaped signal',
+        value: 'End-to-end + async',
+        description: 'Product judgment, durable writing, UI craft, and enough technical range to own the feature from idea to shipped.'
+      },
+      facts: [
+        { label: 'Location', value: 'Szczecin, Poland - Europe timezone' },
+        { label: 'Mode', value: 'Shape -> build -> polish -> learn' },
+        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
+        { label: 'Stack', value: 'TypeScript product surfaces, Nuxt/Vue, AI SDKs, SQL/data flows' }
+      ]
+    },
+    relationship: {
+      kicker: 'Linear in practice',
+      heading: 'The role describes the operating mode I want more of.',
+      copy:
+        'The strongest signal in the Linear role is not a framework checklist. It is the expectation that engineers shape customer-facing product work, push for quality, write clearly, and ship without heavy PM overhead. That is the same direction I have been moving teams toward at Lendi.',
+      cards: [
+        {
+          label: 'Owner',
+          title: 'I like whole problems',
+          description:
+            'The best work I have done was not isolated implementation. It was taking a messy problem, finding the product shape, building the UI and workflow, and staying with it after release.'
+        },
+        {
+          label: 'Craft',
+          title: 'I care when the product feels wrong',
+          description:
+            'Frontend leadership made me sensitive to interaction quality, speed, details, and the difference between something that technically works and something users can trust.'
+        },
+        {
+          label: 'Async',
+          title: 'Writing is part of the job',
+          description:
+            'I write specs, memos, training material, product notes, and decision framing because remote product teams need context that survives the meeting.'
+        },
+        {
+          label: 'Agents',
+          title: 'I am building for the AI era of software work',
+          description:
+            'My current edge is MCP apps, agent workflows, AI-to-UI, generated interfaces, and the shift from ticket execution toward product ownership.'
+        }
+      ]
+    },
+    fit: {
+      kicker: 'Why Linear',
+      heading: 'Linear sits where product craft and AI-era software work collide.',
+      cards: [
+        {
+          index: '01',
+          heading: 'Full lifecycle is the point',
+          description:
+            'I am strongest when the job includes shaping, implementation, product taste, release judgment, and iteration from real usage rather than only moving tickets across a board.'
+        },
+        {
+          index: '02',
+          heading: 'High-quality software teams are the user',
+          description:
+            'A product for builders needs speed, clarity, low friction, and a strong point of view. Those are the details I naturally obsess over.'
+        },
+        {
+          index: '03',
+          heading: 'AI changes product development itself',
+          description:
+            'My work at Lendi is already about this shift: engineers becoming product builders, agents becoming workflow participants, and tooling changing how teams decide and ship.'
+        },
+        {
+          index: '04',
+          heading: 'I can bridge UI, data, and workflow',
+          description:
+            'I come from product surfaces, but my recent work reaches into AI tooling, product analytics, retrieval, internal workflows, and product operating systems.'
+        }
+      ]
+    },
+    proof: {
+      kicker: 'Proof points',
+      heading: 'Signals that I can own customer-facing product work at a high bar.',
+      rows: [
+        {
+          label: '8.5 yrs / Lendi',
+          heading: 'Grew from frontend developer to lead, R&D, and AI Manager inside one product company.',
+          description:
+            'Long-term ownership across B2B/B2C product surfaces, frontend stack decisions, mentoring, prototypes, and org-level AI adoption.'
+        },
+        {
+          label: 'Product craft',
+          heading: 'Owned frontend quality across complex financial product surfaces.',
+          description:
+            'Nuxt/Vue product work taught me to care about speed, clarity, edge cases, user trust, and the operational details around production UI.'
+        },
+        {
+          label: 'AI adoption',
+          heading: 'Moved engineering work toward AI-native product ownership.',
+          description:
+            'Training, tooling, workflows, KPIs, internal copilots, and the operating model that shifts engineers from ticket execution to product outcomes.'
+        },
+        {
+          label: '0->1 / jasne.ai',
+          heading: 'Built a vertical AI product end-to-end.',
+          description:
+            'Product strategy, UX, code, infrastructure, AI integration, distribution, and iteration without a handoff between product and engineering.'
+        },
+        {
+          label: 'PostHog',
+          heading: 'Used product evidence as a working input, not a reporting layer.',
+          description:
+            'Implemented PostHog in two organizations, used MCP heavily, and pushed teams toward funnels, cohorts, recordings, flags, and observable product truth.'
+        },
+        {
+          label: 'MAF / retrieval',
+          heading: 'Worked around retrieval-heavy AI and large knowledge systems.',
+          description:
+            'Vector search, operational context, and practical AI delivery for a Dubai shopping mall network.'
+        }
+      ]
+    },
+    loop: {
+      kicker: 'How I work',
+      heading: 'The Linear-shaped loop I would bring.',
+      steps: [
+        { label: 'Shape', description: 'Turn a vague problem into a concrete product surface, tradeoff, and first useful release.' },
+        { label: 'Build', description: 'Work through UI, state, data flow, and integration details until the feature is real enough to judge.' },
+        { label: 'Polish', description: 'Tune interaction quality, latency, copy, empty states, and the details that make serious tools feel dependable.' },
+        { label: 'Learn', description: 'Use data, support context, user feedback, and team notes to decide what should change next.' }
+      ]
+    },
+    ideas: {
+      kicker: 'What I would explore',
+      heading: 'Product directions I would want to test with Linear users.',
+      file: 'linear/product-notes.md',
+      items: [
+        {
+          label: 'Agent-ready product context',
+          description:
+            'make issues, specs, diffs, customer requests, and decisions easier for agents to read, update, and explain without losing human accountability.'
+        },
+        {
+          label: 'Planning from evidence',
+          description:
+            'connect roadmap conversations to product signals, customer requests, support context, and the actual shape of shipped work.'
+        },
+        {
+          label: 'Async decision memory',
+          description:
+            'turn scattered comments, specs, and meeting residue into durable decision trails that help remote teams move faster.'
+        },
+        {
+          label: 'Quality loops for builders',
+          description:
+            'make the product help teams notice unclear ownership, stale scope, slow handoffs, and broken loops before they become process.'
+        }
+      ]
+    },
+    contactHeading: 'If Linear wants a product builder for the agent-native era of software work, we should talk.'
+  },
+  medusa: {
+    company: 'Medusa',
+    title: 'Konrad Straszewski for Medusa Product Engineer',
+    description:
+      'A Medusa-tailored product engineering pitch from Konrad Straszewski: open-source product systems, TypeScript product work, AI-native developer workflows, and end-to-end ownership.',
+    role: {
+      href: 'https://medusajs.com/careers/product-engineer/'
+    },
+    hero: {
+      kicker: 'Application page / Product Engineer',
+      headline: 'I build developer products where code and product strategy stay together.',
+      lead:
+        'Medusa needs a product engineer who can own systems end-to-end, understand users and business context, and help make AI-era commerce faster to build. That fits my builder path: product surfaces, AI adoption, jasne.ai, and a bias toward shipping useful systems.'
+    },
+    panel: {
+      file: 'candidate.medusa-fit',
+      scoreLabel: 'Role match',
+      scoreValue: 'Open-source product engineer + AI builder',
+      badge: {
+        label: 'Medusa-shaped signal',
+        value: 'Developer product ownership',
+        description: 'Full-stack product thinking, AI workflow experience, and a practical feel for tools that developers actually want to use.'
+      },
+      facts: [
+        { label: 'Location', value: 'Szczecin, Poland - Europe timezone' },
+        { label: 'Mode', value: 'Understand users -> build systems -> ship fast' },
+        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
+        { label: 'Stack', value: 'TypeScript, Nuxt/Vue, Supabase, AI SDKs, PostHog, SQL/data flows' }
+      ]
+    },
+    relationship: {
+      kicker: 'Medusa in practice',
+      heading: 'The role is about builder leverage, not just commerce.',
+      copy:
+        'Medusa is an open-source platform for modern commerce applications, managed infrastructure, and AI-assisted building. The fit for me is the product-engineering loop: understand the developer, make the abstractions useful, ship the system, and keep the product close to real customer pressure.',
+      cards: [
+        {
+          label: 'OSS',
+          title: 'I like products developers can inspect and extend',
+          description:
+            'Open-source products force stronger primitives, better docs, clearer APIs, and less hand-waving. That is the kind of product pressure I like.'
+        },
+        {
+          label: 'AI',
+          title: 'I work where AI changes the product surface',
+          description:
+            'My current work is about AI in real workflows: tools, agents, MCP apps, retrieval, generated interfaces, and the operating model around them.'
+        },
+        {
+          label: 'Users',
+          title: 'Customer context belongs in engineering',
+          description:
+            'I have spent the last years moving teams away from abstract delivery and toward product evidence, workflow understanding, and ownership.'
+        },
+        {
+          label: '0->1',
+          title: 'I can build without handoffs',
+          description:
+            'jasne.ai is a practical example: product strategy, UX, code, infra, AI integration, and distribution owned in one loop.'
+        }
+      ]
+    },
+    fit: {
+      kicker: 'Why Medusa',
+      heading: 'Commerce is being rebuilt as programmable infrastructure.',
+      cards: [
+        {
+          index: '01',
+          heading: 'Abstractions matter',
+          description:
+            'The interesting work is not another admin panel. It is creating primitives, APIs, workflows, and UI that make custom commerce cheaper to build.'
+        },
+        {
+          index: '02',
+          heading: 'AI changes implementation cost',
+          description:
+            'Medusa is explicit about AI making custom software cheaper. That is the same thesis behind my AI adoption work at Lendi.'
+        },
+        {
+          index: '03',
+          heading: 'Developers still need tasteful product',
+          description:
+            'Developer tools win when the product feels fast, obvious, flexible, and trustworthy. That requires engineering judgment and product taste together.'
+        },
+        {
+          index: '04',
+          heading: 'Small teams need owners',
+          description:
+            'The role describes a small remote team with high agency. That is where broad product engineering range becomes useful instead of ornamental.'
+        }
+      ]
+    },
+    proof: {
+      kicker: 'Proof points',
+      heading: 'Evidence that I can build product systems close to users and business context.',
+      rows: [
+        {
+          label: 'Lendi scale',
+          heading: 'Helped scale product surfaces inside a fast-growing financial company.',
+          description:
+            "Eight and a half years at Lendi, from frontend developer to lead, R&D, and AI Manager while the company became Poland's #1 broker."
+        },
+        {
+          label: 'B2B/B2C',
+          heading: 'Built serious product UI where trust, accuracy, and workflows matter.',
+          description:
+            'Financial products taught me to respect edge cases, operational context, compliance-adjacent pressure, and user confidence.'
+        },
+        {
+          label: 'AI adoption',
+          heading: 'Lead the shift from AI demos to working product and team workflows.',
+          description:
+            'Company-wide adoption, training, tooling, internal copilots, workflow redesign, KPIs, and the product-builder operating model.'
+        },
+        {
+          label: 'jasne.ai',
+          heading: 'Built and positioned a vertical AI product from zero.',
+          description:
+            'End-to-end work across product strategy, UX, implementation, infrastructure, model integration, distribution, and iteration.'
+        },
+        {
+          label: 'Data loops',
+          heading: 'Use product analytics and behavior evidence as part of building.',
+          description:
+            'Implemented PostHog, used MCP workflows, and pushed teams toward observable product evidence instead of narrative-only decisions.'
+        },
+        {
+          label: 'AI systems',
+          heading: 'Worked around retrieval-heavy AI and modern AI product surfaces.',
+          description:
+            'MAF retrieval collaboration, Gemini/OpenAI SDKs, Vercel AI SDK, Supabase, LangChain, MCP apps, and AI-to-UI exploration.'
+        }
+      ]
+    },
+    loop: {
+      kicker: 'How I work',
+      heading: 'The Medusa-shaped loop I would bring.',
+      steps: [
+        { label: 'Understand', description: 'Start from the developer or operator workflow: what they are trying to build, where time disappears, and what abstraction would help.' },
+        { label: 'Design', description: 'Turn the workflow into primitives, APIs, UI, and docs that make the next action obvious.' },
+        { label: 'Ship', description: 'Build the first working version, keep scope tight, and make the result observable enough to improve.' },
+        { label: 'Compound', description: 'Use customer feedback, product analytics, support context, and internal dogfooding to strengthen the platform.' }
+      ]
+    },
+    ideas: {
+      kicker: 'What I would explore',
+      heading: 'Product directions I would want to test with Medusa users.',
+      file: 'medusa/product-notes.md',
+      items: [
+        {
+          label: 'AI-assisted commerce setup',
+          description:
+            'turn product catalog, fulfillment, payment, and custom workflow setup into guided agent-assisted flows with explicit review points.'
+        },
+        {
+          label: 'Composable admin surfaces',
+          description:
+            'let teams shape admin workflows around their commerce model instead of forcing every implementation into the same rigid interface.'
+        },
+        {
+          label: 'Developer onboarding telemetry',
+          description:
+            'instrument where developers get stuck across docs, templates, APIs, and deployment so activation work is grounded in evidence.'
+        },
+        {
+          label: 'Operational workflow debugger',
+          description:
+            'make orders, inventory, payments, and fulfillment flows inspectable as timelines with clear state, failure reasons, and suggested fixes.'
+        }
+      ]
+    },
+    contactHeading: 'If Medusa needs a product engineer who can build the platform and the workflow around it, we should talk.'
   }
 } as const
