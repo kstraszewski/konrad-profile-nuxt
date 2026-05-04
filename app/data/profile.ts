@@ -503,6 +503,16 @@ export const profile = {
         href: '/api/cv/posthog-ai-research.pdf'
       },
       {
+        label: 'Linear Senior Fullstack Engineer',
+        description: 'PDF w spokojnym stylu Linear pod full-stack product engineering',
+        href: '/api/cv/linear-fullstack-engineer.pdf'
+      },
+      {
+        label: 'Medusa Product Engineer',
+        description: 'PDF w stylu Medusa pod open-source commerce i AI developer workflows',
+        href: '/api/cv/medusa-product-engineer.pdf'
+      },
+      {
         label: 'n8n Sr AI Engineer',
         description: 'PDF pod AI orchestration, agents, Claude/Codex workflows i TS/Vue/Node',
         href: '/api/cv/n8n-ai-engineer.pdf'

@@ -6,7 +6,7 @@
     analytics-prefix="n8n"
     :cv-options="cvOptions"
     :job-links="jobLinks"
-    theme="medusa"
+    theme="n8n"
   />
 </template>
 
