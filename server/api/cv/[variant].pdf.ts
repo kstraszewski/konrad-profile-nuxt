@@ -4,7 +4,11 @@ import { buildCvPdf } from '../../utils/cvPdf'
 export default defineEventHandler((event) => {
   const requestPath = event.node.req.url ?? ''
   const rawVariant = `${event.context.params?.variant ?? ''} ${requestPath}`.toLowerCase()
-  const variant = rawVariant.includes('posthog')
+  const variant = rawVariant.includes('n8n')
+    ? rawVariant.includes('ai') || rawVariant.includes('sr')
+      ? 'n8n-ai-engineer'
+      : 'n8n-product-engineer'
+    : rawVariant.includes('posthog')
     ? rawVariant.includes('ai-research') || rawVariant.includes('research')
       ? 'posthog-ai-research'
       : rawVariant.includes('pm')
@@ -12,7 +16,11 @@ export default defineEventHandler((event) => {
         : 'posthog-pe'
     : 'general'
   const filename =
-    variant === 'posthog-ai-research'
+    variant === 'n8n-ai-engineer'
+      ? 'Konrad-Straszewski-CV-n8n-Sr-AI-Engineer.pdf'
+      : variant === 'n8n-product-engineer'
+        ? 'Konrad-Straszewski-CV-n8n-Product-Engineer.pdf'
+        : variant === 'posthog-ai-research'
       ? 'Konrad-Straszewski-CV-PostHog-AI-Research-Engineer.pdf'
       : variant === 'posthog-pm'
         ? 'Konrad-Straszewski-CV-PostHog-PM.pdf'

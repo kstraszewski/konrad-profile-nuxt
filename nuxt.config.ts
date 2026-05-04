@@ -27,6 +27,21 @@ export default defineNuxtConfig({
         'X-Robots-Tag': 'noindex, nofollow'
       }
     },
+    '/linear': {
+      headers: {
+        'X-Robots-Tag': 'noindex, nofollow'
+      }
+    },
+    '/medusa': {
+      headers: {
+        'X-Robots-Tag': 'noindex, nofollow'
+      }
+    },
+    '/n8n': {
+      headers: {
+        'X-Robots-Tag': 'noindex, nofollow'
+      }
+    },
     '/mcp/server': {
       headers: {
         'X-Robots-Tag': 'noindex, nofollow'
@@ -46,6 +61,8 @@ export default defineNuxtConfig({
         '/api/cv/posthog-pe.pdf',
         '/api/cv/posthog-pm.pdf',
         '/api/cv/posthog-ai-research.pdf',
+        '/api/cv/n8n-ai-engineer.pdf',
+        '/api/cv/n8n-product-engineer.pdf',
         '/robots.txt',
         '/sitemap.xml'
       ]

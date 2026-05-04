@@ -29,10 +29,10 @@
 
           <div
             class="cv-preview__paper"
-            :class="{ 'cv-preview__paper--posthog': isPosthogDownload(option.label) }"
+            :class="{ 'cv-preview__paper--posthog': isTargetedDownload(option.label) }"
             aria-hidden="true"
           >
-            <template v-if="isPosthogDownload(option.label)">
+            <template v-if="isTargetedDownload(option.label)">
               <div class="cv-mini-ph__mast">
                 <span>KS</span>
                 <strong>Konrad Straszewski</strong>
@@ -82,6 +82,14 @@ const generalPreviewSummary =
   'Product Engineer and AI-native builder with 11 years across product engineering, frontend leadership, and AI adoption.'
 
 const downloadName = (label) => {
+  if (label.includes('n8n') && label.includes('AI Engineer')) {
+    return 'Konrad-Straszewski-CV-n8n-Sr-AI-Engineer.pdf'
+  }
+
+  if (label.includes('n8n') && label.includes('Product Engineer')) {
+    return 'Konrad-Straszewski-CV-n8n-Product-Engineer.pdf'
+  }
+
   if (label.includes('AI Research')) {
     return 'Konrad-Straszewski-CV-PostHog-AI-Research-Engineer.pdf'
   }
@@ -97,9 +105,25 @@ const downloadName = (label) => {
   return 'Konrad-Straszewski-CV.pdf'
 }
 const isPosthogDownload = (label) => label.includes('PostHog')
+const isN8nDownload = (label) => label.includes('n8n')
+const isTargetedDownload = (label) => isPosthogDownload(label) || isN8nDownload(label)
 const isPosthogAiResearchDownload = (label) => label.includes('AI Research')
 const isPosthogPmDownload = (label) => label.includes('Product Manager')
 const posthogPreview = (label) => {
+  if (label.includes('n8n') && label.includes('AI Engineer')) {
+    return {
+      small: 'Application page / Sr AI Engineer',
+      headline: 'I turn AI tools, agents, and workflows into production habits.'
+    }
+  }
+
+  if (label.includes('n8n') && label.includes('Product Engineer')) {
+    return {
+      small: 'Application page / Senior Product Engineer',
+      headline: 'I build product surfaces for technical users and keep the workflow honest.'
+    }
+  }
+
   if (isPosthogAiResearchDownload(label)) {
     return {
       small: 'Application page / AI Research Engineer',
@@ -121,7 +145,11 @@ const posthogPreview = (label) => {
 }
 
 const onDownload = (label) => {
-  const variant = isPosthogAiResearchDownload(label)
+  const variant = label.includes('n8n') && label.includes('AI Engineer')
+    ? 'n8n-ai-engineer'
+    : label.includes('n8n') && label.includes('Product Engineer')
+      ? 'n8n-product-engineer'
+      : isPosthogAiResearchDownload(label)
     ? 'posthog-ai-research'
     : isPosthogPmDownload(label)
       ? 'posthog-pm'

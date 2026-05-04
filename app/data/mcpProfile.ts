@@ -17,6 +17,7 @@ export const profileFocusOptions = [
   'posthog',
   'linear',
   'medusa',
+  'n8n',
   'contact'
 ] as const
 
@@ -86,6 +87,20 @@ const targetedRoleContexts = [
     summary: profile.medusa.description,
     proof: profile.medusa.proof.rows,
     ideas: profile.medusa.ideas.items
+  },
+  {
+    id: 'n8n-ai-engineer',
+    title: profile.n8n.cv.aiEngineer.title,
+    summary: profile.n8n.cv.aiEngineer.description,
+    proof: profile.n8n.cv.aiEngineer.proof.rows,
+    ideas: profile.n8n.cv.aiEngineer.ideas.items
+  },
+  {
+    id: 'n8n-product-engineer',
+    title: profile.n8n.cv.productEngineer.title,
+    summary: profile.n8n.cv.productEngineer.description,
+    proof: profile.n8n.cv.productEngineer.proof.rows,
+    ideas: profile.n8n.cv.productEngineer.ideas.items
   }
 ]
 
@@ -150,6 +165,19 @@ const allSections = {
     title: 'Medusa-tailored context',
     role: targetedRoleContexts.find((role) => role.id === 'medusa-product-engineer')
   },
+  n8n: {
+    title: 'n8n-tailored contexts',
+    page: {
+      title: profile.n8n.title,
+      summary: profile.n8n.description,
+      proof: profile.n8n.proof.rows,
+      ideas: profile.n8n.ideas.items
+    },
+    roles: [
+      targetedRoleContexts.find((role) => role.id === 'n8n-ai-engineer'),
+      targetedRoleContexts.find((role) => role.id === 'n8n-product-engineer')
+    ]
+  },
   contact: {
     title: 'Contact',
     availability: profile.person.availability,
@@ -160,15 +188,16 @@ const allSections = {
 } as const
 
 const sectionIdsByFocus: Record<ProfileFocus, (keyof typeof allSections)[]> = {
-  full: ['overview', 'cv', 'experience', 'projects', 'ai', 'stack', 'posthog', 'contact'],
+  full: ['overview', 'cv', 'experience', 'projects', 'ai', 'stack', 'posthog', 'n8n', 'contact'],
   overview: ['overview', 'experience', 'projects', 'stack', 'contact'],
   cv: ['cv', 'experience', 'stack', 'contact'],
   experience: ['experience', 'projects', 'ai'],
-  ai: ['ai', 'projects', 'stack', 'posthog', 'linear', 'medusa'],
+  ai: ['ai', 'projects', 'stack', 'posthog', 'linear', 'medusa', 'n8n'],
   projects: ['projects', 'experience', 'stack'],
   posthog: ['posthog', 'experience', 'ai', 'cv', 'contact'],
   linear: ['linear', 'experience', 'ai', 'cv', 'contact'],
   medusa: ['medusa', 'experience', 'ai', 'cv', 'contact'],
+  n8n: ['n8n', 'experience', 'ai', 'cv', 'contact'],
   contact: ['contact', 'cv']
 }
 
@@ -322,6 +351,23 @@ export const profileDocuments: ProfileDocument[] = [
       ...profile.medusa.ideas.items.map((idea) => `${idea.label}: ${idea.description}`)
     ]),
     metadata: { section: 'medusa' }
+  },
+  {
+    id: 'n8n-context',
+    title: 'n8n-tailored role contexts',
+    url: absoluteUrl('/n8n'),
+    text: lines([
+      profile.n8n.title,
+      profile.n8n.description,
+      ...profile.n8n.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`),
+      profile.n8n.cv.aiEngineer.title,
+      profile.n8n.cv.aiEngineer.description,
+      ...profile.n8n.cv.aiEngineer.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`),
+      profile.n8n.cv.productEngineer.title,
+      profile.n8n.cv.productEngineer.description,
+      ...profile.n8n.cv.productEngineer.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`)
+    ]),
+    metadata: { section: 'n8n' }
   },
   {
     id: 'contact',

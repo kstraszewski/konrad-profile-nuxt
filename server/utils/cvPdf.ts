@@ -1,6 +1,17 @@
 type Profile = typeof import('../../app/data/profile').profile
-type CvVariant = 'general' | 'posthog-pe' | 'posthog-pm' | 'posthog-ai-research'
-type PosthogCvContent = Profile['posthog'] | Profile['posthogPm'] | Profile['posthogAiResearch']
+type CvVariant =
+  | 'general'
+  | 'posthog-pe'
+  | 'posthog-pm'
+  | 'posthog-ai-research'
+  | 'n8n-ai-engineer'
+  | 'n8n-product-engineer'
+type TargetedCvContent =
+  | Profile['posthog']
+  | Profile['posthogPm']
+  | Profile['posthogAiResearch']
+  | Profile['n8n']['cv']['aiEngineer']
+  | Profile['n8n']['cv']['productEngineer']
 type Color = [number, number, number]
 
 const PAGE = {
@@ -344,16 +355,24 @@ const posthogCard = (doc: PdfDoc, x: number, y: number, width: number, height: n
   doc.panel(x, y, width, height, colors.paper, colors.ink, true)
 }
 
-const drawPosthogCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>) => {
+const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>) => {
   const doc = new PdfDoc(variant)
-  const content: PosthogCvContent =
-    variant === 'posthog-ai-research'
+  const content: TargetedCvContent =
+    variant === 'n8n-ai-engineer'
+      ? profile.n8n.cv.aiEngineer
+      : variant === 'n8n-product-engineer'
+        ? profile.n8n.cv.productEngineer
+        : variant === 'posthog-ai-research'
       ? profile.posthogAiResearch
       : variant === 'posthog-pm'
         ? profile.posthogPm
         : profile.posthog
   const roleLabel =
-    variant === 'posthog-ai-research'
+    variant === 'n8n-ai-engineer'
+      ? 'n8n Sr AI Engineer'
+      : variant === 'n8n-product-engineer'
+        ? 'n8n Senior Product Engineer'
+        : variant === 'posthog-ai-research'
       ? 'AI Research Engineer'
       : variant === 'posthog-pm'
         ? 'Product Manager'
@@ -446,4 +465,4 @@ const drawPosthogCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>)
 }
 
 export const buildCvPdf = (profile: Profile, variant: CvVariant) =>
-  variant === 'general' ? drawGeneralCv(profile) : drawPosthogCv(profile, variant)
+  variant === 'general' ? drawGeneralCv(profile) : drawTargetedCv(profile, variant)
