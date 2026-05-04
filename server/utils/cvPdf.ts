@@ -38,25 +38,25 @@ const colors = {
   phOrange: [0.878, 0.373, 0.184] as Color,
   phYellow: [0.957, 0.784, 0.294] as Color,
   phGreen: [0.302, 0.553, 0.353] as Color,
-  linearBg: [0.031, 0.035, 0.039] as Color,
-  linearPanel: [0.078, 0.082, 0.102] as Color,
-  linearLine: [0.18, 0.19, 0.22] as Color,
+  linearBg: [0.02, 0.024, 0.031] as Color,
+  linearPanel: [0.063, 0.071, 0.094] as Color,
+  linearLine: [0.18, 0.188, 0.22] as Color,
   linearText: [0.957, 0.961, 0.973] as Color,
   linearMuted: [0.706, 0.737, 0.816] as Color,
-  linearAccent: [0.369, 0.416, 0.824] as Color,
-  medusaBg: [0.972, 0.972, 0.948] as Color,
+  linearAccent: [0.608, 0.631, 1] as Color,
+  medusaBg: [0.984, 0.984, 0.973] as Color,
   medusaPanel: [1, 1, 1] as Color,
   medusaLine: [0.851, 0.851, 0.824] as Color,
   medusaText: [0.067, 0.067, 0.067] as Color,
   medusaMuted: [0.4, 0.404, 0.38] as Color,
   medusaGreen: [0.129, 0.647, 0.404] as Color,
   medusaLime: [0.914, 0.973, 0.38] as Color,
-  n8nBg: [1, 0.969, 0.98] as Color,
-  n8nPanel: [1, 1, 1] as Color,
-  n8nLine: [0.937, 0.722, 0.78] as Color,
-  n8nText: [0.016, 0.02, 0.024] as Color,
-  n8nMuted: [0.447, 0.361, 0.396] as Color,
-  n8nPink: [0.918, 0.294, 0.443] as Color
+  n8nBg: [0.063, 0.031, 0.098] as Color,
+  n8nPanel: [0.09, 0.071, 0.125] as Color,
+  n8nLine: [0.275, 0.235, 0.325] as Color,
+  n8nText: [0.984, 0.973, 1] as Color,
+  n8nMuted: [0.776, 0.729, 0.808] as Color,
+  n8nPink: [1, 0.353, 0.239] as Color
 }
 
 const cvThemeName = (variant: CvVariant): CvThemeName =>
@@ -102,8 +102,8 @@ const cvThemes: Record<
     text: colors.linearText,
     muted: colors.linearMuted,
     accent: colors.linearAccent,
-    accentSoft: [0.102, 0.11, 0.15],
-    grid: false,
+    accentSoft: [0.102, 0.114, 0.141],
+    grid: true,
     shadow: false,
     dark: true
   },
@@ -115,7 +115,7 @@ const cvThemes: Record<
     muted: colors.medusaMuted,
     accent: colors.medusaText,
     accentSoft: colors.medusaLime,
-    grid: false,
+    grid: true,
     shadow: false,
     dark: false
   },
@@ -126,11 +126,27 @@ const cvThemes: Record<
     text: colors.n8nText,
     muted: colors.n8nMuted,
     accent: colors.n8nPink,
-    accentSoft: [1, 0.895, 0.925],
+    accentSoft: [0.165, 0.141, 0.208],
     grid: true,
     shadow: false,
-    dark: false
+    dark: true
   }
+}
+
+const gridStyle = (theme: (typeof cvThemes)[CvThemeName]) => {
+  if (theme === cvThemes.linear) {
+    return { step: 96, color: [0.118, 0.129, 0.157] as Color, width: 0.3 }
+  }
+
+  if (theme === cvThemes.medusa) {
+    return { step: 72, color: [0.88, 0.88, 0.85] as Color, width: 0.35 }
+  }
+
+  if (theme === cvThemes.n8n) {
+    return { step: 56, color: [0.196, 0.157, 0.243] as Color, width: 0.35 }
+  }
+
+  return { step: 36, color: [0.89, 0.86, 0.78] as Color, width: 0.35 }
 }
 
 const sanitize = (input: string | number) =>
@@ -220,12 +236,14 @@ class PdfDoc {
     this.fillRect(0, 0, PAGE.width, PAGE.height, this.variant === 'general' ? colors.bg : this.theme.bg)
 
     if (this.variant !== 'general' && this.theme.grid) {
-      for (let x = 0; x <= PAGE.width; x += 36) {
-        this.line(x, 0, x, PAGE.height, this.theme === cvThemes.n8n ? [0.975, 0.82, 0.86] : [0.89, 0.86, 0.78], 0.35)
+      const grid = gridStyle(this.theme)
+
+      for (let x = 0; x <= PAGE.width; x += grid.step) {
+        this.line(x, 0, x, PAGE.height, grid.color, grid.width)
       }
 
-      for (let y = 0; y <= PAGE.height; y += 36) {
-        this.line(0, y, PAGE.width, y, this.theme === cvThemes.n8n ? [0.975, 0.82, 0.86] : [0.89, 0.86, 0.78], 0.35)
+      for (let y = 0; y <= PAGE.height; y += grid.step) {
+        this.line(0, y, PAGE.width, y, grid.color, grid.width)
       }
     }
   }
@@ -288,6 +306,15 @@ class PdfDoc {
       `${num(width)} w ${rgb(color, 'RG')} ${num(x1)} ${num(PAGE.height - y1)} m ${num(x2)} ${num(
         PAGE.height - y2
       )} l S`
+    )
+  }
+
+  polygon(points: Array<[number, number]>, color: Color) {
+    const [first, ...rest] = points
+    this.ops.push(
+      `${rgb(color, 'rg')} ${num(first[0])} ${num(PAGE.height - first[1])} m ${rest
+        .map(([x, y]) => `${num(x)} ${num(PAGE.height - y)} l`)
+        .join(' ')} h f`
     )
   }
 
@@ -448,12 +475,15 @@ const compactTextBlock = (
 
 const targetHeader = (doc: PdfDoc, profile: Profile, subtitle = 'Product Engineer') => {
   const theme = doc.theme
-  doc.panel(PAGE.margin, 42, 32, 32, theme.accent, theme.line, theme.shadow)
-  doc.text(profile.person.initials, 57, 64, 11, 'F2', theme.dark ? colors.linearText : colors.paper)
+  const markFill = theme === cvThemes.linear ? theme.text : theme.accent
+  const markText = theme === cvThemes.linear ? colors.linearBg : colors.paper
+
+  doc.panel(PAGE.margin, 42, 32, 32, markFill, theme.line, theme.shadow)
+  doc.text(profile.person.initials, 57, 64, 11, 'F2', markText)
   doc.text(profile.person.name, 94, 60, 16, 'F2', theme.text)
   doc.text(subtitle, 94, 77, 8, 'F1', theme.muted)
 
-  if (theme === cvThemes.linear) {
+  if (theme.dark) {
     doc.line(94, 86, 520, 86, theme.line, 0.8)
   }
 }
@@ -500,6 +530,27 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
   targetCard(doc, PAGE.margin, heroY, 499, 124)
   doc.fillRect(PAGE.margin, heroY, 499, 25, theme.accentSoft)
   doc.line(PAGE.margin, heroY + 25, PAGE.width - PAGE.margin, heroY + 25, theme.line, 1.1)
+
+  if (theme === cvThemes.linear) {
+    doc.panel(PAGE.width - PAGE.margin - 82, heroY + 3, 68, 18, [0.078, 0.118, 0.09], [0.247, 0.424, 0.294])
+    doc.text('In progress', PAGE.width - PAGE.margin - 75, heroY + 15, 5.6, 'F2', [0.62, 0.898, 0.706])
+  }
+
+  if (theme === cvThemes.n8n) {
+    doc.polygon(
+      [
+        [458, heroY + 38],
+        [520, heroY + 38],
+        [488, heroY + 78],
+        [529, heroY + 78],
+        [438, heroY + 140],
+        [462, heroY + 94],
+        [420, heroY + 94]
+      ],
+      [0.255, 0.149, 0.137]
+    )
+  }
+
   doc.text(content.hero.kicker, 64, heroY + 17, 7.5, 'F2', theme.dark ? theme.text : theme.text)
   compactTextBlock(doc, content.hero.headline, 64, heroY + 55, 285, 18, 20, 3, {
     font: 'F4',

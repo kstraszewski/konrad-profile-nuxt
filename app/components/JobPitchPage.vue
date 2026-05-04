@@ -1328,6 +1328,7 @@ useRouteSeo(props.routePath)
 }
 
 .job-pitch-page--n8n {
+  display: flow-root;
   background:
     linear-gradient(135deg, rgba(255, 90, 61, 0.16) 0%, rgba(255, 90, 61, 0) 38%),
     linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
