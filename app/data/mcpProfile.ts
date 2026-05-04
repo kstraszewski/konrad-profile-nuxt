@@ -1,8 +1,12 @@
 import { profile } from './profile'
+import { seoSite } from './seo'
+
+const siteUrl = seoSite.defaultUrl
+const absoluteUrl = (path: string) => `${siteUrl}${path.startsWith('/') ? path : `/${path}`}`
 
 export const mcpServer = {
   name: 'Konrad Profile MCP',
-  endpoint: 'https://konradstraszewski.com/mcp/server',
+  endpoint: absoluteUrl('/mcp/server'),
   appTool: 'konrad-cv',
   updated: '2026-05-04'
 } as const
@@ -30,9 +34,6 @@ type ProfileDocument = {
   text: string
   metadata?: Record<string, string>
 }
-
-const siteUrl = 'https://konradstraszewski.com'
-const absoluteUrl = (path: string) => `${siteUrl}${path.startsWith('/') ? path : `/${path}`}`
 
 const compactList = (items: readonly string[]) => items.join('; ')
 const lines = (items: readonly string[]) => items.filter(Boolean).join('\n')

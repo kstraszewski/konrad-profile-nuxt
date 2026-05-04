@@ -169,7 +169,7 @@ export const profile = {
       rest: 'is where I learned the building, the leading, and the unbuilding.'
     },
     intro:
-      'Most "AI managers" arrive at AI from outside the company. I arrived from inside - eight and a half years of shipping the product, leading the team, and watching what actually breaks. That history is the leverage.',
+      'Most "AI managers" arrive at AI from outside the company. I arrived from inside - eight and a half years of shipping the product, leading an 8-person team, and watching what actually breaks. That history is the leverage.',
     pride:
       "The part I'm especially proud of: helping scale Lendi from a startup into Poland's #1 broker and the fastest-growing broker in Europe.",
     phases: [
@@ -182,7 +182,7 @@ export const profile = {
       {
         year: '2020',
         label: 'Frontend Lead',
-        description: 'Owned the front-end stack. Mentored juniors. Nuxt 2 -> 3 from alpha.',
+        description: 'Owned the front-end stack. Led an 8-person frontend team. Nuxt 2 -> 3 from alpha.',
         ordinal: '04'
       },
       {
@@ -357,7 +357,7 @@ export const profile = {
         role: 'Frontend Developer -> Lead',
         org: 'Lendi',
         description:
-          "Seven years on Lendi's product. Started as Vue/Nuxt developer, grew into front-end lead. Shipped Nuxt 2/3 from alpha, mentored juniors, owned the front-end stack across B2B and B2C surfaces."
+          "Seven years on Lendi's product. Started as Vue/Nuxt developer, grew into front-end lead, and led an 8-person frontend team. Shipped Nuxt 2/3 from alpha and owned the front-end stack across B2B and B2C surfaces."
       },
       {
         year: '2015 - 2017',

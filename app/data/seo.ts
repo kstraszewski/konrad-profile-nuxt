@@ -13,7 +13,7 @@ export type SeoPage = {
 
 export const seoSite = {
   name: profile.person.name,
-  defaultUrl: 'https://konradstraszewski.com',
+  defaultUrl: 'https://koonrad.dev',
   defaultImage: '/uploads/pasted-1777461139852-0.png',
   locale: 'en_US',
   twitterCard: 'summary_large_image'
