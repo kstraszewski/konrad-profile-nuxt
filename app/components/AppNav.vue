@@ -32,7 +32,6 @@
         <a v-for="item in items" :key="item.href" :href="navHref(item.href)" class="nav__link" @click="mobileMenuOpen = false">
           {{ item.label }}
         </a>
-        <a class="nav__cta" :href="sectionHref('#contact')" @click="onLetsTalkClick">Let's talk &rarr;</a>
       </nav>
     </div>
 
@@ -43,7 +42,6 @@
 <script setup>
 import { profile } from '~/data/profile'
 
-const posthog = usePostHog()
 const route = useRoute()
 const scrolled = ref(false)
 const progress = ref(0)
@@ -54,11 +52,6 @@ const items = profile.nav.main
 const homeHref = computed(() => (route.path === '/' ? '#top' : '/'))
 const sectionHref = (hash) => (route.path === '/' ? hash : `/${hash}`)
 const navHref = (href) => (href.startsWith('#') ? sectionHref(href) : href)
-
-const onLetsTalkClick = () => {
-  mobileMenuOpen.value = false
-  posthog?.capture('nav_lets_talk_clicked')
-}
 
 let removeScrollListener = null
 let removeKeydownListener = null
@@ -180,21 +173,6 @@ onBeforeUnmount(() => {
   color: var(--ink);
 }
 
-.nav__cta {
-  display: inline-flex;
-  align-items: center;
-  flex: 0 0 auto;
-  justify-content: center;
-  border-radius: 4px;
-  background: var(--ink);
-  color: var(--bg);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  padding: 8px 16px;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
 .nav__progress {
   position: absolute;
   bottom: -1px;
@@ -313,12 +291,6 @@ onBeforeUnmount(() => {
     white-space: normal;
   }
 
-  .nav__cta {
-    justify-content: center;
-    width: 100%;
-    margin-top: 12px;
-    padding: 10px 12px;
-  }
 }
 
 @media (max-width: 380px) {

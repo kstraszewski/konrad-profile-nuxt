@@ -61,17 +61,10 @@ export const profile = {
   nav: {
     main: [
       { label: 'Now', href: '#now' },
-      { label: 'Lendi', href: '#lendi' },
-      { label: 'jasne.ai', href: '/jasne.ai' },
-      { label: 'MCP', href: '/mcp' },
-      { label: 'n8n', href: '/n8n' },
-      { label: 'Linear', href: '/linear' },
-      { label: 'Medusa', href: '/medusa' },
       { label: 'Principles', href: '#principles' },
       { label: 'Tech', href: '#technologies' },
-      { label: 'Track record', href: '#track' },
-      { label: 'Interests', href: '#interests' },
-      { label: 'About', href: '#about' },
+      { label: 'Track records', href: '#track' },
+      { label: 'Interest', href: '#interests' },
       { label: 'Contact', href: '#contact' }
     ],
     posthog: [
