@@ -9,6 +9,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+.playwright-mcp/
 
 # Legacy static export kept locally as reference, not part of the Nuxt project.
 Konrad CV*.html
