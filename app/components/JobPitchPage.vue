@@ -340,14 +340,14 @@ useRouteSeo(props.routePath)
 }
 
 .job-pitch-page--linear {
-  --ph-bg: #08090a;
-  --ph-paper: #121317;
-  --ph-ink: #f4f5f8;
-  --ph-muted: #8a8f98;
-  --ph-line: rgba(244, 245, 248, 0.14);
-  --ph-orange: #5e6ad2;
-  --ph-yellow: #4ea7fc;
-  --ph-green: #4cb782;
+  --ph-bg: #050608;
+  --ph-paper: #0d0f12;
+  --ph-ink: #f7f8fb;
+  --ph-muted: #8f949e;
+  --ph-line: rgba(247, 248, 251, 0.12);
+  --ph-orange: #7c83ff;
+  --ph-yellow: #1a1d24;
+  --ph-green: #73d391;
 }
 
 .job-pitch-page--medusa {
@@ -362,14 +362,14 @@ useRouteSeo(props.routePath)
 }
 
 .job-pitch-page--n8n {
-  --ph-bg: #fff7fa;
-  --ph-paper: #ffffff;
-  --ph-ink: #040506;
-  --ph-muted: #725c65;
-  --ph-line: #efb8c7;
-  --ph-orange: #ea4b71;
-  --ph-yellow: #ffe4ec;
-  --ph-green: #27c281;
+  --ph-bg: #0e0718;
+  --ph-paper: #171220;
+  --ph-ink: #fbf8ff;
+  --ph-muted: #c4bace;
+  --ph-line: rgba(255, 255, 255, 0.13);
+  --ph-orange: #ff5a3d;
+  --ph-yellow: #2a2435;
+  --ph-green: #8bdb81;
 }
 
 .job-pitch-nav {
@@ -982,35 +982,80 @@ useRouteSeo(props.routePath)
 
 .job-pitch-page--linear {
   background:
-    radial-gradient(circle at 78% 8%, rgba(94, 106, 210, 0.26), transparent 30%),
-    radial-gradient(circle at 15% 88%, rgba(78, 167, 252, 0.16), transparent 28%),
-    linear-gradient(180deg, #08090a 0%, #101116 48%, #08090a 100%);
+    linear-gradient(rgba(247, 248, 251, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(247, 248, 251, 0.025) 1px, transparent 1px),
+    linear-gradient(180deg, #050608 0%, #090a0d 52%, #050608 100%);
+  background-size: 96px 96px, 96px 96px, auto;
 }
 
 .job-pitch-page--linear .job-pitch-nav {
-  border-bottom: 1px solid rgba(244, 245, 248, 0.1);
-  background: rgba(8, 9, 10, 0.76);
+  border-bottom: 1px solid rgba(247, 248, 251, 0.08);
+  background: rgba(5, 6, 8, 0.74);
+  backdrop-filter: blur(18px);
+}
+
+.job-pitch-page--linear .job-pitch-nav__brand {
+  font-weight: 600;
 }
 
 .job-pitch-page--linear .job-pitch-nav__mark {
-  border: 1px solid rgba(244, 245, 248, 0.16);
-  border-radius: 8px;
-  background: linear-gradient(135deg, rgba(94, 106, 210, 0.95), rgba(78, 167, 252, 0.72));
-  box-shadow: 0 14px 34px rgba(94, 106, 210, 0.26);
-  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(247, 248, 251, 0.2);
+  border-radius: 999px;
+  background: #f7f8fb;
+  box-shadow: none;
+  color: transparent;
+}
+
+.job-pitch-page--linear .job-pitch-nav__mark::before {
+  position: absolute;
+  inset: 6px;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+    45deg,
+    #050608 0 4px,
+    #050608 4px 7px,
+    transparent 7px 10px
+  );
+  content: "";
+  transform: rotate(-12deg);
+}
+
+.job-pitch-page--linear .job-pitch-nav__links a {
+  border-width: 1px;
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  font-weight: 500;
+  text-transform: none;
 }
 
 .job-pitch-page--linear .job-pitch-nav__links a:hover {
-  border-color: rgba(244, 245, 248, 0.16);
-  background: rgba(244, 245, 248, 0.07);
+  border-color: rgba(247, 248, 251, 0.14);
+  background: rgba(247, 248, 251, 0.06);
 }
 
 .job-pitch-page--linear .job-pitch-kicker {
-  border: 1px solid rgba(94, 106, 210, 0.35);
+  border: 1px solid rgba(247, 248, 251, 0.1);
   border-radius: 999px;
-  background: rgba(94, 106, 210, 0.12);
+  background: rgba(247, 248, 251, 0.055);
   box-shadow: none;
-  color: #cfd3ff;
+  color: #c9cdd7;
+  font-family: var(--font-body);
+  font-weight: 500;
+  text-transform: none;
+}
+
+.job-pitch-page--linear .job-pitch-hero {
+  max-width: 1320px;
+  grid-template-columns: minmax(0, 0.84fr) minmax(430px, 0.9fr);
+  gap: 58px;
+  padding-top: 78px;
+}
+
+.job-pitch-page--linear .job-pitch-hero__lead {
+  color: #a2a7b1;
+  font-size: 1.12rem;
 }
 
 .job-pitch-page--linear .job-pitch-hero h1,
@@ -1020,31 +1065,23 @@ useRouteSeo(props.routePath)
 .job-pitch-page--linear .job-pitch-loop__steps span,
 .job-pitch-page--linear .job-pitch-contact h2 {
   font-family: var(--font-body);
-  font-weight: 600;
+  font-weight: 520;
 }
 
 .job-pitch-page--linear .job-pitch-hero h1 {
-  line-height: 1.02;
+  max-width: 780px;
+  font-size: 4.85rem;
+  line-height: 1.01;
 }
 
 .job-pitch-page--linear .job-pitch-button {
-  border: 1px solid rgba(244, 245, 248, 0.14);
-  border-radius: 8px;
-  background: rgba(244, 245, 248, 0.06);
+  min-height: 44px;
+  border: 1px solid rgba(247, 248, 251, 0.12);
+  border-radius: 999px;
+  background: rgba(247, 248, 251, 0.055);
   box-shadow: none;
-  color: #f4f5f8;
-}
-
-.job-pitch-page--linear .job-pitch-button:hover {
-  transform: translateY(-1px);
-  border-color: rgba(244, 245, 248, 0.24);
-  background: rgba(244, 245, 248, 0.1);
-  box-shadow: none;
-}
-
-.job-pitch-page--linear .job-pitch-button--primary {
-  border-color: rgba(94, 106, 210, 0.72);
-  background: linear-gradient(135deg, #5e6ad2, #4ea7fc);
+  color: #f7f8fb;
+  font-weight: 600;
 }
 
 .job-pitch-page--linear .job-pitch-panel,
@@ -1053,50 +1090,150 @@ useRouteSeo(props.routePath)
 .job-pitch-page--linear .job-pitch-terminal,
 .job-pitch-page--linear .job-pitch-loop__steps li,
 .job-pitch-page--linear .job-pitch-contact__links a {
-  border: 1px solid rgba(244, 245, 248, 0.12);
-  border-radius: 8px;
-  background: linear-gradient(180deg, rgba(26, 28, 31, 0.86), rgba(13, 14, 18, 0.94));
-  box-shadow: 0 18px 70px rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(247, 248, 251, 0.1);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(16, 18, 22, 0.82), rgba(8, 9, 12, 0.94));
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.32);
+}
+
+.job-pitch-page--linear .job-pitch-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(247, 248, 251, 0.24);
+  background: rgba(247, 248, 251, 0.095);
+  box-shadow: none;
+}
+
+.job-pitch-page--linear .job-pitch-button--primary {
+  border-color: #f7f8fb;
+  background: #f7f8fb;
+  color: #050608;
+}
+
+.job-pitch-page--linear .job-pitch-panel--hero {
+  position: relative;
+  width: min(100%, 560px);
+  min-height: 620px;
+  overflow: hidden;
+  border-radius: 18px;
+  background:
+    linear-gradient(90deg, rgba(247, 248, 251, 0.045) 0 1px, transparent 1px 100%),
+    linear-gradient(180deg, #11141a 0%, #090b0f 100%);
+  background-size: 100% 100%, auto;
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.48),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.job-pitch-page--linear .job-pitch-panel--hero::before {
+  position: absolute;
+  top: 44px;
+  bottom: 0;
+  left: 0;
+  width: 138px;
+  border-right: 1px solid rgba(247, 248, 251, 0.08);
+  background:
+    linear-gradient(rgba(247, 248, 251, 0.055) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(247, 248, 251, 0.045), rgba(247, 248, 251, 0.015));
+  background-size: 100% 54px, auto;
+  content: "";
+}
+
+.job-pitch-page--linear .job-pitch-panel--hero::after {
+  position: absolute;
+  top: 74px;
+  left: 20px;
+  width: 98px;
+  height: 34px;
+  border: 1px solid rgba(115, 211, 145, 0.24);
+  border-radius: 999px;
+  background: rgba(115, 211, 145, 0.08);
+  color: #9ee5b4;
+  content: "In progress";
+  display: grid;
+  font-size: 0.78rem;
+  font-weight: 600;
+  place-items: center;
+}
+
+.job-pitch-page--linear .job-pitch-panel--hero > * {
+  position: relative;
+  z-index: 1;
 }
 
 .job-pitch-page--linear .job-pitch-panel__bar {
-  border-bottom: 1px solid rgba(244, 245, 248, 0.1);
-  background: rgba(244, 245, 248, 0.04);
+  border-bottom: 1px solid rgba(247, 248, 251, 0.08);
+  background: rgba(247, 248, 251, 0.035);
 }
 
 .job-pitch-page--linear .job-pitch-panel__bar span {
   border: 0;
-  box-shadow: 0 0 24px currentColor;
+  opacity: 0.55;
+  box-shadow: none;
 }
 
 .job-pitch-page--linear .job-pitch-score,
 .job-pitch-page--linear .job-pitch-role-badge {
-  border: 1px solid rgba(244, 245, 248, 0.1);
-  border-radius: 8px;
-  background: rgba(94, 106, 210, 0.12);
+  margin-left: 162px;
+  border: 1px solid rgba(247, 248, 251, 0.1);
+  border-radius: 12px;
+  background: rgba(247, 248, 251, 0.05);
   box-shadow: none;
 }
 
+.job-pitch-page--linear .job-pitch-score {
+  color: #f7f8fb;
+}
+
+.job-pitch-page--linear .job-pitch-score__value {
+  font-family: var(--font-body);
+  font-size: 1.9rem;
+  font-weight: 540;
+  line-height: 1.08;
+}
+
+.job-pitch-page--linear .job-pitch-role-badge strong {
+  color: #d7d9ff;
+}
+
+.job-pitch-page--linear .job-pitch-role-badge span {
+  color: #a2a7b1;
+}
+
 .job-pitch-page--linear .job-pitch-facts {
-  border: 1px solid rgba(244, 245, 248, 0.1);
+  margin-left: 162px;
+  border: 1px solid rgba(247, 248, 251, 0.1);
   border-bottom: 0;
 }
 
 .job-pitch-page--linear .job-pitch-facts div,
 .job-pitch-page--linear .job-pitch-table__row {
-  border-bottom-color: rgba(244, 245, 248, 0.1);
+  border-bottom-color: rgba(247, 248, 251, 0.09);
+}
+
+.job-pitch-page--linear .job-pitch-card,
+.job-pitch-page--linear .job-pitch-loop__steps li {
+  box-shadow: none;
+}
+
+.job-pitch-page--linear .job-pitch-card__index,
+.job-pitch-page--linear .job-pitch-table__row span,
+.job-pitch-page--linear .job-pitch-contact__links span {
+  color: #9ba1ff;
 }
 
 .job-pitch-page--linear .job-pitch-terminal {
-  background: #08090a;
+  background:
+    linear-gradient(rgba(247, 248, 251, 0.045) 1px, transparent 1px),
+    #050608;
+  background-size: 100% 34px;
 }
 
 .job-pitch-page--linear .job-pitch-terminal .job-pitch-panel__bar {
-  background: #121317;
+  background: #11141a;
 }
 
 .job-pitch-page--linear .job-pitch-terminal li {
-  color: #b4bcd0;
+  color: #b6bbc7;
 }
 
 .job-pitch-page--linear .job-pitch-footer {
@@ -1192,32 +1329,114 @@ useRouteSeo(props.routePath)
 
 .job-pitch-page--n8n {
   background:
-    radial-gradient(circle at 24px 24px, rgba(234, 75, 113, 0.22) 2px, transparent 2px),
-    linear-gradient(rgba(234, 75, 113, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(234, 75, 113, 0.08) 1px, transparent 1px),
-    #fff7fa;
-  background-size: 64px 64px, 32px 32px, 32px 32px, auto;
+    linear-gradient(135deg, rgba(255, 90, 61, 0.16) 0%, rgba(255, 90, 61, 0) 38%),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(180deg, #100819 0%, #0b0712 54%, #15101f 100%);
+  background-size: auto, 56px 56px, 56px 56px, auto;
 }
 
 .job-pitch-page--n8n .job-pitch-nav {
-  border-bottom: 1px solid #efb8c7;
-  background: rgba(255, 247, 250, 0.9);
+  top: 16px;
+  width: min(1320px, calc(100% - 48px));
+  margin: 16px auto 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  background: rgba(23, 18, 32, 0.84);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(18px);
+}
+
+.job-pitch-page--n8n .job-pitch-nav__brand {
+  font-weight: 700;
+}
+
+.job-pitch-page--n8n .job-pitch-nav__links a {
+  border-width: 1px;
+  color: #c8c0d0;
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-transform: none;
+}
+
+.job-pitch-page--n8n .job-pitch-nav__links a:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
 }
 
 .job-pitch-page--n8n .job-pitch-nav__mark {
   border: 0;
-  border-radius: 8px;
-  background: #ea4b71;
-  box-shadow: 0 10px 28px rgba(234, 75, 113, 0.28);
+  border-radius: 12px;
+  background: #ff5a3d;
+  box-shadow: 0 12px 34px rgba(255, 90, 61, 0.34);
   color: #ffffff;
+  font-family: var(--font-body);
+  font-style: normal;
 }
 
 .job-pitch-page--n8n .job-pitch-kicker {
-  border: 1px solid #f1aac0;
-  border-radius: 8px;
-  background: #ffe4ec;
+  border: 1px solid rgba(255, 90, 61, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 90, 61, 0.11);
   box-shadow: none;
-  color: #9f2447;
+  color: #ffb09f;
+  font-family: var(--font-body);
+  font-weight: 600;
+  text-transform: none;
+}
+
+.job-pitch-page--n8n .job-pitch-hero {
+  position: relative;
+  min-height: calc(100svh - 106px);
+  padding-top: 84px;
+}
+
+.job-pitch-page--n8n .job-pitch-hero::after {
+  position: absolute;
+  top: 86px;
+  right: max(5vw, 36px);
+  z-index: 0;
+  width: min(430px, 38vw);
+  height: min(610px, 72svh);
+  min-height: 420px;
+  background:
+    linear-gradient(135deg, rgba(255, 247, 229, 0.92), rgba(255, 90, 61, 0.84) 46%, rgba(104, 143, 255, 0.62) 100%);
+  clip-path: polygon(45% 0, 95% 0, 68% 42%, 100% 42%, 39% 100%, 51% 57%, 12% 57%);
+  content: "";
+  filter:
+    drop-shadow(0 0 28px rgba(255, 90, 61, 0.46))
+    drop-shadow(0 0 62px rgba(104, 143, 255, 0.2));
+  opacity: 0.82;
+  pointer-events: none;
+}
+
+.job-pitch-page--n8n .job-pitch-hero__copy,
+.job-pitch-page--n8n .job-pitch-panel--hero {
+  position: relative;
+  z-index: 1;
+}
+
+.job-pitch-page--n8n .job-pitch-hero h1,
+.job-pitch-page--n8n .job-pitch-section h2,
+.job-pitch-page--n8n .job-pitch-card h3,
+.job-pitch-page--n8n .job-pitch-table__row strong,
+.job-pitch-page--n8n .job-pitch-loop__steps span,
+.job-pitch-page--n8n .job-pitch-contact h2 {
+  font-family: var(--font-body);
+  font-weight: 520;
+}
+
+.job-pitch-page--n8n .job-pitch-hero h1 {
+  max-width: 700px;
+  font-size: 4.75rem;
+  line-height: 1.04;
+}
+
+.job-pitch-page--n8n .job-pitch-hero__lead {
+  color: #d6cfdf;
+  font-size: 1.12rem;
 }
 
 .job-pitch-page--n8n .job-pitch-panel,
@@ -1226,10 +1445,40 @@ useRouteSeo(props.routePath)
 .job-pitch-page--n8n .job-pitch-terminal,
 .job-pitch-page--n8n .job-pitch-loop__steps li,
 .job-pitch-page--n8n .job-pitch-contact__links a {
-  border: 1px solid #efb8c7;
-  border-radius: 8px;
-  background: #ffffff;
-  box-shadow: 0 16px 42px rgba(73, 30, 43, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 16px;
+  background: rgba(23, 18, 32, 0.88);
+  box-shadow:
+    0 22px 70px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.job-pitch-page--n8n .job-pitch-panel--hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    rgba(20, 15, 29, 0.96);
+  background-size: 42px 42px, 42px 42px, auto;
+}
+
+.job-pitch-page--n8n .job-pitch-panel--hero::before {
+  position: absolute;
+  right: 34px;
+  bottom: 28px;
+  width: 90px;
+  height: 90px;
+  border: 1px solid rgba(255, 90, 61, 0.32);
+  border-radius: 24px;
+  background: rgba(255, 90, 61, 0.12);
+  content: "";
+  transform: rotate(45deg);
+}
+
+.job-pitch-page--n8n .job-pitch-panel--hero > * {
+  position: relative;
+  z-index: 1;
 }
 
 .job-pitch-page--n8n .job-pitch-card,
@@ -1240,14 +1489,14 @@ useRouteSeo(props.routePath)
 .job-pitch-page--n8n .job-pitch-card::before,
 .job-pitch-page--n8n .job-pitch-loop__steps li::before {
   position: absolute;
-  top: 22px;
-  left: -7px;
-  width: 12px;
-  height: 12px;
-  border: 2px solid #ffffff;
+  top: 24px;
+  left: 24px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
   border-radius: 999px;
-  background: #ea4b71;
-  box-shadow: 0 0 0 1px #efb8c7;
+  background: #ff5a3d;
+  box-shadow: 0 0 0 5px rgba(255, 90, 61, 0.13);
   content: "";
 }
 
@@ -1256,66 +1505,116 @@ useRouteSeo(props.routePath)
 }
 
 .job-pitch-page--n8n .job-pitch-panel__bar {
-  border-bottom: 1px solid #efb8c7;
-  background: #fff1f5;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(12, 8, 18, 0.78);
+  color: #ffffff;
 }
 
 .job-pitch-page--n8n .job-pitch-panel__bar span {
-  border: 1px solid #efb8c7;
+  border: 0;
+  background: #ff5a3d;
+}
+
+.job-pitch-page--n8n .job-pitch-panel__bar span:nth-child(2) {
+  background: #8bdb81;
+}
+
+.job-pitch-page--n8n .job-pitch-panel__bar span:nth-child(3) {
+  background: #688fff;
 }
 
 .job-pitch-page--n8n .job-pitch-score,
 .job-pitch-page--n8n .job-pitch-role-badge {
-  border: 1px solid #040506;
-  border-radius: 8px;
-  background: #040506;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 14px;
   box-shadow: none;
 }
 
+.job-pitch-page--n8n .job-pitch-score {
+  background: #ff5a3d;
+  color: #ffffff;
+}
+
+.job-pitch-page--n8n .job-pitch-score__value {
+  font-family: var(--font-body);
+  font-size: 1.88rem;
+  font-weight: 620;
+  line-height: 1.08;
+}
+
+.job-pitch-page--n8n .job-pitch-role-badge {
+  background: rgba(12, 8, 18, 0.78);
+}
+
 .job-pitch-page--n8n .job-pitch-role-badge strong {
-  color: #ff7898;
+  color: #ffb09f;
+}
+
+.job-pitch-page--n8n .job-pitch-role-badge span {
+  color: #d6cfdf;
 }
 
 .job-pitch-page--n8n .job-pitch-facts {
-  border: 1px solid #efb8c7;
+  border: 1px solid rgba(255, 255, 255, 0.13);
   border-bottom: 0;
 }
 
 .job-pitch-page--n8n .job-pitch-facts div,
 .job-pitch-page--n8n .job-pitch-table__row {
-  border-bottom-color: #efb8c7;
+  border-bottom-color: rgba(255, 255, 255, 0.12);
   border-bottom-width: 1px;
 }
 
+.job-pitch-page--n8n .job-pitch-card__index {
+  margin-left: 24px;
+  color: #ffb09f;
+}
+
+.job-pitch-page--n8n .job-pitch-table__row span,
+.job-pitch-page--n8n .job-pitch-contact__links span {
+  color: #ffb09f;
+}
+
 .job-pitch-page--n8n .job-pitch-button {
-  border: 1px solid #efb8c7;
-  border-radius: 8px;
-  background: #ffffff;
+  min-height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
   box-shadow: none;
+  color: #ffffff;
 }
 
 .job-pitch-page--n8n .job-pitch-button--primary {
-  border-color: #ea4b71;
-  background: #ea4b71;
+  border-color: #ff5a3d;
+  background: #ff5a3d;
   color: #ffffff;
 }
 
 .job-pitch-page--n8n .job-pitch-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 30px rgba(234, 75, 113, 0.14);
+  border-color: rgba(255, 90, 61, 0.44);
+  background: rgba(255, 90, 61, 0.14);
+  box-shadow: 0 12px 30px rgba(255, 90, 61, 0.18);
 }
 
 .job-pitch-page--n8n .job-pitch-terminal {
-  background: #040506;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    #0c0812;
+  background-size: 100% 34px;
 }
 
 .job-pitch-page--n8n .job-pitch-terminal .job-pitch-panel__bar {
-  background: #161416;
+  background: #171220;
   color: #ffffff;
 }
 
 .job-pitch-page--n8n .job-pitch-terminal li {
-  color: #f5dce5;
+  color: #e4ddea;
+}
+
+.job-pitch-page--n8n .job-pitch-footer {
+  border-top-color: rgba(255, 255, 255, 0.12);
 }
 
 @media (max-width: 980px) {
@@ -1355,6 +1654,12 @@ useRouteSeo(props.routePath)
   .job-pitch-contact h2 {
     font-size: 3.8rem;
   }
+
+  .job-pitch-page--n8n .job-pitch-hero::after {
+    right: -8vw;
+    width: 42vw;
+    opacity: 0.32;
+  }
 }
 
 @media (max-width: 720px) {
@@ -1370,6 +1675,12 @@ useRouteSeo(props.routePath)
     scrollbar-width: none;
     padding-bottom: 4px;
     -webkit-overflow-scrolling: touch;
+  }
+
+  .job-pitch-page--n8n .job-pitch-nav {
+    top: 12px;
+    width: calc(100% - 32px);
+    margin-top: 12px;
   }
 
   .job-pitch-nav__links::-webkit-scrollbar {
@@ -1394,6 +1705,23 @@ useRouteSeo(props.routePath)
 
   .job-pitch-hero__lead {
     font-size: 1.06rem;
+  }
+
+  .job-pitch-page--linear .job-pitch-panel--hero,
+  .job-pitch-page--n8n .job-pitch-panel--hero {
+    min-height: auto;
+  }
+
+  .job-pitch-page--linear .job-pitch-panel--hero::before,
+  .job-pitch-page--linear .job-pitch-panel--hero::after,
+  .job-pitch-page--n8n .job-pitch-hero::after {
+    display: none;
+  }
+
+  .job-pitch-page--linear .job-pitch-score,
+  .job-pitch-page--linear .job-pitch-role-badge,
+  .job-pitch-page--linear .job-pitch-facts {
+    margin-left: 14px;
   }
 
   .job-pitch-facts div,
