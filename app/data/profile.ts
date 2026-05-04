@@ -510,7 +510,7 @@ export const profile = {
       pizzaBadge: {
         question: 'Does pineapple belong on pizza?',
         percent: '100%',
-        answer: '100% YES'
+        answer: 'YES'
       },
       facts: [
         { label: 'Location', value: 'Szczecin, Poland - GMT+2' },
@@ -679,7 +679,7 @@ export const profile = {
       pizzaBadge: {
         question: 'Does pineapple belong on pizza?',
         percent: '100%',
-        answer: '100% YES'
+        answer: 'YES'
       },
       facts: [
         { label: 'Location', value: 'Szczecin, Poland - GMT+2' },
@@ -848,7 +848,7 @@ export const profile = {
       pizzaBadge: {
         question: 'Does pineapple belong on pizza?',
         percent: '100%',
-        answer: '100% YES'
+        answer: 'YES'
       },
       facts: [
         { label: 'Location', value: 'Szczecin, Poland - GMT+1/+2' },

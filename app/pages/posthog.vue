@@ -54,12 +54,12 @@
               <path d="M9 24c2-8 9-13 17-11 8 2 12 9 10 17-2 9-10 15-18 13S7 32 9 24Z" fill="#f3a23c" stroke="#40396e" stroke-width="2.4" />
               <path d="m13 20 19 15M20 15l17 13M10 28l15 13M33 19 15 38M25 14 10 30" fill="none" stroke="#d47f56" stroke-linecap="round" stroke-width="1.7" />
               <circle cx="35" cy="35" r="10" fill="#fff8e8" stroke="#40396e" stroke-width="2.2" />
-              <path d="M33 37h5c1 0 2-1 2-2v-5h-4v5l-4 5c-1 1-3 0-3-1l1-4h-3c-1 0-2-1-2-2l1-5c0-1 1-2 2-2h8v11Z" fill="#31a85f" />
-              <path d="M36 27v9" fill="none" stroke="#fff8e8" stroke-linecap="round" stroke-width="1.4" />
+              <path d="M30 43h8c1 0 2-.7 2.2-1.7l1.4-5.8c.4-1.5-.8-3-2.4-3h-4.1l.5-3c.2-1.3-.8-2.4-2.1-2.4H33l-4 6v10Z" fill="#31a85f" />
+              <path d="M26 34h4v9h-4c-1 0-2-.9-2-2v-5c0-1.1.9-2 2-2Z" fill="#31a85f" />
+              <path d="M30 35v7" fill="none" stroke="#fff8e8" stroke-linecap="round" stroke-width="1.4" />
             </svg>
             <span>
               <strong>{{ profile.posthog.panel.pizzaBadge.percent }}</strong>
-              say
               <strong class="posthog-pizza-badge__answer">{{ profile.posthog.panel.pizzaBadge.answer }}</strong>
             </span>
           </div>
