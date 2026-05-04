@@ -29,7 +29,7 @@
 
           <div
             class="cv-preview__paper"
-            :class="{ 'cv-preview__paper--posthog': isTargetedDownload(option.label) }"
+            :class="previewClass(option.label)"
             aria-hidden="true"
           >
             <template v-if="isTargetedDownload(option.label)">
@@ -82,6 +82,14 @@ const generalPreviewSummary =
   'Product Engineer and AI-native builder with 11 years across product engineering, frontend leadership, and AI adoption.'
 
 const downloadName = (label) => {
+  if (label.includes('Linear')) {
+    return 'Konrad-Straszewski-CV-Linear-Fullstack-Engineer.pdf'
+  }
+
+  if (label.includes('Medusa')) {
+    return 'Konrad-Straszewski-CV-Medusa-Product-Engineer.pdf'
+  }
+
   if (label.includes('n8n') && label.includes('AI Engineer')) {
     return 'Konrad-Straszewski-CV-n8n-Sr-AI-Engineer.pdf'
   }
@@ -106,10 +114,33 @@ const downloadName = (label) => {
 }
 const isPosthogDownload = (label) => label.includes('PostHog')
 const isN8nDownload = (label) => label.includes('n8n')
-const isTargetedDownload = (label) => isPosthogDownload(label) || isN8nDownload(label)
+const isLinearDownload = (label) => label.includes('Linear')
+const isMedusaDownload = (label) => label.includes('Medusa')
+const isTargetedDownload = (label) =>
+  isPosthogDownload(label) || isN8nDownload(label) || isLinearDownload(label) || isMedusaDownload(label)
 const isPosthogAiResearchDownload = (label) => label.includes('AI Research')
 const isPosthogPmDownload = (label) => label.includes('Product Manager')
+const previewClass = (label) => ({
+  'cv-preview__paper--posthog': isPosthogDownload(label),
+  'cv-preview__paper--linear': isLinearDownload(label),
+  'cv-preview__paper--medusa': isMedusaDownload(label),
+  'cv-preview__paper--n8n': isN8nDownload(label)
+})
 const posthogPreview = (label) => {
+  if (label.includes('Linear')) {
+    return {
+      small: 'Application page / Senior Fullstack Engineer',
+      headline: 'I build product systems with ownership, speed, and taste.'
+    }
+  }
+
+  if (label.includes('Medusa')) {
+    return {
+      small: 'Application page / Product Engineer',
+      headline: 'I build developer products where code and product strategy stay together.'
+    }
+  }
+
   if (label.includes('n8n') && label.includes('AI Engineer')) {
     return {
       small: 'Application page / Sr AI Engineer',
@@ -145,7 +176,11 @@ const posthogPreview = (label) => {
 }
 
 const onDownload = (label) => {
-  const variant = label.includes('n8n') && label.includes('AI Engineer')
+  const variant = label.includes('Linear')
+    ? 'linear-fullstack-engineer'
+    : label.includes('Medusa')
+      ? 'medusa-product-engineer'
+      : label.includes('n8n') && label.includes('AI Engineer')
     ? 'n8n-ai-engineer'
     : label.includes('n8n') && label.includes('Product Engineer')
       ? 'n8n-product-engineer'
@@ -407,6 +442,34 @@ useRouteSeo('/cv')
   background-size: 34px 34px;
 }
 
+.cv-preview__paper--linear {
+  background:
+    radial-gradient(circle at 80% 10%, rgba(94, 106, 210, 0.26), transparent 32%),
+    linear-gradient(180deg, #08090a, #111217);
+  color: #f4f5f8;
+}
+
+.cv-preview__paper--linear::after {
+  border-color: rgba(244, 245, 248, 0.14);
+}
+
+.cv-preview__paper--medusa {
+  background:
+    linear-gradient(rgba(17, 17, 17, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17, 17, 17, 0.045) 1px, transparent 1px),
+    #f7f7f3;
+  background-size: 44px 44px;
+}
+
+.cv-preview__paper--n8n {
+  background:
+    radial-gradient(circle at 22px 22px, rgba(234, 75, 113, 0.22) 2px, transparent 2px),
+    linear-gradient(rgba(234, 75, 113, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(234, 75, 113, 0.08) 1px, transparent 1px),
+    #fff7fa;
+  background-size: 54px 54px, 27px 27px, 27px 27px, auto;
+}
+
 .cv-mini-ph__mast,
 .cv-mini-ph__panel,
 .cv-mini-ph__rows {
@@ -433,6 +496,27 @@ useRouteSeo('/cv')
   font-weight: 700;
 }
 
+.cv-preview__paper--linear .cv-mini-ph__mast span {
+  border: 1px solid rgba(244, 245, 248, 0.18);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #5e6ad2, #4ea7fc);
+  box-shadow: none;
+}
+
+.cv-preview__paper--medusa .cv-mini-ph__mast span {
+  border-width: 1px;
+  border-radius: 8px;
+  background: #111111;
+  box-shadow: none;
+}
+
+.cv-preview__paper--n8n .cv-mini-ph__mast span {
+  border: 0;
+  border-radius: 8px;
+  background: #ea4b71;
+  box-shadow: 0 10px 28px rgba(234, 75, 113, 0.25);
+}
+
 .cv-mini-ph__mast strong {
   font-size: 1.05rem;
   line-height: 1;
@@ -445,6 +529,29 @@ useRouteSeo('/cv')
   box-shadow: 6px 6px 0 var(--ink);
 }
 
+.cv-preview__paper--linear .cv-mini-ph__panel,
+.cv-preview__paper--linear .cv-mini-ph__rows span {
+  border: 1px solid rgba(244, 245, 248, 0.14);
+  border-radius: 8px;
+  background: rgba(244, 245, 248, 0.06);
+  box-shadow: none;
+  color: #f4f5f8;
+}
+
+.cv-preview__paper--medusa .cv-mini-ph__panel,
+.cv-preview__paper--medusa .cv-mini-ph__rows span {
+  border: 1px solid #d9d9d2;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.cv-preview__paper--n8n .cv-mini-ph__panel,
+.cv-preview__paper--n8n .cv-mini-ph__rows span {
+  border: 1px solid #efb8c7;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
 .cv-mini-ph__panel small {
   display: block;
   padding: 12px 14px;
@@ -452,6 +559,23 @@ useRouteSeo('/cv')
   background: #efe2c6;
   font-size: 0.625rem;
   font-weight: 800;
+}
+
+.cv-preview__paper--linear .cv-mini-ph__panel small {
+  border-bottom: 1px solid rgba(244, 245, 248, 0.14);
+  background: rgba(94, 106, 210, 0.18);
+  color: #cfd3ff;
+}
+
+.cv-preview__paper--medusa .cv-mini-ph__panel small {
+  border-bottom: 1px solid #d9d9d2;
+  background: #e9f861;
+}
+
+.cv-preview__paper--n8n .cv-mini-ph__panel small {
+  border-bottom: 1px solid #efb8c7;
+  background: #ffe4ec;
+  color: #9f2447;
 }
 
 .cv-mini-ph__panel strong {
@@ -480,6 +604,18 @@ useRouteSeo('/cv')
   font-size: 0.75rem;
   font-weight: 800;
   text-transform: uppercase;
+}
+
+.cv-preview__paper--linear .cv-mini-ph__rows span {
+  color: #b4bcd0;
+}
+
+.cv-preview__paper--medusa .cv-mini-ph__rows span {
+  color: #111111;
+}
+
+.cv-preview__paper--n8n .cv-mini-ph__rows span {
+  color: #ea4b71;
 }
 
 @media (max-width: 1280px) {

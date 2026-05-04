@@ -61,6 +61,8 @@ export default defineNuxtConfig({
         '/api/cv/posthog-pe.pdf',
         '/api/cv/posthog-pm.pdf',
         '/api/cv/posthog-ai-research.pdf',
+        '/api/cv/linear-fullstack-engineer.pdf',
+        '/api/cv/medusa-product-engineer.pdf',
         '/api/cv/n8n-ai-engineer.pdf',
         '/api/cv/n8n-product-engineer.pdf',
         '/robots.txt',

@@ -4,15 +4,20 @@ type CvVariant =
   | 'posthog-pe'
   | 'posthog-pm'
   | 'posthog-ai-research'
+  | 'linear-fullstack-engineer'
+  | 'medusa-product-engineer'
   | 'n8n-ai-engineer'
   | 'n8n-product-engineer'
 type TargetedCvContent =
   | Profile['posthog']
   | Profile['posthogPm']
   | Profile['posthogAiResearch']
+  | Profile['linear']
+  | Profile['medusa']
   | Profile['n8n']['cv']['aiEngineer']
   | Profile['n8n']['cv']['productEngineer']
 type Color = [number, number, number]
+type CvThemeName = 'posthog' | 'linear' | 'medusa' | 'n8n'
 
 const PAGE = {
   width: 595.28,
@@ -32,7 +37,100 @@ const colors = {
   phBg: [0.969, 0.941, 0.875] as Color,
   phOrange: [0.878, 0.373, 0.184] as Color,
   phYellow: [0.957, 0.784, 0.294] as Color,
-  phGreen: [0.302, 0.553, 0.353] as Color
+  phGreen: [0.302, 0.553, 0.353] as Color,
+  linearBg: [0.031, 0.035, 0.039] as Color,
+  linearPanel: [0.078, 0.082, 0.102] as Color,
+  linearLine: [0.18, 0.19, 0.22] as Color,
+  linearText: [0.957, 0.961, 0.973] as Color,
+  linearMuted: [0.706, 0.737, 0.816] as Color,
+  linearAccent: [0.369, 0.416, 0.824] as Color,
+  medusaBg: [0.972, 0.972, 0.948] as Color,
+  medusaPanel: [1, 1, 1] as Color,
+  medusaLine: [0.851, 0.851, 0.824] as Color,
+  medusaText: [0.067, 0.067, 0.067] as Color,
+  medusaMuted: [0.4, 0.404, 0.38] as Color,
+  medusaGreen: [0.129, 0.647, 0.404] as Color,
+  medusaLime: [0.914, 0.973, 0.38] as Color,
+  n8nBg: [1, 0.969, 0.98] as Color,
+  n8nPanel: [1, 1, 1] as Color,
+  n8nLine: [0.937, 0.722, 0.78] as Color,
+  n8nText: [0.016, 0.02, 0.024] as Color,
+  n8nMuted: [0.447, 0.361, 0.396] as Color,
+  n8nPink: [0.918, 0.294, 0.443] as Color
+}
+
+const cvThemeName = (variant: CvVariant): CvThemeName =>
+  variant.includes('linear')
+    ? 'linear'
+    : variant.includes('medusa')
+      ? 'medusa'
+      : variant.includes('n8n')
+        ? 'n8n'
+        : 'posthog'
+
+const cvThemes: Record<
+  CvThemeName,
+  {
+    bg: Color
+    panel: Color
+    line: Color
+    text: Color
+    muted: Color
+    accent: Color
+    accentSoft: Color
+    grid: boolean
+    shadow: boolean
+    dark: boolean
+  }
+> = {
+  posthog: {
+    bg: colors.phBg,
+    panel: colors.paper,
+    line: colors.ink,
+    text: colors.ink,
+    muted: colors.dim,
+    accent: colors.phOrange,
+    accentSoft: [0.94, 0.89, 0.78],
+    grid: true,
+    shadow: true,
+    dark: false
+  },
+  linear: {
+    bg: colors.linearBg,
+    panel: colors.linearPanel,
+    line: colors.linearLine,
+    text: colors.linearText,
+    muted: colors.linearMuted,
+    accent: colors.linearAccent,
+    accentSoft: [0.102, 0.11, 0.15],
+    grid: false,
+    shadow: false,
+    dark: true
+  },
+  medusa: {
+    bg: colors.medusaBg,
+    panel: colors.medusaPanel,
+    line: colors.medusaLine,
+    text: colors.medusaText,
+    muted: colors.medusaMuted,
+    accent: colors.medusaText,
+    accentSoft: colors.medusaLime,
+    grid: false,
+    shadow: false,
+    dark: false
+  },
+  n8n: {
+    bg: colors.n8nBg,
+    panel: colors.n8nPanel,
+    line: colors.n8nLine,
+    text: colors.n8nText,
+    muted: colors.n8nMuted,
+    accent: colors.n8nPink,
+    accentSoft: [1, 0.895, 0.925],
+    grid: true,
+    shadow: false,
+    dark: false
+  }
 }
 
 const sanitize = (input: string | number) =>
@@ -108,6 +206,10 @@ class PdfDoc {
     this.addPage()
   }
 
+  get theme() {
+    return cvThemes[cvThemeName(this.variant)]
+  }
+
   addPage() {
     if (this.ops.length) {
       this.pages.push(this.ops.join('\n'))
@@ -115,15 +217,15 @@ class PdfDoc {
 
     this.ops = []
     this.y = 60
-    this.fillRect(0, 0, PAGE.width, PAGE.height, this.variant === 'general' ? colors.bg : colors.phBg)
+    this.fillRect(0, 0, PAGE.width, PAGE.height, this.variant === 'general' ? colors.bg : this.theme.bg)
 
-    if (this.variant !== 'general') {
+    if (this.variant !== 'general' && this.theme.grid) {
       for (let x = 0; x <= PAGE.width; x += 36) {
-        this.line(x, 0, x, PAGE.height, [0.89, 0.86, 0.78], 0.35)
+        this.line(x, 0, x, PAGE.height, this.theme === cvThemes.n8n ? [0.975, 0.82, 0.86] : [0.89, 0.86, 0.78], 0.35)
       }
 
       for (let y = 0; y <= PAGE.height; y += 36) {
-        this.line(0, y, PAGE.width, y, [0.89, 0.86, 0.78], 0.35)
+        this.line(0, y, PAGE.width, y, this.theme === cvThemes.n8n ? [0.975, 0.82, 0.86] : [0.89, 0.86, 0.78], 0.35)
       }
     }
   }
@@ -344,21 +446,31 @@ const compactTextBlock = (
   return y + visibleLines.length * lineHeight
 }
 
-const posthogHeader = (doc: PdfDoc, profile: Profile, subtitle = 'Product Engineer') => {
-  doc.panel(PAGE.margin, 42, 32, 32, colors.phOrange, colors.ink, true)
-  doc.text(profile.person.initials, 57, 64, 11, 'F2', colors.paper)
-  doc.text(profile.person.name, 94, 60, 16, 'F2')
-  doc.text(subtitle, 94, 77, 8, 'F1', colors.dim)
+const targetHeader = (doc: PdfDoc, profile: Profile, subtitle = 'Product Engineer') => {
+  const theme = doc.theme
+  doc.panel(PAGE.margin, 42, 32, 32, theme.accent, theme.line, theme.shadow)
+  doc.text(profile.person.initials, 57, 64, 11, 'F2', theme.dark ? colors.linearText : colors.paper)
+  doc.text(profile.person.name, 94, 60, 16, 'F2', theme.text)
+  doc.text(subtitle, 94, 77, 8, 'F1', theme.muted)
+
+  if (theme === cvThemes.linear) {
+    doc.line(94, 86, 520, 86, theme.line, 0.8)
+  }
 }
 
-const posthogCard = (doc: PdfDoc, x: number, y: number, width: number, height: number) => {
-  doc.panel(x, y, width, height, colors.paper, colors.ink, true)
+const targetCard = (doc: PdfDoc, x: number, y: number, width: number, height: number) => {
+  doc.panel(x, y, width, height, doc.theme.panel, doc.theme.line, doc.theme.shadow)
 }
 
 const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>) => {
   const doc = new PdfDoc(variant)
+  const theme = doc.theme
   const content: TargetedCvContent =
-    variant === 'n8n-ai-engineer'
+    variant === 'linear-fullstack-engineer'
+      ? profile.linear
+      : variant === 'medusa-product-engineer'
+        ? profile.medusa
+        : variant === 'n8n-ai-engineer'
       ? profile.n8n.cv.aiEngineer
       : variant === 'n8n-product-engineer'
         ? profile.n8n.cv.productEngineer
@@ -368,7 +480,11 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
         ? profile.posthogPm
         : profile.posthog
   const roleLabel =
-    variant === 'n8n-ai-engineer'
+    variant === 'linear-fullstack-engineer'
+      ? 'Linear Senior Fullstack Engineer'
+      : variant === 'medusa-product-engineer'
+        ? 'Medusa Product Engineer'
+        : variant === 'n8n-ai-engineer'
       ? 'n8n Sr AI Engineer'
       : variant === 'n8n-product-engineer'
         ? 'n8n Senior Product Engineer'
@@ -378,24 +494,24 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
         ? 'Product Manager'
         : 'Product Engineer'
 
-  posthogHeader(doc, profile, roleLabel)
+  targetHeader(doc, profile, roleLabel)
 
   const heroY = 96
-  posthogCard(doc, PAGE.margin, heroY, 499, 124)
-  doc.fillRect(PAGE.margin, heroY, 499, 25, [0.94, 0.89, 0.78])
-  doc.line(PAGE.margin, heroY + 25, PAGE.width - PAGE.margin, heroY + 25, colors.ink, 1.4)
-  doc.text(content.hero.kicker, 64, heroY + 17, 7.5, 'F2', colors.ink)
+  targetCard(doc, PAGE.margin, heroY, 499, 124)
+  doc.fillRect(PAGE.margin, heroY, 499, 25, theme.accentSoft)
+  doc.line(PAGE.margin, heroY + 25, PAGE.width - PAGE.margin, heroY + 25, theme.line, 1.1)
+  doc.text(content.hero.kicker, 64, heroY + 17, 7.5, 'F2', theme.dark ? theme.text : theme.text)
   compactTextBlock(doc, content.hero.headline, 64, heroY + 55, 285, 18, 20, 3, {
     font: 'F4',
-    color: colors.ink
+    color: theme.text
   })
-  doc.text('WHY', 376, heroY + 54, 7, 'F2', colors.phOrange)
-  compactTextBlock(doc, content.hero.lead, 376, heroY + 72, 135, 8, 10.5, 5, { color: colors.dim })
+  doc.text('WHY', 376, heroY + 54, 7, 'F2', theme.accent)
+  compactTextBlock(doc, content.hero.lead, 376, heroY + 72, 135, 8, 10.5, 5, { color: theme.muted })
 
-  doc.text(content.proof.kicker.toUpperCase(), PAGE.margin, 252, 8, 'F2', colors.phOrange)
+  doc.text(content.proof.kicker.toUpperCase(), PAGE.margin, 252, 8, 'F2', theme.accent)
   compactTextBlock(doc, content.proof.heading, PAGE.margin, 274, 366, 15.5, 17.5, 2, {
     font: 'F4',
-    color: colors.ink
+    color: theme.text
   })
 
   const proofCardWidth = 242
@@ -405,45 +521,49 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
     const x = PAGE.margin + column * (proofCardWidth + 15)
     const y = 326 + rowIndex * 80
 
-    posthogCard(doc, x, y, proofCardWidth, 66)
-    doc.text(row.label.toUpperCase(), x + 12, y + 17, 7, 'F2', colors.phOrange)
+    targetCard(doc, x, y, proofCardWidth, 66)
+    if (theme === cvThemes.n8n) {
+      doc.fillRect(x - 3, y + 18, 6, 6, theme.accent)
+      doc.line(x - 18, y + 21, x - 3, y + 21, theme.accent, 0.7)
+    }
+    doc.text(row.label.toUpperCase(), x + 12, y + 17, 7, 'F2', theme.accent)
     compactTextBlock(doc, row.heading, x + 12, y + 33, proofCardWidth - 24, 8.4, 10, 3, {
       font: 'F2',
-      color: colors.ink
+      color: theme.text
     })
   })
 
-  doc.text(content.loop.kicker.toUpperCase(), PAGE.margin, 592, 8, 'F2', colors.phOrange)
+  doc.text(content.loop.kicker.toUpperCase(), PAGE.margin, 592, 8, 'F2', theme.accent)
   compactTextBlock(doc, content.loop.heading, PAGE.margin, 615, 190, 16, 18, 2, {
     font: 'F4',
-    color: colors.ink
+    color: theme.text
   })
   content.loop.steps.forEach((step, index) => {
     const y = 584 + index * 48
-    doc.panel(258, y, 289, 42, colors.paper, colors.ink)
-    doc.text(step.label, 272, y + 16, 9.2, 'F2', colors.ink)
-    compactTextBlock(doc, step.description, 350, y + 14, 178, 7.3, 9, 3, { color: colors.dim })
+    doc.panel(258, y, 289, 42, theme.panel, theme.line)
+    doc.text(step.label, 272, y + 16, 9.2, 'F2', theme.text)
+    compactTextBlock(doc, step.description, 350, y + 14, 178, 7.3, 9, 3, { color: theme.muted })
   })
 
   doc.addPage()
-  posthogHeader(doc, profile, roleLabel)
+  targetHeader(doc, profile, roleLabel)
 
-  doc.text('TRACK RECORD', PAGE.margin, 104, 8, 'F2', colors.phOrange)
+  doc.text('TRACK RECORD', PAGE.margin, 104, 8, 'F2', theme.accent)
   compactTextBlock(doc, profile.track.heading, PAGE.margin, 126, 430, 15, 17, 2, {
     font: 'F4',
-    color: colors.ink
+    color: theme.text
   })
 
   profile.track.experience.slice(0, 5).forEach((item, index) => {
     const y = 190 + index * 94
-    doc.text(item.year, PAGE.margin, y, 7.2, 'F2', colors.dim)
-    doc.text(`${item.role} / ${item.org}`, 142, y, 9, 'F2', colors.ink)
-    compactTextBlock(doc, item.description, 142, y + 14, 375, 7.4, 9.2, 6, { color: colors.dim })
-    doc.line(PAGE.margin, y + 74, PAGE.width - PAGE.margin, y + 74, colors.ink, 0.65)
+    doc.text(item.year, PAGE.margin, y, 7.2, 'F2', theme.muted)
+    doc.text(`${item.role} / ${item.org}`, 142, y, 9, 'F2', theme.text)
+    compactTextBlock(doc, item.description, 142, y + 14, 375, 7.4, 9.2, 6, { color: theme.muted })
+    doc.line(PAGE.margin, y + 74, PAGE.width - PAGE.margin, y + 74, theme.line, 0.65)
   })
 
-  doc.panel(PAGE.margin, 674, 499, 44, colors.paper, colors.ink)
-  doc.text('OUTSIDE WORK', 64, 694, 8, 'F2', colors.phOrange)
+  doc.panel(PAGE.margin, 674, 499, 44, theme.panel, theme.line)
+  doc.text('OUTSIDE WORK', 64, 694, 8, 'F2', theme.accent)
   compactTextBlock(
     doc,
     'Boxing training / automotive / technology / science - grounded interests where feedback, systems, and craft matter.',
@@ -453,13 +573,13 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
     8.2,
     10.2,
     2,
-    { color: colors.ink }
+    { color: theme.text }
   )
 
-  doc.panel(PAGE.margin, 746, 499, 54, colors.phOrange, colors.ink, true)
-  doc.text('CONTACT', 64, 768, 8, 'F2', colors.paper)
-  doc.text(profile.person.email, 142, 768, 10, 'F2', colors.paper)
-  doc.text(profile.links.github.value, 142, 784, 8.5, 'F1', colors.paper)
+  doc.panel(PAGE.margin, 746, 499, 54, theme.accent, theme.line, theme.shadow)
+  doc.text('CONTACT', 64, 768, 8, 'F2', theme.dark ? colors.linearText : colors.paper)
+  doc.text(profile.person.email, 142, 768, 10, 'F2', theme.dark ? colors.linearText : colors.paper)
+  doc.text(profile.links.github.value, 142, 784, 8.5, 'F1', theme.dark ? colors.linearText : colors.paper)
 
   return doc.finish()
 }
