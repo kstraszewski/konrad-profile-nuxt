@@ -79,9 +79,21 @@ import { profile } from '~/data/profile'
 const posthog = usePostHog()
 
 const generalPreviewSummary =
-  'Product Engineer and AI-native builder with 11 years across product engineering, frontend leadership, and AI adoption.'
+  'Product Engineer and AI-native builder with PostgreSQL, Redis, product engineering, frontend leadership, and AI adoption.'
 
 const downloadName = (label) => {
+  if (label.includes('Plain')) {
+    return 'Konrad-Straszewski-CV-Plain-AI-Product-Engineer.pdf'
+  }
+
+  if (label.includes('Polar')) {
+    return 'Konrad-Straszewski-CV-Polar-Senior-Product-Engineer.pdf'
+  }
+
+  if (label.includes('Lago')) {
+    return 'Konrad-Straszewski-CV-Lago-Product-Engineer-Growth.pdf'
+  }
+
   if (label.includes('Linear')) {
     return 'Konrad-Straszewski-CV-Linear-Fullstack-Engineer.pdf'
   }
@@ -116,17 +128,49 @@ const isPosthogDownload = (label) => label.includes('PostHog')
 const isN8nDownload = (label) => label.includes('n8n')
 const isLinearDownload = (label) => label.includes('Linear')
 const isMedusaDownload = (label) => label.includes('Medusa')
+const isPlainDownload = (label) => label.includes('Plain')
+const isPolarDownload = (label) => label.includes('Polar')
+const isLagoDownload = (label) => label.includes('Lago')
 const isTargetedDownload = (label) =>
-  isPosthogDownload(label) || isN8nDownload(label) || isLinearDownload(label) || isMedusaDownload(label)
+  isPosthogDownload(label) ||
+  isN8nDownload(label) ||
+  isLinearDownload(label) ||
+  isMedusaDownload(label) ||
+  isPlainDownload(label) ||
+  isPolarDownload(label) ||
+  isLagoDownload(label)
 const isPosthogAiResearchDownload = (label) => label.includes('AI Research')
 const isPosthogPmDownload = (label) => label.includes('Product Manager')
 const previewClass = (label) => ({
   'cv-preview__paper--posthog': isPosthogDownload(label),
-  'cv-preview__paper--linear': isLinearDownload(label),
+  'cv-preview__paper--linear': isLinearDownload(label) || isPolarDownload(label),
   'cv-preview__paper--medusa': isMedusaDownload(label),
-  'cv-preview__paper--n8n': isN8nDownload(label)
+  'cv-preview__paper--plain': isPlainDownload(label),
+  'cv-preview__paper--n8n': isN8nDownload(label),
+  'cv-preview__paper--lago': isLagoDownload(label)
 })
 const posthogPreview = (label) => {
+  if (label.includes('Plain')) {
+    return {
+      small: 'Application page / Senior Product Engineer AI',
+      headline: 'I build AI workflows that keep customer context close to the product.'
+    }
+  }
+
+  if (label.includes('Polar')) {
+    return {
+      small: 'Application page / Senior Product Engineer',
+      headline: 'I build product systems for the new economics of software.'
+    }
+  }
+
+  if (label.includes('Lago')) {
+    return {
+      small: 'Application page / Product Engineer Growth',
+      headline: 'I turn AI agent prototypes into workflows people can actually run.'
+    }
+  }
+
   if (label.includes('Linear')) {
     return {
       small: 'Application page / Senior Fullstack Engineer',
@@ -137,7 +181,7 @@ const posthogPreview = (label) => {
   if (label.includes('Medusa')) {
     return {
       small: 'Application page / Product Engineer',
-      headline: 'I build developer products where code and product strategy stay together.'
+      headline: 'I build product systems where code and strategy stay together.'
     }
   }
 
@@ -175,25 +219,24 @@ const posthogPreview = (label) => {
   }
 }
 
-const onDownload = (label) => {
-  const variant = label.includes('Linear')
-    ? 'linear-fullstack-engineer'
-    : label.includes('Medusa')
-      ? 'medusa-product-engineer'
-      : label.includes('n8n') && label.includes('AI Engineer')
-    ? 'n8n-ai-engineer'
-    : label.includes('n8n') && label.includes('Product Engineer')
-      ? 'n8n-product-engineer'
-      : isPosthogAiResearchDownload(label)
-    ? 'posthog-ai-research'
-    : isPosthogPmDownload(label)
-      ? 'posthog-pm'
-      : label.includes('Product Engineer')
-        ? 'posthog-pe'
-        : 'general'
+const downloadVariant = (label) => {
+  if (label.includes('Plain')) return 'plain-ai-product-engineer'
+  if (label.includes('Polar')) return 'polar-senior-product-engineer'
+  if (label.includes('Lago')) return 'lago-product-engineer-growth'
+  if (label.includes('Linear')) return 'linear-fullstack-engineer'
+  if (label.includes('Medusa')) return 'medusa-product-engineer'
+  if (label.includes('n8n') && label.includes('AI Engineer')) return 'n8n-ai-engineer'
+  if (label.includes('n8n') && label.includes('Product Engineer')) return 'n8n-product-engineer'
+  if (isPosthogAiResearchDownload(label)) return 'posthog-ai-research'
+  if (isPosthogPmDownload(label)) return 'posthog-pm'
+  if (label.includes('Product Engineer')) return 'posthog-pe'
 
+  return 'general'
+}
+
+const onDownload = (label) => {
   posthog?.capture('cv_downloaded', {
-    variant,
+    variant: downloadVariant(label),
     label,
   })
 }
@@ -457,10 +500,18 @@ useRouteSeo('/cv')
 
 .cv-preview__paper--medusa {
   background:
-    linear-gradient(rgba(17, 17, 17, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(17, 17, 17, 0.035) 1px, transparent 1px),
-    linear-gradient(180deg, #fbfbf8 0%, #f3f4ee 100%);
-  background-size: 72px 72px, 72px 72px, auto;
+    linear-gradient(90deg, transparent 0 28px, rgba(17, 17, 17, 0.1) 28px 29px, transparent 29px calc(100% - 29px), rgba(17, 17, 17, 0.1) calc(100% - 29px) calc(100% - 28px), transparent calc(100% - 28px)),
+    #ffffff;
+}
+
+.cv-preview__paper--plain {
+  background:
+    linear-gradient(180deg, rgba(26, 211, 121, 0.08), rgba(26, 211, 121, 0) 36%),
+    #ffffff;
+}
+
+.cv-preview__paper--plain::after {
+  border-color: #e4e4e4;
 }
 
 .cv-preview__paper--n8n {
@@ -492,6 +543,17 @@ useRouteSeo('/cv')
 
 .cv-preview__paper--n8n::after {
   border-color: rgba(255, 255, 255, 0.12);
+}
+
+.cv-preview__paper--lago {
+  background:
+    linear-gradient(180deg, rgba(79, 70, 229, 0.055), rgba(79, 70, 229, 0) 42%),
+    #f7f7f2;
+  color: #050505;
+}
+
+.cv-preview__paper--lago::after {
+  border-color: #deded4;
 }
 
 .cv-mini-ph__mast,
@@ -545,10 +607,26 @@ useRouteSeo('/cv')
 }
 
 .cv-preview__paper--medusa .cv-mini-ph__mast span {
+  border-color: #111111;
   border-width: 1px;
-  border-radius: 8px;
+  border-radius: 999px;
   background: #111111;
   box-shadow: none;
+  color: #ffffff;
+}
+
+.cv-preview__paper--plain .cv-mini-ph__mast span {
+  border: 1px solid #050505;
+  border-radius: 6px;
+  background: #050505;
+  box-shadow: none;
+  color: #1ad379;
+}
+
+.cv-preview__paper--plain .cv-mini-ph__mast strong,
+.cv-preview__paper--plain .cv-mini-ph__panel strong {
+  font-family: var(--font-body);
+  font-weight: 520;
 }
 
 .cv-preview__paper--n8n .cv-mini-ph__mast span {
@@ -556,6 +634,20 @@ useRouteSeo('/cv')
   border-radius: 12px;
   background: #ff5a3d;
   box-shadow: 0 12px 34px rgba(255, 90, 61, 0.34);
+}
+
+.cv-preview__paper--lago .cv-mini-ph__mast span {
+  border: 0;
+  border-radius: 6px;
+  background: #4f46e5;
+  box-shadow: none;
+  color: #ffffff;
+}
+
+.cv-preview__paper--lago .cv-mini-ph__mast strong,
+.cv-preview__paper--lago .cv-mini-ph__panel strong {
+  font-family: var(--font-body);
+  font-weight: 560;
 }
 
 .cv-mini-ph__mast strong {
@@ -581,8 +673,17 @@ useRouteSeo('/cv')
 
 .cv-preview__paper--medusa .cv-mini-ph__panel,
 .cv-preview__paper--medusa .cv-mini-ph__rows span {
-  border: 1px solid #d9d9d2;
+  border: 1px solid #e4e4e7;
   border-radius: 8px;
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.cv-preview__paper--plain .cv-mini-ph__panel,
+.cv-preview__paper--plain .cv-mini-ph__rows span {
+  border: 1px solid #e4e4e4;
+  border-radius: 8px;
+  background: #ffffff;
   box-shadow: none;
 }
 
@@ -594,6 +695,14 @@ useRouteSeo('/cv')
   box-shadow:
     0 22px 70px rgba(0, 0, 0, 0.24),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.cv-preview__paper--lago .cv-mini-ph__panel,
+.cv-preview__paper--lago .cv-mini-ph__rows span {
+  border: 1px solid #deded4;
+  border-radius: 8px;
+  background: #fffef9;
+  box-shadow: none;
 }
 
 .cv-mini-ph__panel small {
@@ -612,14 +721,27 @@ useRouteSeo('/cv')
 }
 
 .cv-preview__paper--medusa .cv-mini-ph__panel small {
-  border-bottom: 1px solid #d9d9d2;
-  background: #e9f861;
+  border-bottom: 1px solid #e4e4e7;
+  background: #f6f7f8;
+  color: #52525b;
+}
+
+.cv-preview__paper--plain .cv-mini-ph__panel small {
+  border-bottom: 1px solid #e4e4e4;
+  background: #050505;
+  color: #1ad379;
 }
 
 .cv-preview__paper--n8n .cv-mini-ph__panel small {
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(12, 8, 18, 0.78);
   color: #ffb09f;
+}
+
+.cv-preview__paper--lago .cv-mini-ph__panel small {
+  border-bottom: 1px solid #e7e7df;
+  background: #fffef9;
+  color: #61615b;
 }
 
 .cv-mini-ph__panel strong {
@@ -656,10 +778,21 @@ useRouteSeo('/cv')
 
 .cv-preview__paper--medusa .cv-mini-ph__rows span {
   color: #111111;
+  background: #f6f7f8;
+}
+
+.cv-preview__paper--plain .cv-mini-ph__rows span {
+  color: #13a961;
+  background: #ffffff;
 }
 
 .cv-preview__paper--n8n .cv-mini-ph__rows span {
   color: #ffb09f;
+}
+
+.cv-preview__paper--lago .cv-mini-ph__rows span {
+  color: #4f46e5;
+  background: #fffef9;
 }
 
 @media (max-width: 1280px) {

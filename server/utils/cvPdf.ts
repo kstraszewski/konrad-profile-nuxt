@@ -8,6 +8,9 @@ type CvVariant =
   | 'medusa-product-engineer'
   | 'n8n-ai-engineer'
   | 'n8n-product-engineer'
+  | 'plain-ai-product-engineer'
+  | 'polar-senior-product-engineer'
+  | 'lago-product-engineer-growth'
 type TargetedCvContent =
   | Profile['posthog']
   | Profile['posthogPm']
@@ -16,8 +19,11 @@ type TargetedCvContent =
   | Profile['medusa']
   | Profile['n8n']['cv']['aiEngineer']
   | Profile['n8n']['cv']['productEngineer']
+  | Profile['plain']
+  | Profile['polar']
+  | Profile['lago']
 type Color = [number, number, number]
-type CvThemeName = 'posthog' | 'linear' | 'medusa' | 'n8n'
+type CvThemeName = 'posthog' | 'linear' | 'medusa' | 'plain' | 'n8n' | 'lago'
 
 const PAGE = {
   width: 595.28,
@@ -44,28 +50,47 @@ const colors = {
   linearText: [0.957, 0.961, 0.973] as Color,
   linearMuted: [0.706, 0.737, 0.816] as Color,
   linearAccent: [0.608, 0.631, 1] as Color,
-  medusaBg: [0.984, 0.984, 0.973] as Color,
+  medusaBg: [1, 1, 1] as Color,
   medusaPanel: [1, 1, 1] as Color,
-  medusaLine: [0.851, 0.851, 0.824] as Color,
-  medusaText: [0.067, 0.067, 0.067] as Color,
-  medusaMuted: [0.4, 0.404, 0.38] as Color,
-  medusaGreen: [0.129, 0.647, 0.404] as Color,
-  medusaLime: [0.914, 0.973, 0.38] as Color,
+  medusaLine: [0.894, 0.894, 0.906] as Color,
+  medusaText: [0.09, 0.09, 0.106] as Color,
+  medusaMuted: [0.373, 0.388, 0.408] as Color,
+  medusaSoft: [0.965, 0.969, 0.973] as Color,
+  plainBg: [1, 1, 1] as Color,
+  plainPanel: [1, 1, 1] as Color,
+  plainLine: [0.894, 0.894, 0.894] as Color,
+  plainText: [0.02, 0.02, 0.02] as Color,
+  plainMuted: [0.333, 0.333, 0.333] as Color,
+  plainGreen: [0.102, 0.827, 0.475] as Color,
+  plainSoft: [0.91, 0.984, 0.941] as Color,
   n8nBg: [0.063, 0.031, 0.098] as Color,
   n8nPanel: [0.09, 0.071, 0.125] as Color,
   n8nLine: [0.275, 0.235, 0.325] as Color,
   n8nText: [0.984, 0.973, 1] as Color,
   n8nMuted: [0.776, 0.729, 0.808] as Color,
-  n8nPink: [1, 0.353, 0.239] as Color
+  n8nPink: [1, 0.353, 0.239] as Color,
+  lagoBg: [0.969, 0.969, 0.949] as Color,
+  lagoPanel: [1, 0.996, 0.976] as Color,
+  lagoLine: [0.871, 0.871, 0.831] as Color,
+  lagoText: [0.02, 0.02, 0.02] as Color,
+  lagoMuted: [0.38, 0.38, 0.357] as Color,
+  lagoBlue: [0.31, 0.275, 0.898] as Color,
+  lagoGreen: [0.059, 0.624, 0.431] as Color
 }
 
 const cvThemeName = (variant: CvVariant): CvThemeName =>
   variant.includes('linear')
     ? 'linear'
-    : variant.includes('medusa')
-      ? 'medusa'
-      : variant.includes('n8n')
-        ? 'n8n'
+    : variant.includes('polar')
+      ? 'linear'
+    : variant.includes('plain')
+      ? 'plain'
+      : variant.includes('medusa')
+        ? 'medusa'
+      : variant.includes('lago')
+        ? 'lago'
+        : variant.includes('n8n')
+          ? 'n8n'
         : 'posthog'
 
 const cvThemes: Record<
@@ -114,8 +139,20 @@ const cvThemes: Record<
     text: colors.medusaText,
     muted: colors.medusaMuted,
     accent: colors.medusaText,
-    accentSoft: colors.medusaLime,
-    grid: true,
+    accentSoft: colors.medusaSoft,
+    grid: false,
+    shadow: false,
+    dark: false
+  },
+  plain: {
+    bg: colors.plainBg,
+    panel: colors.plainPanel,
+    line: colors.plainLine,
+    text: colors.plainText,
+    muted: colors.plainMuted,
+    accent: colors.plainGreen,
+    accentSoft: colors.plainSoft,
+    grid: false,
     shadow: false,
     dark: false
   },
@@ -130,6 +167,18 @@ const cvThemes: Record<
     grid: true,
     shadow: false,
     dark: true
+  },
+  lago: {
+    bg: colors.lagoBg,
+    panel: colors.lagoPanel,
+    line: colors.lagoLine,
+    text: colors.lagoText,
+    muted: colors.lagoMuted,
+    accent: colors.lagoBlue,
+    accentSoft: [0.925, 0.922, 1],
+    grid: false,
+    shadow: false,
+    dark: false
   }
 }
 
@@ -142,8 +191,16 @@ const gridStyle = (theme: (typeof cvThemes)[CvThemeName]) => {
     return { step: 72, color: [0.88, 0.88, 0.85] as Color, width: 0.35 }
   }
 
+  if (theme === cvThemes.plain) {
+    return { step: 64, color: [0.914, 0.914, 0.914] as Color, width: 0.35 }
+  }
+
   if (theme === cvThemes.n8n) {
     return { step: 56, color: [0.196, 0.157, 0.243] as Color, width: 0.35 }
+  }
+
+  if (theme === cvThemes.lago) {
+    return { step: 96, color: [0.875, 0.875, 0.835] as Color, width: 0.3 }
   }
 
   return { step: 36, color: [0.89, 0.86, 0.78] as Color, width: 0.35 }
@@ -479,8 +536,14 @@ const compactTextBlock = (
 
 const targetHeader = (doc: PdfDoc, profile: Profile, subtitle = 'Product Engineer') => {
   const theme = doc.theme
-  const markFill = theme === cvThemes.linear ? theme.text : theme.accent
-  const markText = theme === cvThemes.linear ? colors.linearBg : colors.paper
+  const markFill = theme === cvThemes.linear ? theme.text : theme === cvThemes.plain ? colors.plainText : theme.accent
+  const markText = theme === cvThemes.linear
+    ? colors.linearBg
+    : theme === cvThemes.plain
+      ? colors.plainGreen
+      : theme === cvThemes.medusa
+        ? colors.medusaPanel
+        : colors.paper
 
   doc.panel(PAGE.margin, 42, 32, 32, markFill, theme.line, theme.shadow)
   doc.text(profile.person.initials, 57, 64, 11, 'F2', markText)
@@ -499,11 +562,19 @@ const targetCard = (doc: PdfDoc, x: number, y: number, width: number, height: nu
 const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>) => {
   const doc = new PdfDoc(variant)
   const theme = doc.theme
+  const headlineFont = theme === cvThemes.medusa || theme === cvThemes.plain || theme === cvThemes.lago ? 'F2' : 'F4'
+  const heroHeadlineColor = theme === cvThemes.plain ? theme.accent : theme.text
   const content: TargetedCvContent =
     variant === 'linear-fullstack-engineer'
       ? profile.linear
       : variant === 'medusa-product-engineer'
         ? profile.medusa
+        : variant === 'plain-ai-product-engineer'
+          ? profile.plain
+          : variant === 'polar-senior-product-engineer'
+            ? profile.polar
+            : variant === 'lago-product-engineer-growth'
+              ? profile.lago
         : variant === 'n8n-ai-engineer'
       ? profile.n8n.cv.aiEngineer
       : variant === 'n8n-product-engineer'
@@ -518,6 +589,12 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
       ? 'Linear Senior Fullstack Engineer'
       : variant === 'medusa-product-engineer'
         ? 'Medusa Product Engineer'
+        : variant === 'plain-ai-product-engineer'
+          ? 'Plain AI Product Engineer'
+          : variant === 'polar-senior-product-engineer'
+            ? 'Polar Senior Product Engineer'
+            : variant === 'lago-product-engineer-growth'
+              ? 'Lago Product Engineer Growth'
         : variant === 'n8n-ai-engineer'
       ? 'n8n Sr AI Engineer'
       : variant === 'n8n-product-engineer'
@@ -540,6 +617,11 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
     doc.text('In progress', PAGE.width - PAGE.margin - 75, heroY + 15, 5.6, 'F2', [0.62, 0.898, 0.706])
   }
 
+  if (theme === cvThemes.lago) {
+    doc.panel(PAGE.width - PAGE.margin - 82, heroY + 3, 68, 18, [0.945, 0.98, 0.965], colors.lagoLine)
+    doc.text('Open source', PAGE.width - PAGE.margin - 74, heroY + 15, 5.6, 'F2', colors.lagoGreen)
+  }
+
   if (theme === cvThemes.n8n) {
     doc.polygon(
       [
@@ -557,15 +639,15 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
 
   doc.text(content.hero.kicker, 64, heroY + 17, 7.5, 'F2', theme.dark ? theme.text : theme.text)
   compactTextBlock(doc, content.hero.headline, 64, heroY + 55, 285, 18, 20, 3, {
-    font: 'F4',
-    color: theme.text
+    font: headlineFont,
+    color: heroHeadlineColor
   })
   doc.text('WHY', 376, heroY + 54, 7, 'F2', theme.accent)
   compactTextBlock(doc, content.hero.lead, 376, heroY + 72, 135, 8, 10.5, 5, { color: theme.muted })
 
   doc.text(content.proof.kicker.toUpperCase(), PAGE.margin, 252, 8, 'F2', theme.accent)
   compactTextBlock(doc, content.proof.heading, PAGE.margin, 274, 366, 15.5, 17.5, 2, {
-    font: 'F4',
+    font: headlineFont,
     color: theme.text
   })
 
@@ -590,7 +672,7 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
 
   doc.text(content.loop.kicker.toUpperCase(), PAGE.margin, 592, 8, 'F2', theme.accent)
   compactTextBlock(doc, content.loop.heading, PAGE.margin, 615, 190, 16, 18, 2, {
-    font: 'F4',
+    font: headlineFont,
     color: theme.text
   })
   content.loop.steps.forEach((step, index) => {
@@ -605,7 +687,7 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
 
   doc.text('TRACK RECORD', PAGE.margin, 104, 8, 'F2', theme.accent)
   compactTextBlock(doc, profile.track.heading, PAGE.margin, 126, 430, 15, 17, 2, {
-    font: 'F4',
+    font: headlineFont,
     color: theme.text
   })
 

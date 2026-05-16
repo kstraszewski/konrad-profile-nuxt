@@ -32,14 +32,14 @@ export const seoPages: SeoPage[] = [
     path: '/jasne.ai',
     title: 'jasne.ai Case Study | Vertical AI Product by Konrad Straszewski',
     description:
-      'Case study of jasne.ai, a vertical AI product built end-to-end by Konrad Straszewski across product, UX, Nuxt, Expo, Supabase, and AI SDK.',
+      'Case study of jasne.ai, a vertical AI product built end-to-end by Konrad Straszewski across product, UX, Nuxt, Expo, Supabase/PostgreSQL, and AI SDK.',
     lastmod: '2026-04-30'
   },
   {
     path: '/cv',
     title: 'CV | Konrad Straszewski - AI Manager & Product Engineer',
     description:
-      'Download CV files for Konrad Straszewski: AI Manager, product engineer, Nuxt/Vue frontend lead, jasne.ai founder, and AI adoption lead.',
+      'Download CV files for Konrad Straszewski: AI Manager, product engineer, PostgreSQL/Redis builder, Nuxt/Vue frontend lead, jasne.ai founder, and AI adoption lead.',
     lastmod: '2026-04-30'
   },
   {
@@ -78,6 +78,30 @@ export const seoPages: SeoPage[] = [
     title: profile.n8n.title,
     description: profile.n8n.description,
     lastmod: '2026-05-04',
+    index: false,
+    sitemap: false
+  },
+  {
+    path: '/plain',
+    title: profile.plain.title,
+    description: profile.plain.description,
+    lastmod: '2026-05-16',
+    index: false,
+    sitemap: false
+  },
+  {
+    path: '/polar',
+    title: profile.polar.title,
+    description: profile.polar.description,
+    lastmod: '2026-05-16',
+    index: false,
+    sitemap: false
+  },
+  {
+    path: '/lago',
+    title: profile.lago.title,
+    description: profile.lago.description,
+    lastmod: '2026-05-16',
     index: false,
     sitemap: false
   }
@@ -138,6 +162,8 @@ const getPersonSchema = (siteUrl: string) => ({
     'Generative UI',
     'AI-native workflows',
     'Supabase',
+    'PostgreSQL',
+    'Redis',
     'PostHog'
   ]
 })

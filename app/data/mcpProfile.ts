@@ -8,7 +8,7 @@ export const mcpServer = {
   name: 'Konrad Profile MCP',
   endpoint: absoluteUrl('/mcp/server'),
   appTool: 'konrad-cv',
-  updated: '2026-05-04'
+  updated: '2026-05-16'
 } as const
 
 export const profileFocusOptions = [
@@ -22,6 +22,9 @@ export const profileFocusOptions = [
   'linear',
   'medusa',
   'n8n',
+  'plain',
+  'polar',
+  'lago',
   'contact'
 ] as const
 
@@ -102,6 +105,27 @@ const targetedRoleContexts = [
     summary: profile.n8n.cv.productEngineer.description,
     proof: profile.n8n.cv.productEngineer.proof.rows,
     ideas: profile.n8n.cv.productEngineer.ideas.items
+  },
+  {
+    id: 'plain-ai-product-engineer',
+    title: profile.plain.title,
+    summary: profile.plain.description,
+    proof: profile.plain.proof.rows,
+    ideas: profile.plain.ideas.items
+  },
+  {
+    id: 'polar-senior-product-engineer',
+    title: profile.polar.title,
+    summary: profile.polar.description,
+    proof: profile.polar.proof.rows,
+    ideas: profile.polar.ideas.items
+  },
+  {
+    id: 'lago-product-engineer-growth',
+    title: profile.lago.title,
+    summary: profile.lago.description,
+    proof: profile.lago.proof.rows,
+    ideas: profile.lago.ideas.items
   }
 ]
 
@@ -179,6 +203,18 @@ const allSections = {
       targetedRoleContexts.find((role) => role.id === 'n8n-product-engineer')
     ]
   },
+  plain: {
+    title: 'Plain-tailored context',
+    role: targetedRoleContexts.find((role) => role.id === 'plain-ai-product-engineer')
+  },
+  polar: {
+    title: 'Polar-tailored context',
+    role: targetedRoleContexts.find((role) => role.id === 'polar-senior-product-engineer')
+  },
+  lago: {
+    title: 'Lago-tailored context',
+    role: targetedRoleContexts.find((role) => role.id === 'lago-product-engineer-growth')
+  },
   contact: {
     title: 'Contact',
     availability: profile.person.availability,
@@ -189,16 +225,19 @@ const allSections = {
 } as const
 
 const sectionIdsByFocus: Record<ProfileFocus, (keyof typeof allSections)[]> = {
-  full: ['overview', 'cv', 'experience', 'projects', 'ai', 'stack', 'posthog', 'n8n', 'contact'],
+  full: ['overview', 'cv', 'experience', 'projects', 'ai', 'stack', 'posthog', 'n8n', 'plain', 'polar', 'lago', 'contact'],
   overview: ['overview', 'experience', 'projects', 'stack', 'contact'],
   cv: ['cv', 'experience', 'stack', 'contact'],
   experience: ['experience', 'projects', 'ai'],
-  ai: ['ai', 'projects', 'stack', 'posthog', 'linear', 'medusa', 'n8n'],
+  ai: ['ai', 'projects', 'stack', 'posthog', 'linear', 'medusa', 'n8n', 'plain', 'polar', 'lago'],
   projects: ['projects', 'experience', 'stack'],
   posthog: ['posthog', 'experience', 'ai', 'cv', 'contact'],
   linear: ['linear', 'experience', 'ai', 'cv', 'contact'],
   medusa: ['medusa', 'experience', 'ai', 'cv', 'contact'],
   n8n: ['n8n', 'experience', 'ai', 'cv', 'contact'],
+  plain: ['plain', 'experience', 'ai', 'cv', 'contact'],
+  polar: ['polar', 'experience', 'ai', 'cv', 'contact'],
+  lago: ['lago', 'experience', 'ai', 'cv', 'contact'],
   contact: ['contact', 'cv']
 }
 
@@ -369,6 +408,42 @@ export const profileDocuments: ProfileDocument[] = [
       ...profile.n8n.cv.productEngineer.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`)
     ]),
     metadata: { section: 'n8n' }
+  },
+  {
+    id: 'plain-context',
+    title: 'Plain-tailored role context',
+    url: absoluteUrl('/plain'),
+    text: lines([
+      profile.plain.title,
+      profile.plain.description,
+      ...profile.plain.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`),
+      ...profile.plain.ideas.items.map((idea) => `${idea.label}: ${idea.description}`)
+    ]),
+    metadata: { section: 'plain' }
+  },
+  {
+    id: 'polar-context',
+    title: 'Polar-tailored role context',
+    url: absoluteUrl('/polar'),
+    text: lines([
+      profile.polar.title,
+      profile.polar.description,
+      ...profile.polar.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`),
+      ...profile.polar.ideas.items.map((idea) => `${idea.label}: ${idea.description}`)
+    ]),
+    metadata: { section: 'polar' }
+  },
+  {
+    id: 'lago-context',
+    title: 'Lago-tailored role context',
+    url: absoluteUrl('/lago'),
+    text: lines([
+      profile.lago.title,
+      profile.lago.description,
+      ...profile.lago.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`),
+      ...profile.lago.ideas.items.map((idea) => `${idea.label}: ${idea.description}`)
+    ]),
+    metadata: { section: 'lago' }
   },
   {
     id: 'contact',
