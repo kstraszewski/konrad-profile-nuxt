@@ -408,11 +408,15 @@ const drawGeneralCv = (profile: Profile) => {
   profile.track.experience.forEach((item) => {
     doc.ensure(82)
     const startY = doc.y
+    const roleX = 142
+    const descX = 304
+    const roleWidth = descX - roleX - 20
     doc.text(item.year, PAGE.margin, startY, 8, 'F2', colors.dim)
-    doc.text(item.role, 142, startY, 14, 'F4')
-    doc.text(item.org, 142, startY + 17, 9, 'F1', colors.dim)
-    const descY = doc.textBlock(item.description, 304, startY, 234, 9, 12.5, { color: colors.ink })
-    doc.y = Math.max(startY + 44, descY) + 18
+    const roleEndY = doc.textBlock(item.role, roleX, startY, roleWidth, 13.5, 15, { font: 'F4' })
+    const orgY = Math.max(startY + 17, roleEndY + 3)
+    doc.text(item.org, roleX, orgY, 9, 'F1', colors.dim)
+    const descY = doc.textBlock(item.description, descX, startY, 234, 9, 12.5, { color: colors.ink })
+    doc.y = Math.max(startY + 44, orgY + 14, descY) + 18
     doc.line(PAGE.margin, doc.y - 8, PAGE.width - PAGE.margin, doc.y - 8, colors.rule)
   })
 
