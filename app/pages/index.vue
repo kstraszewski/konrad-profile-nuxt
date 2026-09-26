@@ -44,10 +44,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
     <main id="main">
       <section class="home-hero home-wrap" aria-labelledby="home-title">
         <div class="home-hero__intro">
-          <p class="home-kicker">Konrad Straszewski <span>—</span> AI & product engineering</p>
+          <p class="home-kicker">Konrad Straszewski <span>—</span> TypeScript · full-stack · AI</p>
           <h1 id="home-title">Engineer.<br>Builder.<br><span>Still curious.</span></h1>
           <p class="home-hero__copy">
-            I turn AI into useful products and help teams do the same.
+            I build full-stack products in TypeScript, put AI to work, and help teams ship.
             Currently at <a :href="profile.links.lendi.href" target="_blank" rel="noreferrer">Lendi</a>.
             Independently building <NuxtLink to="/jasne.ai" @click="trackJasne">jasne.ai</NuxtLink>.
           </p>

@@ -23,10 +23,10 @@ export const seoSite = {
 export const seoPages: SeoPage[] = [
   {
     path: '/',
-    title: 'Konrad Straszewski | AI Manager, Product Builder & Nuxt/Vue Engineer',
+    title: 'Konrad Straszewski | AI Manager & Full-Stack TypeScript Engineer',
     description:
-      'AI Manager at Lendi and founder of jasne.ai. Konrad Straszewski leads AI adoption, Nuxt/Vue product engineering, and AI-native workflows.',
-    lastmod: '2026-04-30',
+      'AI Manager at Lendi and founder of jasne.ai. Full-stack TypeScript engineering, AI adoption, and products built end-to-end by Konrad Straszewski.',
+    lastmod: '2026-09-26',
     type: 'profile'
   },
   {
