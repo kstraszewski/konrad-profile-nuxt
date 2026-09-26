@@ -22,6 +22,8 @@ export default defineNuxtConfig({
     }
   },
   routeRules: {
+    '/neoiq': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
+    '/neoiq/ar': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
     '/oferteo': {
       headers: {
         'X-Robots-Tag': 'noindex, nofollow'
@@ -61,6 +63,7 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       routes: [
+        '/api/cv/neoiq-fde-ai-manager.pdf',
         '/api/cv/oferteo-fde-ai-manager.pdf',
         '/api/cv/general.pdf',
         '/api/cv/posthog.pdf',

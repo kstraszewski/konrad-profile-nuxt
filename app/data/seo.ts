@@ -39,8 +39,8 @@ export const seoPages: SeoPage[] = [
   },
   {
     path: '/neoiq',
-    title: 'Konrad × NeoIQ | Forward Deployed Engineer / AI Manager',
-    description: 'A collaboration proposal for NeoIQ: four customer pilots across brand onboarding, bilingual evaluation, team learning and AI adoption.',
+    title: 'Hi Marwan — Konrad × NeoIQ',
+    description: 'A personal hello to Marwan Abdelaziz from Konrad Straszewski, one of NeoIQ’s early employees. A little tongue-in-cheek, with a serious interest in building together.',
     lastmod: '2026-09-26',
     locale: 'en_US',
     index: false,
@@ -48,8 +48,8 @@ export const seoPages: SeoPage[] = [
   },
   {
     path: '/neoiq/ar',
-    title: 'كونراد × NeoIQ | مهندس حلول ميداني ومدير الذكاء الاصطناعي',
-    description: 'مقترح تعاون مع NeoIQ: أربع تجارب عملية لتهيئة العلامات التجارية، وتقييم الجودة بالعربية والإنجليزية، وتعلّم الفريق، وتبنّي الذكاء الاصطناعي.',
+    title: 'مرحباً مروان — كونراد × NeoIQ',
+    description: 'تحية شخصية إلى مروان عبد العزيز من كونراد ستراشيفسكي، أحد أوائل موظفي NeoIQ. شيء من المزاح ورغبة جادة في بناء أشياء مفيدة معاً.',
     lastmod: '2026-09-26',
     locale: 'ar_AE',
     index: false,

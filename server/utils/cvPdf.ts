@@ -1,6 +1,7 @@
 type Profile = typeof import('../../app/data/profile').profile
 type CvVariant =
   | 'general'
+  | 'neoiq-fde-ai-manager'
   | 'oferteo-fde-ai-manager'
   | 'posthog-pe'
   | 'posthog-pm'
@@ -13,6 +14,7 @@ type CvVariant =
   | 'polar-senior-product-engineer'
   | 'lago-product-engineer-growth'
 type TargetedCvContent =
+  | Profile['neoiq']['cv']
   | Profile['oferteo']['cv']
   | Profile['posthog']
   | Profile['posthogPm']
@@ -25,7 +27,7 @@ type TargetedCvContent =
   | Profile['polar']
   | Profile['lago']
 type Color = [number, number, number]
-type CvThemeName = 'posthog' | 'linear' | 'medusa' | 'plain' | 'n8n' | 'lago' | 'oferteo'
+type CvThemeName = 'posthog' | 'linear' | 'medusa' | 'plain' | 'n8n' | 'lago' | 'oferteo' | 'neoiq'
 
 const PAGE = {
   width: 595.28,
@@ -87,7 +89,9 @@ const colors = {
 }
 
 const cvThemeName = (variant: CvVariant): CvThemeName =>
-  variant.includes('oferteo')
+  variant.includes('neoiq')
+    ? 'neoiq'
+    : variant.includes('oferteo')
     ? 'oferteo'
     : variant.includes('linear')
     ? 'linear'
@@ -118,6 +122,18 @@ const cvThemes: Record<
     dark: boolean
   }
 > = {
+  neoiq: {
+    bg: [0.969, 0.961, 0.941],
+    panel: [1, 1, 1],
+    line: [0.894, 0.898, 0.871],
+    text: [0.145, 0.173, 0.169],
+    muted: [0.376, 0.388, 0.365],
+    accent: [0.722, 0.345, 0.188],
+    accentSoft: [0.918, 0.949, 0.929],
+    grid: false,
+    shadow: false,
+    dark: false
+  },
   oferteo: {
     bg: [1, 1, 1],
     panel: colors.oferteoPanel,
@@ -398,7 +414,7 @@ class PdfDoc {
   }
 
   panel(x: number, y: number, width: number, height: number, fill: Color, stroke: Color = colors.ink, shadow = false) {
-    if (this.theme === cvThemes.oferteo) {
+    if (this.theme === cvThemes.oferteo || this.theme === cvThemes.neoiq) {
       const radius = Math.min(8, width / 2, height / 2)
       const curve = radius * 0.55228475
       const bottom = PAGE.height - y - height
@@ -582,6 +598,7 @@ const targetHeader = (doc: PdfDoc, profile: Profile, subtitle = 'Product Enginee
   const theme = doc.theme
   const markFill = theme === cvThemes.oferteo
     ? colors.oferteoOrange
+    : theme === cvThemes.neoiq ? [0.286, 0.431, 0.396] as Color
     : theme === cvThemes.linear ? theme.text : theme === cvThemes.plain ? colors.plainText : theme.accent
   const markText = theme === cvThemes.linear
     ? colors.linearBg
@@ -610,10 +627,12 @@ const targetCard = (doc: PdfDoc, x: number, y: number, width: number, height: nu
 const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>) => {
   const doc = new PdfDoc(variant)
   const theme = doc.theme
-  const headlineFont = theme === cvThemes.medusa || theme === cvThemes.plain || theme === cvThemes.lago || theme === cvThemes.oferteo ? 'F2' : 'F4'
+  const headlineFont = theme === cvThemes.medusa || theme === cvThemes.plain || theme === cvThemes.lago || theme === cvThemes.oferteo || theme === cvThemes.neoiq ? 'F2' : 'F4'
   const heroHeadlineColor = theme === cvThemes.plain ? theme.accent : theme.text
   const content: TargetedCvContent =
-    variant === 'oferteo-fde-ai-manager'
+    variant === 'neoiq-fde-ai-manager'
+      ? profile.neoiq.cv
+      : variant === 'oferteo-fde-ai-manager'
       ? profile.oferteo.cv
       : variant === 'linear-fullstack-engineer'
       ? profile.linear
@@ -635,7 +654,9 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
         ? profile.posthogPm
         : profile.posthog
   const roleLabel =
-    variant === 'oferteo-fde-ai-manager'
+    variant === 'neoiq-fde-ai-manager'
+      ? 'neoIQ Forward Deployed Engineer / AI Manager'
+      : variant === 'oferteo-fde-ai-manager'
       ? 'Oferteo Forward Deployed Engineer / AI Manager'
       : variant === 'linear-fullstack-engineer'
       ? 'Linear Senior Fullstack Engineer'
@@ -661,7 +682,7 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
 
   const heroY = 96
   targetCard(doc, PAGE.margin, heroY, 499, 124)
-  if (theme !== cvThemes.oferteo) {
+  if (theme !== cvThemes.oferteo && theme !== cvThemes.neoiq) {
     doc.fillRect(PAGE.margin, heroY, 499, 25, theme.accentSoft)
   }
   doc.line(PAGE.margin, heroY + 25, PAGE.width - PAGE.margin, heroY + 25, theme.line, 1.1)

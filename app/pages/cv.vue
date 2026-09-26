@@ -82,6 +82,10 @@ const generalPreviewSummary =
   'Product Engineer and AI-native builder with PostgreSQL, Redis, product engineering, frontend leadership, and AI adoption.'
 
 const downloadName = (label) => {
+  if (label.includes('NeoIQ')) {
+    return 'Konrad-Straszewski-CV-NeoIQ-FDE-AI-Manager.pdf'
+  }
+
   if (label.includes('Oferteo')) {
     return 'Konrad-Straszewski-CV-Oferteo-FDE-AI-Manager.pdf'
   }
@@ -136,6 +140,7 @@ const isPlainDownload = (label) => label.includes('Plain')
 const isPolarDownload = (label) => label.includes('Polar')
 const isLagoDownload = (label) => label.includes('Lago')
 const isOferteoDownload = (label) => label.includes('Oferteo')
+const isNeoiqDownload = (label) => label.includes('NeoIQ')
 const isTargetedDownload = (label) =>
   isPosthogDownload(label) ||
   isN8nDownload(label) ||
@@ -144,7 +149,8 @@ const isTargetedDownload = (label) =>
   isPlainDownload(label) ||
   isPolarDownload(label) ||
   isLagoDownload(label) ||
-  isOferteoDownload(label)
+  isOferteoDownload(label) ||
+  isNeoiqDownload(label)
 const isPosthogAiResearchDownload = (label) => label.includes('AI Research')
 const isPosthogPmDownload = (label) => label.includes('Product Manager')
 const previewClass = (label) => ({
@@ -154,9 +160,17 @@ const previewClass = (label) => ({
   'cv-preview__paper--plain': isPlainDownload(label),
   'cv-preview__paper--n8n': isN8nDownload(label),
   'cv-preview__paper--lago': isLagoDownload(label),
-  'cv-preview__paper--oferteo': isOferteoDownload(label)
+  'cv-preview__paper--oferteo': isOferteoDownload(label),
+  'cv-preview__paper--neoiq': isNeoiqDownload(label)
 })
 const posthogPreview = (label) => {
+  if (isNeoiqDownload(label)) {
+    return {
+      small: profile.neoiq.cv.hero.kicker,
+      headline: profile.neoiq.cv.hero.headline
+    }
+  }
+
   if (isOferteoDownload(label)) {
     return {
       small: profile.oferteo.cv.hero.kicker,
@@ -234,6 +248,7 @@ const posthogPreview = (label) => {
 }
 
 const downloadVariant = (label) => {
+  if (isNeoiqDownload(label)) return 'neoiq-fde-ai-manager'
   if (isOferteoDownload(label)) return 'oferteo-fde-ai-manager'
   if (label.includes('Plain')) return 'plain-ai-product-engineer'
   if (label.includes('Polar')) return 'polar-senior-product-engineer'
@@ -808,6 +823,51 @@ useRouteSeo('/cv')
 .cv-preview__paper--lago .cv-mini-ph__rows span {
   color: #4f46e5;
   background: #fffef9;
+}
+
+.cv-preview__paper--neoiq {
+  background: #f7f5f0;
+  color: #252c2b;
+  font-family: var(--font-body);
+}
+
+.cv-preview__paper--neoiq::after {
+  border-color: #e4e5de;
+  border-radius: 12px;
+}
+
+.cv-preview__paper--neoiq .cv-mini-ph__mast span {
+  border: 1px solid #496e65;
+  border-radius: 10px;
+  background: #496e65;
+  box-shadow: none;
+  color: #fff8ef;
+}
+
+.cv-preview__paper--neoiq .cv-mini-ph__mast strong,
+.cv-preview__paper--neoiq .cv-mini-ph__panel strong {
+  font-family: var(--font-body);
+  font-weight: 700;
+  line-height: 1.12;
+}
+
+.cv-preview__paper--neoiq .cv-mini-ph__panel,
+.cv-preview__paper--neoiq .cv-mini-ph__rows span {
+  border: 1px solid #e4e5de;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.cv-preview__paper--neoiq .cv-mini-ph__panel small {
+  border-bottom: 1px solid #e4e5de;
+  border-radius: 11px 11px 0 0;
+  background: #eaf2ed;
+  color: #496e65;
+}
+
+.cv-preview__paper--neoiq .cv-mini-ph__rows span {
+  color: #b85830;
 }
 
 .cv-preview__paper--oferteo {

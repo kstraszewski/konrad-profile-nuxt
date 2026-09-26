@@ -1,7 +1,9 @@
 import { oferteo } from './oferteo'
+import { neoiqCv } from './neoiq-cv'
 
 export const profile = {
   oferteo,
+  neoiq: { cv: neoiqCv },
   person: {
     name: 'Konrad Straszewski',
     initials: 'KS',
@@ -501,6 +503,11 @@ export const profile = {
       'Based in Szczecin, Poland (GMT+2), inside PostHog timezone range; strong async writing, docs, and product-context habits.'
     ],
     downloads: [
+      {
+        label: 'NeoIQ Forward Deployed Engineer / AI Manager',
+        description: 'English CV: brand context, AI product delivery, retrieval and team adoption',
+        href: '/api/cv/neoiq-fde-ai-manager.pdf'
+      },
       {
         label: 'Oferteo Forward Deployed Engineer / AI Manager',
         description: 'CV po angielsku: wdrożenia AI, product engineering, przywództwo i pomiar efektów',
