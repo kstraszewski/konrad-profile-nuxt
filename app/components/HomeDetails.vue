@@ -61,6 +61,7 @@
             <li v-for="item in explorations" :key="item.number">
               <span>{{ item.title }}</span>
               <span class="exploration-tag">{{ item.tag }}</span>
+              <p v-if="item.featured" class="exploration-description">{{ item.description }}</p>
             </li>
           </ul>
           <NuxtLink :to="profile.links.mcp.href" class="text-link">
@@ -122,7 +123,10 @@
 import { profile } from '~/data/profile'
 
 const posthog = usePostHog()
-const explorations = profile.interests.items.slice(0, 3)
+const explorations = [
+  ...profile.interests.items.filter((item) => item.featured),
+  ...profile.interests.items.slice(0, 3)
+]
 const contactLinks = [profile.links.github, profile.links.linkedin, profile.links.phone]
 
 const onContactLinkClick = (item) => {
@@ -374,9 +378,10 @@ details > p {
 }
 
 .exploration-list li {
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 6px 20px;
   padding-block: 11px;
   border-bottom: 1px solid var(--home-line, #d8dbdf);
   font-size: 15px;
@@ -385,6 +390,14 @@ details > p {
 .exploration-tag {
   color: var(--home-muted, #666b75);
   font-size: 12px;
+}
+
+.exploration-description {
+  grid-column: 1 / -1;
+  margin: 0 0 5px;
+  color: var(--home-muted, #666b75);
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .personal-note {

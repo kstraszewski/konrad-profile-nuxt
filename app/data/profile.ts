@@ -308,6 +308,9 @@ export const profile = {
       'PostgreSQL',
       'Redis',
       'AI SDK',
+      'eve',
+      'Sandboxes',
+      'agent-browser',
       'PostHog',
       'Neon',
       'LangChain',
@@ -416,8 +419,9 @@ export const profile = {
         number: '06',
         title: 'Autonomous agents in sandboxes',
         description:
-          'Agents that can plan, execute, test, and recover inside isolated workspaces: enough freedom to do real work, enough containment to keep systems observable and safe.',
-        tag: 'Agents'
+          'Isolated environments where agents can run code, install dependencies, test changes, and work with files while keeping execution separate from the host system.',
+        tag: 'Execution',
+        featured: true
       },
       {
         number: '07',
@@ -425,6 +429,22 @@ export const profile = {
         description:
           'Operating systems and workspaces where the model is not an app inside the environment, but the layer that routes intent, memory, files, tools, and actions.',
         tag: 'Systems'
+      },
+      {
+        number: '08',
+        title: 'eve · durable AI agents',
+        description:
+          'Agents that keep working beyond a single request: typed tools, subagents, and durable workflows that can pause and resume.',
+        tag: 'Orchestration',
+        featured: true
+      },
+      {
+        number: '09',
+        title: 'agent-browser',
+        description:
+          'Browser automation for AI agents: navigate pages, interact with interfaces, and verify that a product flow works in a real browser.',
+        tag: 'Browser',
+        featured: true
       }
     ]
   },
