@@ -1,0 +1,16 @@
+{
+  "id": "/",
+  "name": "Konrad Straszewski — TypeScript, Full-stack & AI",
+  "short_name": "koonrad.dev",
+  "description": "Full-stack TypeScript engineering, AI adoption, and products built end-to-end.",
+  "lang": "en",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#f4f5f6",
+  "theme_color": "#2949ed",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

@@ -4,8 +4,12 @@ export type SeoPage = {
   path: string
   title: string
   description: string
-  lastmod: string
+  lastmod?: string
   image?: string
+  imageWidth?: number
+  imageHeight?: number
+  imageType?: string
+  imageAlt?: string
   index?: boolean
   sitemap?: boolean
   type?: 'profile' | 'website'
@@ -14,8 +18,12 @@ export type SeoPage = {
 
 export const seoSite = {
   name: profile.person.name,
-  defaultUrl: 'https://koonrad.dev',
-  defaultImage: '/uploads/pasted-1777461139852-0.png',
+  defaultUrl: 'https://www.koonrad.dev',
+  defaultImage: '/social/koonrad-typescript-v1.png',
+  imageWidth: 1200,
+  imageHeight: 630,
+  imageType: 'image/png',
+  imageAlt: 'Konrad Straszewski — AI Manager & Full-Stack TypeScript Engineer',
   locale: 'en_US',
   twitterCard: 'summary_large_image'
 } as const
@@ -28,6 +36,24 @@ export const seoPages: SeoPage[] = [
       'AI Manager at Lendi and founder of jasne.ai. Full-stack TypeScript engineering, AI adoption, and products built end-to-end by Konrad Straszewski.',
     lastmod: '2026-09-26',
     type: 'profile'
+  },
+  {
+    path: '/neoiq',
+    title: 'Konrad × NeoIQ | Forward Deployed Engineer / AI Manager',
+    description: 'A collaboration proposal for NeoIQ: four customer pilots across brand onboarding, bilingual evaluation, team learning and AI adoption.',
+    lastmod: '2026-09-26',
+    locale: 'en_US',
+    index: false,
+    sitemap: false
+  },
+  {
+    path: '/neoiq/ar',
+    title: 'كونراد × NeoIQ | مهندس حلول ميداني ومدير الذكاء الاصطناعي',
+    description: 'مقترح تعاون مع NeoIQ: أربع تجارب عملية لتهيئة العلامات التجارية، وتقييم الجودة بالعربية والإنجليزية، وتعلّم الفريق، وتبنّي الذكاء الاصطناعي.',
+    lastmod: '2026-09-26',
+    locale: 'ar_AE',
+    index: false,
+    sitemap: false
   },
   {
     path: '/oferteo',
@@ -47,10 +73,10 @@ export const seoPages: SeoPage[] = [
   },
   {
     path: '/cv',
-    title: 'CV | Konrad Straszewski - AI Manager & Product Engineer',
+    title: 'CV | Konrad Straszewski - Full-Stack TypeScript & AI Engineer',
     description:
-      'Download CV files for Konrad Straszewski: AI Manager, product engineer, PostgreSQL/Redis builder, Nuxt/Vue frontend lead, jasne.ai founder, and AI adoption lead.',
-    lastmod: '2026-04-30'
+      'Download Konrad Straszewski’s CV: full-stack TypeScript engineering, AI leadership at Lendi, PostgreSQL and Redis, and end-to-end product building at jasne.ai.',
+    lastmod: '2026-09-26'
   },
   {
     path: '/mcp',
@@ -119,27 +145,42 @@ export const seoPages: SeoPage[] = [
 
 export const normalizePath = (path: string) => {
   const cleanPath = path.split(/[?#]/)[0] || '/'
-
-  if (cleanPath !== '/' && cleanPath.endsWith('/')) {
-    return cleanPath.slice(0, -1)
-  }
-
-  return cleanPath
+  return `/${cleanPath.replace(/^\/+|\/+$/g, '')}`
 }
 
 export const normalizeSiteUrl = (siteUrl?: string) => {
-  const url = siteUrl || seoSite.defaultUrl
-  return url.replace(/\/+$/, '')
+  try {
+    const url = new URL(siteUrl?.trim() || seoSite.defaultUrl)
+
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') {
+      return seoSite.defaultUrl
+    }
+
+    // The apex domain redirects to www in production, including older env values.
+    if (url.hostname === 'koonrad.dev' || url.hostname === 'www.koonrad.dev') {
+      return seoSite.defaultUrl
+    }
+
+    return url.origin
+  } catch {
+    return seoSite.defaultUrl
+  }
 }
 
 export const getAbsoluteUrl = (siteUrl: string | undefined, path: string) => {
-  const normalizedPath = normalizePath(path)
-  return `${normalizeSiteUrl(siteUrl)}${normalizedPath === '/' ? '/' : normalizedPath}`
+  // Asset URLs may be external or include a version query, so don't normalize as routes.
+  return new URL(path, `${normalizeSiteUrl(siteUrl)}/`).href
 }
 
-export const getPageSeo = (path: string) => {
+export const getPageSeo = (path: string): SeoPage => {
   const normalizedPath = normalizePath(path)
-  return seoPages.find((page) => page.path === normalizedPath) ?? seoPages[0]
+  return seoPages.find((page) => page.path === normalizedPath) ?? {
+    path: normalizedPath,
+    title: `${seoSite.name} | koonrad.dev`,
+    description: 'Konrad Straszewski — full-stack TypeScript engineer, AI manager, and product builder.',
+    index: false,
+    sitemap: false
+  }
 }
 
 export const getSitemapPages = () => seoPages.filter((page) => page.index !== false && page.sitemap !== false)
@@ -149,7 +190,6 @@ const getPersonSchema = (siteUrl: string) => ({
   '@id': `${siteUrl}/#person`,
   name: profile.person.name,
   url: `${siteUrl}/`,
-  image: getAbsoluteUrl(siteUrl, seoSite.defaultImage),
   jobTitle: profile.person.role,
   email: profile.person.email,
   telephone: profile.person.phone,
@@ -163,8 +203,10 @@ const getPersonSchema = (siteUrl: string) => ({
     name: 'Lendi',
     url: profile.links.lendi.href
   },
-  sameAs: [profile.links.linkedin.href, profile.links.github.href, profile.links.lendi.href, 'https://jasne.ai'],
+  sameAs: [profile.links.linkedin.href, profile.links.github.href],
   knowsAbout: [
+    'TypeScript',
+    'Full-stack engineering',
     'AI adoption',
     'Product engineering',
     'Nuxt',
@@ -180,12 +222,14 @@ const getPersonSchema = (siteUrl: string) => ({
 
 export const buildJsonLd = (page: SeoPage, siteUrl?: string) => {
   const url = normalizeSiteUrl(siteUrl)
-  const canonicalUrl = getAbsoluteUrl(url, page.path)
+  const canonicalUrl = getAbsoluteUrl(url, normalizePath(page.path))
+  const imageUrl = getAbsoluteUrl(url, page.image ?? seoSite.defaultImage)
   const person = getPersonSchema(url)
   const webSite = {
     '@type': 'WebSite',
     '@id': `${url}/#website`,
     name: seoSite.name,
+    alternateName: 'koonrad.dev',
     url: `${url}/`,
     publisher: {
       '@id': `${url}/#person`
@@ -198,6 +242,17 @@ export const buildJsonLd = (page: SeoPage, siteUrl?: string) => {
     url: canonicalUrl,
     name: page.title,
     description: page.description,
+    inLanguage: (page.locale ?? seoSite.locale).replace('_', '-'),
+    primaryImageOfPage: {
+      '@type': 'ImageObject',
+      '@id': `${canonicalUrl}#primaryimage`,
+      url: imageUrl,
+      contentUrl: imageUrl,
+      width: page.imageWidth ?? seoSite.imageWidth,
+      height: page.imageHeight ?? seoSite.imageHeight,
+      encodingFormat: page.imageType ?? seoSite.imageType,
+      caption: page.imageAlt ?? seoSite.imageAlt
+    },
     isPartOf: {
       '@id': `${url}/#website`
     },

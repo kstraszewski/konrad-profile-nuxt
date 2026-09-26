@@ -24,8 +24,7 @@ export default defineEventHandler((event) => {
   const urls = getSitemapPages()
     .map(
       (page) => `  <url>
-    <loc>${escapeXml(getAbsoluteUrl(siteUrl, page.path))}</loc>
-    <lastmod>${page.lastmod}</lastmod>
+    <loc>${escapeXml(getAbsoluteUrl(siteUrl, page.path))}</loc>${page.lastmod ? `\n    <lastmod>${escapeXml(page.lastmod)}</lastmod>` : ''}
   </url>`
     )
     .join('\n')
