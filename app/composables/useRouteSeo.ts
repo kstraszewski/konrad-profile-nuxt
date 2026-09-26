@@ -19,7 +19,7 @@ export const useRouteSeo = (path?: string) => {
     description: () => page.value.description,
     robots: () => (page.value.index === false ? 'noindex, nofollow' : 'index, follow'),
     ogType: () => (page.value.type === 'profile' ? 'profile' : 'website'),
-    ogLocale: seoSite.locale,
+    ogLocale: () => page.value.locale ?? seoSite.locale,
     ogSiteName: seoSite.name,
     ogTitle: () => page.value.title,
     ogDescription: () => page.value.description,
@@ -35,6 +35,7 @@ export const useRouteSeo = (path?: string) => {
   })
 
   useHead(() => ({
+    htmlAttrs: { lang: (page.value.locale ?? seoSite.locale).split('_')[0] },
     link: [{ rel: 'canonical', href: canonicalUrl.value }],
     script:
       page.value.index === false

@@ -9,6 +9,7 @@ export type SeoPage = {
   index?: boolean
   sitemap?: boolean
   type?: 'profile' | 'website'
+  locale?: string
 }
 
 export const seoSite = {
@@ -27,6 +28,15 @@ export const seoPages: SeoPage[] = [
       'AI Manager at Lendi and founder of jasne.ai. Konrad Straszewski leads AI adoption, Nuxt/Vue product engineering, and AI-native workflows.',
     lastmod: '2026-04-30',
     type: 'profile'
+  },
+  {
+    path: '/oferteo',
+    title: profile.oferteo.title,
+    description: profile.oferteo.description,
+    lastmod: '2026-09-26',
+    locale: 'pl_PL',
+    index: false,
+    sitemap: false
   },
   {
     path: '/jasne.ai',

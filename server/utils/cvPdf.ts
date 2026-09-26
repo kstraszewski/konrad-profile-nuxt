@@ -1,6 +1,7 @@
 type Profile = typeof import('../../app/data/profile').profile
 type CvVariant =
   | 'general'
+  | 'oferteo-fde-ai-manager'
   | 'posthog-pe'
   | 'posthog-pm'
   | 'posthog-ai-research'
@@ -12,6 +13,7 @@ type CvVariant =
   | 'polar-senior-product-engineer'
   | 'lago-product-engineer-growth'
 type TargetedCvContent =
+  | Profile['oferteo']['cv']
   | Profile['posthog']
   | Profile['posthogPm']
   | Profile['posthogAiResearch']
@@ -23,7 +25,7 @@ type TargetedCvContent =
   | Profile['polar']
   | Profile['lago']
 type Color = [number, number, number]
-type CvThemeName = 'posthog' | 'linear' | 'medusa' | 'plain' | 'n8n' | 'lago'
+type CvThemeName = 'posthog' | 'linear' | 'medusa' | 'plain' | 'n8n' | 'lago' | 'oferteo'
 
 const PAGE = {
   width: 595.28,
@@ -75,11 +77,19 @@ const colors = {
   lagoText: [0.02, 0.02, 0.02] as Color,
   lagoMuted: [0.38, 0.38, 0.357] as Color,
   lagoBlue: [0.31, 0.275, 0.898] as Color,
-  lagoGreen: [0.059, 0.624, 0.431] as Color
+  lagoGreen: [0.059, 0.624, 0.431] as Color,
+  oferteoNavy: [0.031, 0.153, 0.329] as Color,
+  oferteoOrange: [0.961, 0.486, 0] as Color,
+  oferteoAccentText: [0.663, 0.294, 0] as Color,
+  oferteoLine: [0.863, 0.894, 0.929] as Color,
+  oferteoPanel: [0.961, 0.973, 0.988] as Color,
+  oferteoMuted: [0.337, 0.4, 0.486] as Color
 }
 
 const cvThemeName = (variant: CvVariant): CvThemeName =>
-  variant.includes('linear')
+  variant.includes('oferteo')
+    ? 'oferteo'
+    : variant.includes('linear')
     ? 'linear'
     : variant.includes('polar')
       ? 'linear'
@@ -108,6 +118,18 @@ const cvThemes: Record<
     dark: boolean
   }
 > = {
+  oferteo: {
+    bg: [1, 1, 1],
+    panel: colors.oferteoPanel,
+    line: colors.oferteoLine,
+    text: colors.oferteoNavy,
+    muted: colors.oferteoMuted,
+    accent: colors.oferteoAccentText,
+    accentSoft: colors.oferteoPanel,
+    grid: false,
+    shadow: false,
+    dark: false
+  },
   posthog: {
     bg: colors.phBg,
     panel: colors.paper,
@@ -376,6 +398,28 @@ class PdfDoc {
   }
 
   panel(x: number, y: number, width: number, height: number, fill: Color, stroke: Color = colors.ink, shadow = false) {
+    if (this.theme === cvThemes.oferteo) {
+      const radius = Math.min(8, width / 2, height / 2)
+      const curve = radius * 0.55228475
+      const bottom = PAGE.height - y - height
+      const top = bottom + height
+      const right = x + width
+      this.ops.push([
+        `q 0.8 w ${rgb(fill, 'rg')} ${rgb(stroke, 'RG')}`,
+        `${num(x + radius)} ${num(bottom)} m`,
+        `${num(right - radius)} ${num(bottom)} l`,
+        `${num(right - radius + curve)} ${num(bottom)} ${num(right)} ${num(bottom + radius - curve)} ${num(right)} ${num(bottom + radius)} c`,
+        `${num(right)} ${num(top - radius)} l`,
+        `${num(right)} ${num(top - radius + curve)} ${num(right - radius + curve)} ${num(top)} ${num(right - radius)} ${num(top)} c`,
+        `${num(x + radius)} ${num(top)} l`,
+        `${num(x + radius - curve)} ${num(top)} ${num(x)} ${num(top - radius + curve)} ${num(x)} ${num(top - radius)} c`,
+        `${num(x)} ${num(bottom + radius)} l`,
+        `${num(x)} ${num(bottom + radius - curve)} ${num(x + radius - curve)} ${num(bottom)} ${num(x + radius)} ${num(bottom)} c`,
+        'h B Q'
+      ].join(' '))
+      return
+    }
+
     if (shadow) {
       this.fillRect(x + 5, y + 5, width, height, colors.ink)
     }
@@ -536,14 +580,18 @@ const compactTextBlock = (
 
 const targetHeader = (doc: PdfDoc, profile: Profile, subtitle = 'Product Engineer') => {
   const theme = doc.theme
-  const markFill = theme === cvThemes.linear ? theme.text : theme === cvThemes.plain ? colors.plainText : theme.accent
+  const markFill = theme === cvThemes.oferteo
+    ? colors.oferteoOrange
+    : theme === cvThemes.linear ? theme.text : theme === cvThemes.plain ? colors.plainText : theme.accent
   const markText = theme === cvThemes.linear
     ? colors.linearBg
     : theme === cvThemes.plain
       ? colors.plainGreen
       : theme === cvThemes.medusa
         ? colors.medusaPanel
-        : colors.paper
+        : theme === cvThemes.oferteo
+          ? colors.oferteoNavy
+          : colors.paper
 
   doc.panel(PAGE.margin, 42, 32, 32, markFill, theme.line, theme.shadow)
   doc.text(profile.person.initials, 57, 64, 11, 'F2', markText)
@@ -562,10 +610,12 @@ const targetCard = (doc: PdfDoc, x: number, y: number, width: number, height: nu
 const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>) => {
   const doc = new PdfDoc(variant)
   const theme = doc.theme
-  const headlineFont = theme === cvThemes.medusa || theme === cvThemes.plain || theme === cvThemes.lago ? 'F2' : 'F4'
+  const headlineFont = theme === cvThemes.medusa || theme === cvThemes.plain || theme === cvThemes.lago || theme === cvThemes.oferteo ? 'F2' : 'F4'
   const heroHeadlineColor = theme === cvThemes.plain ? theme.accent : theme.text
   const content: TargetedCvContent =
-    variant === 'linear-fullstack-engineer'
+    variant === 'oferteo-fde-ai-manager'
+      ? profile.oferteo.cv
+      : variant === 'linear-fullstack-engineer'
       ? profile.linear
       : variant === 'medusa-product-engineer'
         ? profile.medusa
@@ -585,7 +635,9 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
         ? profile.posthogPm
         : profile.posthog
   const roleLabel =
-    variant === 'linear-fullstack-engineer'
+    variant === 'oferteo-fde-ai-manager'
+      ? 'Oferteo Forward Deployed Engineer / AI Manager'
+      : variant === 'linear-fullstack-engineer'
       ? 'Linear Senior Fullstack Engineer'
       : variant === 'medusa-product-engineer'
         ? 'Medusa Product Engineer'
@@ -609,7 +661,9 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
 
   const heroY = 96
   targetCard(doc, PAGE.margin, heroY, 499, 124)
-  doc.fillRect(PAGE.margin, heroY, 499, 25, theme.accentSoft)
+  if (theme !== cvThemes.oferteo) {
+    doc.fillRect(PAGE.margin, heroY, 499, 25, theme.accentSoft)
+  }
   doc.line(PAGE.margin, heroY + 25, PAGE.width - PAGE.margin, heroY + 25, theme.line, 1.1)
 
   if (theme === cvThemes.linear) {
@@ -713,10 +767,12 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
     { color: theme.text }
   )
 
-  doc.panel(PAGE.margin, 746, 499, 54, theme.accent, theme.line, theme.shadow)
-  doc.text('CONTACT', 64, 768, 8, 'F2', theme.dark ? colors.linearText : colors.paper)
-  doc.text(profile.person.email, 142, 768, 10, 'F2', theme.dark ? colors.linearText : colors.paper)
-  doc.text(profile.links.github.value, 142, 784, 8.5, 'F1', theme.dark ? colors.linearText : colors.paper)
+  const contactFill = theme === cvThemes.oferteo ? colors.oferteoOrange : theme.accent
+  const contactText = theme === cvThemes.oferteo ? colors.oferteoNavy : theme.dark ? colors.linearText : colors.paper
+  doc.panel(PAGE.margin, 746, 499, 54, contactFill, theme.line, theme.shadow)
+  doc.text('CONTACT', 64, 768, 8, 'F2', contactText)
+  doc.text(profile.person.email, 142, 768, 10, 'F2', contactText)
+  doc.text(profile.links.github.value, 142, 784, 8.5, 'F1', contactText)
 
   return doc.finish()
 }

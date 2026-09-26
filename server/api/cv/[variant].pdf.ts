@@ -6,7 +6,9 @@ export default defineEventHandler((event) => {
   const rawVariant = `${event.context.params?.variant ?? ''} ${requestPath}`.toLowerCase()
   let variant: Parameters<typeof buildCvPdf>[1] = 'general'
 
-  if (rawVariant.includes('plain')) {
+  if (rawVariant.includes('oferteo')) {
+    variant = 'oferteo-fde-ai-manager'
+  } else if (rawVariant.includes('plain')) {
     variant = 'plain-ai-product-engineer'
   } else if (rawVariant.includes('polar')) {
     variant = 'polar-senior-product-engineer'
@@ -28,6 +30,7 @@ export default defineEventHandler((event) => {
 
   const filenames: Record<Parameters<typeof buildCvPdf>[1], string> = {
     general: 'Konrad-Straszewski-CV.pdf',
+    'oferteo-fde-ai-manager': 'Konrad-Straszewski-CV-Oferteo-FDE-AI-Manager.pdf',
     'posthog-pe': 'Konrad-Straszewski-CV-PostHog-PE.pdf',
     'posthog-pm': 'Konrad-Straszewski-CV-PostHog-PM.pdf',
     'posthog-ai-research': 'Konrad-Straszewski-CV-PostHog-AI-Research-Engineer.pdf',

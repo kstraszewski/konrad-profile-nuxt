@@ -1,4 +1,7 @@
+import { oferteo } from './oferteo'
+
 export const profile = {
+  oferteo,
   person: {
     name: 'Konrad Straszewski',
     initials: 'KS',
@@ -478,6 +481,11 @@ export const profile = {
       'Based in Szczecin, Poland (GMT+2), inside PostHog timezone range; strong async writing, docs, and product-context habits.'
     ],
     downloads: [
+      {
+        label: 'Oferteo Forward Deployed Engineer / AI Manager',
+        description: 'CV po angielsku: wdrożenia AI, product engineering, przywództwo i pomiar efektów',
+        href: '/api/cv/oferteo-fde-ai-manager.pdf'
+      },
       {
         label: 'Ogólne CV',
         description: 'PDF w stylu głównej strony',
