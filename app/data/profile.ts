@@ -56,10 +56,10 @@ export const profile = {
       value: 'Talk to my CV',
       href: '/mcp'
     },
-    maf: {
-      label: 'MAF',
-      value: 'majidalfuttaim.com',
-      href: 'https://www.majidalfuttaim.com/#Home',
+    neoiq: {
+      label: 'NeoIQ',
+      value: 'neoiq.ai',
+      href: 'https://neoiq.ai',
       external: true
     }
   },
@@ -91,7 +91,7 @@ export const profile = {
   },
   hero: {
     eyebrow: 'Available · senior AI roles · remote',
-    meta: 'EST. 2017 - LENDI · 2023 → AI',
+    meta: 'EST. 2017 - FINPACK · 2023 → AI',
     title: {
       first: 'I rewire teams',
       around: 'around',
@@ -99,17 +99,17 @@ export const profile = {
       last: 'then ship the products.'
     },
     intro: {
-      years: '8.5 years at',
+      years: 'Back at',
       company: 'Lendi',
-      path: 'frontend developer, then lead, then R&D, now',
-      role: 'AI Manager & Builder',
+      path: 'Frontend Lead from 2020 to 2023, and since 2024',
+      role: 'AI Manager',
       mandate:
         'My mandate: redefine the role of the engineer - from feature-shipper to product builder - and prove it ships.',
       side: "On the side I'm building",
       sideBuild: 'jasne.ai',
-      mafLead: 'In 2024 I also collaborated with',
-      mafCompany: 'MAF',
-      mafRest: ', a Dubai mall network, on retrieval-heavy AI.'
+      neoiqLead: 'From 2023 to 2024 I worked as an AI Builder at',
+      neoiqCompany: 'NeoIQ',
+      neoiqRest: ', working on retrieval-heavy AI.'
     },
     facts: [
       { label: 'Currently', value: 'AI Manager · Lendi' },
@@ -121,8 +121,8 @@ export const profile = {
     marquee: [
       { text: 'AI Manager', strong: true },
       { text: 'Builder of jasne.ai', italicWord: 'jasne.ai' },
-      { text: '8.5 yrs at Lendi', strong: true },
-      { text: '2024 MAF vector search at scale', strong: true },
+      { text: 'Building products since 2017', strong: true },
+      { text: '2023–2024 NeoIQ vector search at scale', strong: true },
       { text: 'Products · workflows · distribution' },
       { text: 'Programmers → product builders', strong: true }
     ]
@@ -160,39 +160,39 @@ export const profile = {
     ]
   },
   lendi: {
-    label: '§ 02 · Lendi',
-    sub: '8.5 yrs · FE → Lead → R&D → AI',
+    label: '§ 02 · Career',
+    sub: 'Since 2017 · Frontend → Lead → AI Builder → AI Manager',
     heading: {
       accent: 'Lendi',
       rest: 'is where I learned the building, the leading, and the unbuilding.'
     },
     intro:
-      'Most "AI managers" arrive at AI from outside the company. I arrived from inside - eight and a half years of shipping the product, leading an 8-person team, and watching what actually breaks. That history is the leverage.',
+      'I started as a Frontend Developer at Finpack in 2017, then led an 8-person frontend team at Lendi from 2020 to 2023. After a year as an AI Builder at NeoIQ, I returned to Lendi as AI Manager in 2024.',
     pride:
       "The part I'm especially proud of: helping scale Lendi from a startup into Poland's #1 broker and the fastest-growing broker in Europe.",
     phases: [
       {
-        year: '2017',
-        label: 'Joined Lendi',
-        description: 'Vue/Nuxt developer. Frontend on B2B and B2C surfaces.',
+        year: '2017–2020',
+        label: 'Frontend Developer · Finpack',
+        description: 'B2B financial calculators and product interfaces built with Vue and Angular.',
         ordinal: '01'
       },
       {
-        year: '2020',
-        label: 'Frontend Lead',
+        year: '2020–2023',
+        label: 'Frontend Lead · Lendi',
         description: 'Owned the front-end stack. Led an 8-person frontend team. Nuxt 2 -> 3 from alpha.',
         ordinal: '04'
       },
       {
-        year: '2023',
-        label: 'R&D',
+        year: '2023–2024',
+        label: 'AI Builder · NeoIQ',
         description:
-          'One year off the product, on the future. AI prototypes, internal tools, the company-wide case.',
+          'Built retrieval-heavy AI with vector search and large-scale knowledge bases.',
         ordinal: '07'
       },
       {
-        year: '2024',
-        label: 'AI Manager & Builder',
+        year: '2024 → now',
+        label: 'AI Manager · Lendi',
         description: 'Lead AI adoption company-wide. Redefine the engineering function.',
         ordinal: '08+'
       }
@@ -324,22 +324,15 @@ export const profile = {
   },
   track: {
     label: '§ 06 · Track record',
-    sub: '11 years · product, AI, retrieval',
+    sub: 'Since 2017 · product, AI, retrieval',
     heading: 'Long arcs over loud titles. I stayed where the work compounded.',
     experience: [
       {
         year: '2024 → now',
-        role: 'AI Manager & Builder',
+        role: 'AI Manager',
         org: 'Lendi',
         description:
           'Lead AI adoption company-wide. Redefine engineering function around the product-builder model. Ship internal tooling, agentic workflows, and the cultural shift that makes them stick.'
-      },
-      {
-        year: '2024',
-        role: 'AI retrieval collaboration',
-        org: 'MAF · Dubai mall network',
-        description:
-          'In 2024, collaborated with MAF, a Dubai-based shopping mall network, on vector search across large-scale data and knowledge bases, retrieval workflows, and practical AI surfaces for operational context.'
       },
       {
         year: '2024 → now',
@@ -350,20 +343,21 @@ export const profile = {
       },
       {
         year: '2023 - 2024',
-        role: 'R&D',
-        org: 'Lendi',
+        role: 'AI Builder',
+        org: 'NeoIQ',
+        website: 'https://neoiq.ai',
         description:
-          'One year exploring AI as the next platform. Prototypes, internal tools, the case for company-wide adoption. The bridge between frontend lead and AI manager.'
+          'One year as an AI Builder at NeoIQ. Worked on vector search across large-scale data and knowledge bases, retrieval workflows, and practical AI surfaces for operational context.'
       },
       {
-        year: '2017 - 2023',
-        role: 'Frontend Developer -> Lead',
+        year: '2020 - 2023',
+        role: 'Frontend Lead',
         org: 'Lendi',
         description:
-          "Seven years on Lendi's product. Started as Vue/Nuxt developer, grew into front-end lead, and led an 8-person frontend team. Shipped Nuxt 2/3 from alpha and owned the front-end stack across B2B and B2C surfaces."
+          'Led an 8-person frontend team for three years. Owned the frontend stack across B2B and B2C surfaces and shipped Nuxt 2/3 from alpha.'
       },
       {
-        year: '2015 - 2017',
+        year: '2017 - 2020',
         role: 'Frontend Developer',
         org: 'Finpack',
         description:
@@ -492,10 +486,10 @@ export const profile = {
     subhead:
       'A focused product-engineering CV: product ownership, AI-native building, PostgreSQL, Redis, PostHog practice, jasne.ai, and the stack I use to ship.',
     summary:
-      'Product Engineer and AI-native builder with 11 years across product engineering, frontend leadership, and AI adoption. I spent 8.5 years inside Lendi, moving from Vue/Nuxt developer to frontend lead, R&D, and now AI Manager. My work is practical: own the product surface, build the tool, shape PostgreSQL/Redis-backed data flows, instrument the loop, write the context, and keep iterating with users and teams.',
+      'Product Engineer and AI-native builder working in product engineering since 2017. Frontend Developer at Finpack (2017–2020), Frontend Lead at Lendi (2020–2023), AI Builder at NeoIQ (2023–2024), and AI Manager at Lendi since 2024. My work is practical: own the product surface, build the tool, shape PostgreSQL/Redis-backed data flows, instrument the loop, write the context, and keep iterating with users and teams.',
     highlights: [
       "Helped scale Lendi from a startup into Poland's #1 broker and the fastest-growing broker in Europe.",
-      'Progressed from frontend developer to lead, R&D, and AI Manager while staying close to product surfaces, UX, tooling, and shipping.',
+      'Progressed from Frontend Developer at Finpack to Frontend Lead at Lendi, AI Builder at NeoIQ, and AI Manager at Lendi while staying close to product surfaces, UX, tooling, and shipping.',
       'Lead practical AI adoption at Lendi: strategy, tooling, training, KPIs, production workflows, and the product-builder operating model.',
       'Implemented PostHog in two organizations, used PostHog MCP heavily, and advocated for evidence-first product loops.',
       'Strong with PostgreSQL and Redis: product data modeling, queryable workflows, caching, queues, and runtime state around real product surfaces.',
@@ -663,8 +657,8 @@ export const profile = {
       heading: 'Evidence that I can build, own, explain, and keep the product grounded.',
       rows: [
         {
-          label: '8.5 yrs / Lendi',
-          heading: 'Grew from frontend developer to lead, R&D, and AI Manager inside one product company.',
+          label: 'Lendi / leadership',
+          heading: 'Frontend Lead at Lendi from 2020 to 2023; AI Manager since 2024.',
           description:
             'Long-term ownership across B2B/B2C financial product surfaces, mentoring, frontend stack decisions, AI prototypes, and org-level adoption.'
         },
@@ -687,8 +681,8 @@ export const profile = {
             'Two implementations, heavy MCP usage, internal advocacy, and a practical bias toward funnels, cohorts, recordings, flags, and fast questions.'
         },
         {
-          label: 'MAF / retrieval',
-          heading: 'Collaborated on retrieval-heavy AI for a Dubai shopping mall network.',
+          label: 'NeoIQ / retrieval',
+          heading: 'Collaborated on retrieval-heavy AI at NeoIQ.',
           description:
             'Vector search, large knowledge bases, operational context, and practical AI delivery for complex real-world data.'
         },
@@ -833,7 +827,7 @@ export const profile = {
       rows: [
         {
           label: 'Ex-builder',
-          heading: '11 years in product engineering, frontend leadership, R&D, and AI adoption.',
+          heading: 'Product engineering since 2017, spanning frontend leadership, AI building, and AI adoption.',
           description:
             'I know how product engineering actually works because I have owned product surfaces, mentoring, stack decisions, prototypes, and delivery pressure.'
         },
@@ -859,7 +853,7 @@ export const profile = {
           label: 'AI product',
           heading: 'Worked on AI products, retrieval-heavy systems, and AI-native product surfaces.',
           description:
-            'jasne.ai, Lendi AI workflows, and MAF retrieval work map well to PostHog AI, data products, workflow, support, and CRM ambitions.'
+            'jasne.ai, Lendi AI workflows, and NeoIQ retrieval work map well to PostHog AI, data products, workflow, support, and CRM ambitions.'
         },
         {
           label: 'SQL / data',
@@ -950,7 +944,7 @@ export const profile = {
           label: 'Retrieval',
           title: 'Worked on large knowledge systems',
           description:
-            'Collaborated on retrieval-heavy AI for a Dubai shopping mall network, with vector search, large knowledge bases, and practical operational context.'
+            'Collaborated on retrieval-heavy AI at NeoIQ, with vector search, large knowledge bases, and practical operational context.'
         },
         {
           label: 'Agents',
@@ -1010,7 +1004,7 @@ export const profile = {
           label: 'Retrieval',
           heading: 'Collaborated on retrieval-heavy AI across large knowledge bases.',
           description:
-            'Vector search, operational context, large-scale knowledge systems, and real-world AI delivery for MAF in Dubai.'
+            'Vector search, operational context, large-scale knowledge systems, and real-world AI delivery at NeoIQ.'
         },
         {
           label: 'PostHog',
@@ -1174,8 +1168,8 @@ export const profile = {
       heading: 'Signals that I can own customer-facing product work at a high bar.',
       rows: [
         {
-          label: '8.5 yrs / Lendi',
-          heading: 'Grew from frontend developer to lead, R&D, and AI Manager inside one product company.',
+          label: 'Lendi / leadership',
+          heading: 'Frontend Lead at Lendi from 2020 to 2023; AI Manager since 2024.',
           description:
             'Long-term ownership across B2B/B2C product surfaces, frontend stack decisions, mentoring, prototypes, and org-level AI adoption.'
         },
@@ -1204,10 +1198,10 @@ export const profile = {
             'PostgreSQL and Redis for product systems, plus PostHog in two organizations, MCP workflows, funnels, cohorts, recordings, flags, and observable product truth.'
         },
         {
-          label: 'MAF / retrieval',
+          label: 'NeoIQ / retrieval',
           heading: 'Worked around retrieval-heavy AI and large knowledge systems.',
           description:
-            'Vector search, operational context, and practical AI delivery for a Dubai shopping mall network.'
+            'Vector search, operational context, and practical AI delivery at NeoIQ.'
         }
       ]
     },
@@ -1350,7 +1344,7 @@ export const profile = {
           label: 'Lendi scale',
           heading: 'Helped scale production product surfaces in a fast-growing financial company.',
           description:
-            "Eight and a half years at Lendi, from frontend developer to lead, R&D, and AI Manager while the company became Poland's #1 broker."
+            "Frontend Lead at Lendi from 2020 to 2023 and AI Manager since 2024, helping scale Poland's #1 broker."
         },
         {
           label: 'B2B/B2C',
@@ -1380,7 +1374,7 @@ export const profile = {
           label: 'AI systems',
           heading: 'Worked around PostgreSQL/Redis-backed product systems, retrieval-heavy AI, and model APIs.',
           description:
-            'PostgreSQL, Redis, MAF retrieval collaboration, Gemini/OpenAI SDKs, Vercel AI SDK, Supabase, LangChain, MCP apps, and AI-to-UI exploration.'
+            'PostgreSQL, Redis, NeoIQ retrieval collaboration, Gemini/OpenAI SDKs, Vercel AI SDK, Supabase, LangChain, MCP apps, and AI-to-UI exploration.'
         }
       ]
     },
@@ -1556,10 +1550,10 @@ export const profile = {
             'Implemented PostHog in two organizations, used MCP heavily, and pushed product teams toward observable evidence and faster loops.'
         },
         {
-          label: 'MAF',
+          label: 'NeoIQ',
           heading: 'Worked around retrieval-heavy AI in a real operational context.',
           description:
-            'Vector search, large knowledge bases, operational context, and practical AI delivery for a Dubai shopping mall network.'
+            'Vector search, large knowledge bases, operational context, and practical AI delivery at NeoIQ.'
         }
       ]
     },
@@ -1641,7 +1635,7 @@ export const profile = {
             },
             {
               label: 'Retrieval',
-              heading: 'Collaborated on retrieval-heavy AI for MAF.',
+              heading: 'Collaborated on retrieval-heavy AI for NeoIQ.',
               description:
                 'Vector search, large knowledge bases, operational context, and real-world AI delivery.'
             },
@@ -1699,7 +1693,7 @@ export const profile = {
               label: 'Lendi',
               heading: 'Helped scale Lendi through long-term product engineering ownership.',
               description:
-                "B2B/B2C financial product surfaces, stack decisions, mentoring, R&D, and later AI adoption inside Poland's #1 broker."
+                "B2B/B2C financial product surfaces, stack decisions, mentoring, frontend leadership, and later AI adoption inside Poland's #1 broker."
             },
             {
               label: 'AI adoption',
@@ -1859,7 +1853,7 @@ export const profile = {
           label: 'Product surfaces',
           heading: 'Owned customer-facing product work in a serious financial domain.',
           description:
-            'Eight and a half years across B2B/B2C Lendi surfaces, frontend leadership, R&D, and AI management.'
+            'Frontend leadership across B2B/B2C Lendi surfaces from 2020 to 2023, followed by AI management since 2024.'
         },
         {
           label: '0->1 / jasne.ai',
@@ -1877,7 +1871,7 @@ export const profile = {
           label: 'AI systems',
           heading: 'Worked around retrieval-heavy AI and model-accessible workflows.',
           description:
-            'MAF retrieval collaboration, vector search, large knowledge bases, MCP apps, AI-to-UI exploration, and AI SDK usage.'
+            'NeoIQ retrieval collaboration, vector search, large knowledge bases, MCP apps, AI-to-UI exploration, and AI SDK usage.'
         },
         {
           label: 'Data/runtime',
@@ -2027,7 +2021,7 @@ export const profile = {
           label: 'Lendi',
           heading: 'Helped scale product surfaces in a financial product company.',
           description:
-            "Eight and a half years at Lendi, from Vue/Nuxt developer to frontend lead, R&D, and AI Manager while the company became Poland's #1 broker."
+            "Frontend Lead at Lendi from 2020 to 2023 and AI Manager since 2024, helping scale Poland's #1 broker."
         },
         {
           label: 'Finpack',
@@ -2225,7 +2219,7 @@ export const profile = {
           label: 'Retrieval',
           heading: 'Collaborated on retrieval-heavy AI for operational context.',
           description:
-            'Vector search, large knowledge bases, and practical AI surfaces for a Dubai mall network.'
+            'Vector search, large knowledge bases, and practical AI surfaces at NeoIQ.'
         },
         {
           label: 'Systems',

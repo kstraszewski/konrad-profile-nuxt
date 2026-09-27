@@ -6,8 +6,9 @@
           <span class="section-kicker">The long version, briefly</span>
           <h2 id="context-heading">A little <br />context.</h2>
           <p>
-            I joined Lendi as a frontend developer in 2017. Since then, I’ve led an
-            8-person team, moved into R&amp;D, and taken on company-wide AI adoption.
+            I started at Finpack in 2017, led Lendi’s 8-person frontend team from 2020
+            to 2023, and worked as an AI Builder at <a :href="profile.links.neoiq.href" target="_blank" rel="noopener noreferrer">NeoIQ</a> in 2023–2024. Since 2024,
+            I’ve been Lendi’s AI Manager.
           </p>
           <NuxtLink to="/cv" class="text-link">Read my CV <span aria-hidden="true">↗</span></NuxtLink>
         </div>
@@ -18,7 +19,7 @@
               <span class="history-year">{{ item.year }}</span>
               <span class="history-position">
                 <strong>{{ item.role }}</strong>
-                <span>{{ item.org }}</span>
+                <span><a v-if="item.website" :href="item.website" target="_blank" rel="noopener noreferrer" @click.stop>{{ item.org }} ↗</a><template v-else>{{ item.org }}</template></span>
               </span>
               <span class="expand-mark" aria-hidden="true" />
             </summary>

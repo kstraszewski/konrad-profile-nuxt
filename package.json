@@ -2,6 +2,9 @@
   "name": "konrad-profile-nuxt",
   "type": "module",
   "private": true,
+  "engines": {
+    "node": "^22.19.0 || ^24.11.0 || >=26.0.0"
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -10,11 +13,14 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@nuxtjs/mcp-toolkit": "^0.16.0",
-    "nuxt": "^4.2.1",
-    "posthog-js": "^1.372.6",
-    "vue": "^3.5.0",
-    "vue-router": "^4.5.0",
-    "zod": "^4.4.3"
+    "@neondatabase/serverless": "^1.1.0",
+    "@nuxtjs/mcp-toolkit": "^0.21.0",
+    "ai": "^7.0.116",
+    "botid": "^1.5.11",
+    "nuxt": "^4.5.2",
+    "posthog-js": "^1.434.14",
+    "vue": "^3.5.43",
+    "vue-router": "^5.3.1",
+    "zod": "^4.6.5"
   }
 }

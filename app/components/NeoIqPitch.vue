@@ -12,7 +12,7 @@
     </header>
 
     <section id="neo-main" class="neo-hero neo-width">
-      <div class="neo-collaboration"><span>{{ copy.kicker }}</span><span class="neo-wordmark" dir="ltr">Neo<span>I</span><b>Q</b></span></div>
+      <div class="neo-collaboration"><span>{{ copy.kicker }}</span><a class="neo-wordmark" dir="ltr" :href="profile.links.neoiq.href" target="_blank" rel="noopener noreferrer">Neo<span>I</span><b>Q</b></a></div>
       <h1>{{ copy.hero[0] }}<br><em>{{ copy.hero[1] }}</em></h1>
       <p class="neo-hero-intro">{{ copy.intro }}</p>
       <div class="neo-hero-actions"><a class="neo-button neo-button-primary" href="#note" @click="track('read_note')">{{ copy.explore }}<span aria-hidden="true">↓</span></a><a class="neo-text-link" :href="cvHref" :download="cvFilename" @click="track('download_cv')">{{ copy.cv }}<span aria-hidden="true">↗</span></a></div>
@@ -33,7 +33,7 @@
 
     <section id="experience" class="neo-experience">
       <div class="neo-width"><div class="neo-section-heading"><div><p class="neo-eyebrow">{{ copy.proofEyebrow }}</p><h2>{{ copy.proofHeading[0] }}<br><em>{{ copy.proofHeading[1] }}</em></h2></div><p>{{ copy.proofIntro }}</p></div>
-        <div class="neo-proof-grid"><article v-for="(item, index) in copy.proof" :key="item.label"><span class="neo-proof-index" dir="ltr">0{{ index + 1 }}</span><p class="neo-proof-label">{{ item.label }}</p><h3>{{ item.title }}</h3><p class="neo-proof-text">{{ item.text }}</p><NuxtLink v-if="index === 1" class="neo-text-link" to="/jasne.ai">{{ copy.caseStudy }} <span aria-hidden="true">↗</span></NuxtLink></article></div>
+        <div class="neo-proof-grid"><article v-for="(item, index) in copy.proof" :key="item.label"><span class="neo-proof-index" dir="ltr">0{{ index + 1 }}</span><p class="neo-proof-label"><a v-if="item.label.startsWith('NeoIQ')" :href="profile.links.neoiq.href" target="_blank" rel="noopener noreferrer">{{ item.label }} ↗</a><template v-else>{{ item.label }}</template></p><h3>{{ item.title }}</h3><p class="neo-proof-text">{{ item.text }}</p><NuxtLink v-if="index === 1" class="neo-text-link" to="/jasne.ai">{{ copy.caseStudy }} <span aria-hidden="true">↗</span></NuxtLink></article></div>
         <div class="neo-toolkit"><div><span>{{ copy.toolsLabel }}</span><p dir="ltr">TypeScript <i>·</i> Vue / Nuxt <i>·</i> AI SDK <i>·</i> PostgreSQL <i>·</i> MCP <i>·</i> PostHog</p></div><NuxtLink class="neo-text-link" to="/">{{ copy.fullProfile }}<span aria-hidden="true">↗</span></NuxtLink></div>
       </div>
     </section>

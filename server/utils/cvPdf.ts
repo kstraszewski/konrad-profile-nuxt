@@ -27,6 +27,8 @@ type TargetedCvContent =
   | Profile['polar']
   | Profile['lago']
 type Color = [number, number, number]
+type PdfLink = { href: string; rect: [number, number, number, number] }
+type PdfPage = { content: string; links: PdfLink[] }
 type CvThemeName = 'posthog' | 'linear' | 'medusa' | 'plain' | 'n8n' | 'lago' | 'oferteo' | 'neoiq'
 
 const PAGE = {
@@ -308,8 +310,9 @@ const wrapText = (text: string, maxWidth: number, size: number, font = 'F1') => 
 }
 
 class PdfDoc {
-  private pages: string[] = []
+  private pages: PdfPage[] = []
   private ops: string[] = []
+  private links: PdfLink[] = []
 
   y = 60
 
@@ -323,10 +326,11 @@ class PdfDoc {
 
   addPage() {
     if (this.ops.length) {
-      this.pages.push(this.ops.join('\n'))
+      this.pages.push({ content: this.ops.join('\n'), links: this.links })
     }
 
     this.ops = []
+    this.links = []
     this.y = 60
     this.fillRect(0, 0, PAGE.width, PAGE.height, this.variant === 'general' ? colors.bg : this.theme.bg)
 
@@ -345,8 +349,9 @@ class PdfDoc {
 
   finish() {
     if (this.ops.length) {
-      this.pages.push(this.ops.join('\n'))
+      this.pages.push({ content: this.ops.join('\n'), links: this.links })
       this.ops = []
+      this.links = []
     }
 
     return buildPdf(this.pages)
@@ -365,6 +370,13 @@ class PdfDoc {
         text
       )}) Tj ET`
     )
+  }
+
+  linkText(text: string, href: string, x: number, y: number, size: number, color: Color) {
+    const width = approxTextWidth(text, size)
+    this.text(text, x, y, size, 'F1', color)
+    this.line(x, y + 2, x + width, y + 2, color, 0.4)
+    this.links.push({ href, rect: [x, PAGE.height - y - 3, x + width, PAGE.height - y + size] })
   }
 
   textBlock(
@@ -445,10 +457,11 @@ class PdfDoc {
   }
 }
 
-const buildPdf = (pages: string[]) => {
+const buildPdf = (pages: PdfPage[]) => {
   const objects: string[] = []
   const startObject = 7
   const kids = pages.map((_, index) => `${startObject + index * 2 + 1} 0 R`).join(' ')
+  let nextAnnotationObject = startObject + pages.length * 2
 
   objects[1] = '<< /Type /Catalog /Pages 2 0 R >>'
   objects[2] = `<< /Type /Pages /Kids [ ${kids} ] /Count ${pages.length} >>`
@@ -457,13 +470,18 @@ const buildPdf = (pages: string[]) => {
   objects[5] = '<< /Type /Font /Subtype /Type1 /BaseFont /Times-Roman >>'
   objects[6] = '<< /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >>'
 
-  pages.forEach((content, index) => {
+  pages.forEach(({ content, links }, index) => {
     const contentObject = startObject + index * 2
     const pageObject = contentObject + 1
     const length = Buffer.byteLength(content, 'binary')
+    const annotations = links.map(({ href, rect }) => {
+      const annotationObject = nextAnnotationObject++
+      objects[annotationObject] = `<< /Type /Annot /Subtype /Link /Rect [${rect.map(num).join(' ')}] /Border [0 0 0] /A << /S /URI /URI (${escapePdfText(href)}) >> >>`
+      return `${annotationObject} 0 R`
+    })
 
     objects[contentObject] = `<< /Length ${length} >>\nstream\n${content}\nendstream`
-    objects[pageObject] = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PAGE.width} ${PAGE.height}] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents ${contentObject} 0 R >>`
+    objects[pageObject] = `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PAGE.width} ${PAGE.height}] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents ${contentObject} 0 R${annotations.length ? ` /Annots [${annotations.join(' ')}]` : ''} >>`
   })
 
   let pdf = '%PDF-1.4\n%\x7F\x7F\x7F\x7F\n'
@@ -531,10 +549,14 @@ const drawGeneralCv = (profile: Profile) => {
     doc.text(item.year, PAGE.margin, startY, 8, 'F2', colors.dim)
     const roleEndY = doc.textBlock(item.role, roleX, startY, roleWidth, 13.5, 15, { font: 'F4' })
     const orgY = Math.max(startY + 17, roleEndY + 3)
-    doc.text(item.org, roleX, orgY, 9, 'F1', colors.dim)
+    if (item.org === 'NeoIQ' && item.website) {
+      doc.linkText(item.org, item.website, roleX, orgY, 9, colors.accent)
+    } else {
+      doc.text(item.org, roleX, orgY, 9, 'F1', colors.dim)
+    }
     const descY = doc.textBlock(item.description, descX, startY, 234, 9, 12.5, { color: colors.ink })
     doc.y = Math.max(startY + 44, orgY + 14, descY) + 18
-    doc.line(PAGE.margin, doc.y - 8, PAGE.width - PAGE.margin, doc.y - 8, colors.rule)
+    doc.line(PAGE.margin, doc.y - 18, PAGE.width - PAGE.margin, doc.y - 18, colors.rule)
   })
 
   doc.y += 16
@@ -770,6 +792,9 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
     const y = 190 + index * 94
     doc.text(item.year, PAGE.margin, y, 7.2, 'F2', theme.muted)
     doc.text(`${item.role} / ${item.org}`, 142, y, 9, 'F2', theme.text)
+    if (item.org === 'NeoIQ' && item.website) {
+      doc.linkText(profile.links.neoiq.value, item.website, 465, y, 8, theme.accent)
+    }
     compactTextBlock(doc, item.description, 142, y + 14, 375, 7.4, 9.2, 6, { color: theme.muted })
     doc.line(PAGE.margin, y + 74, PAGE.width - PAGE.margin, y + 74, theme.line, 0.65)
   })

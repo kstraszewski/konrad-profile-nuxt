@@ -38,7 +38,7 @@
       <div class="cv-app__timeline">
         <article v-for="item in experience" :key="`${item.year}-${item.role}`" class="cv-app__role">
           <span>{{ item.year }}</span>
-          <h3>{{ item.role }} · {{ item.org }}</h3>
+          <h3>{{ item.role }} · <a v-if="item.website" :href="item.website" @click.prevent="openLink(item.website)">{{ item.org }} ↗</a><template v-else>{{ item.org }}</template></h3>
           <p>{{ item.description }}</p>
         </article>
       </div>

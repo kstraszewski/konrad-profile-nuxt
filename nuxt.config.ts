@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2026-04-29',
   devtools: { enabled: false },
-  modules: ['@nuxtjs/mcp-toolkit'],
+  modules: ['@nuxtjs/mcp-toolkit', 'botid/nuxt'],
   css: ['~/assets/css/main.css'],
   mcp: {
     name: 'Konrad Profile MCP',
@@ -14,6 +14,9 @@ export default defineNuxtConfig({
       'Use this server as a read-only profile and CV source. Prefer get_profile_context for direct recruiter questions. Use search and fetch when a ChatGPT connector or research flow needs citation-shaped context. Use the konrad-cv app when the host supports MCP Apps UI and the user wants an interactive CV panel.'
   },
   runtimeConfig: {
+    oferteoDatabaseUrl: process.env.NUXT_OFERTEO_DATABASE_URL || '',
+    aiGatewayApiKey: process.env.AI_GATEWAY_API_KEY || '',
+    oferteoAiModel: 'deepseek/deepseek-v4.1-flash',
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://koonrad.dev',
       posthogPublicKey: 'phc_B4WbaRJdBKtTZgC6QQhPJN2uN8HzCfxDXE8HkjqjVuWW',
@@ -24,6 +27,19 @@ export default defineNuxtConfig({
   routeRules: {
     '/neoiq': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
     '/neoiq/ar': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
+    '/offerteo': { redirect: '/oferteo' },
+    '/oferto': { redirect: '/oferteo' },
+    '/oferto/demo-1': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
+    '/oferto/demo-2': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
+    '/oferto/demo': {
+      headers: { 'X-Robots-Tag': 'noindex, nofollow' }
+    },
+    '/oferteo/demo': {
+      redirect: '/oferto/demo'
+    },
+    '/api/oferto/**': {
+      headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' }
+    },
     '/oferteo': {
       headers: {
         'X-Robots-Tag': 'noindex, nofollow'

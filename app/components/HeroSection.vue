@@ -35,14 +35,14 @@
         <NuxtLink to="/jasne.ai" class="link-underline hero__brand hero__brand--jasne" @click="onJasneLinkClick">
           {{ profile.hero.intro.sideBuild }}
         </NuxtLink>.
-        {{ profile.hero.intro.mafLead }}
+        {{ profile.hero.intro.neoiqLead }}
         <a
-          :href="profile.links.maf.href"
-          class="hero__brand hero__brand--maf"
+          :href="profile.links.neoiq.href"
+          class="hero__brand hero__brand--neoiq"
           target="_blank"
           rel="noreferrer"
         >
-          {{ profile.hero.intro.mafCompany }}</a>{{ profile.hero.intro.mafRest }}
+          {{ profile.hero.intro.neoiqCompany }}</a>{{ profile.hero.intro.neoiqRest }}
       </p>
 
       <div class="hero__facts" aria-label="Profile facts">
@@ -215,13 +215,13 @@ onBeforeUnmount(() => {
   text-shadow: 0 0 18px rgba(255, 214, 110, 0.24);
 }
 
-.hero__brand--maf {
+.hero__brand--neoiq {
   color: var(--ink);
 }
 
-.hero__brand--maf:hover,
-.hero__brand--maf:focus-visible {
-  color: var(--brand-maf);
+.hero__brand--neoiq:hover,
+.hero__brand--neoiq:focus-visible {
+  color: var(--brand-neoiq);
   text-shadow: 0 0 18px rgba(49, 38, 29, 0.22);
 }
 

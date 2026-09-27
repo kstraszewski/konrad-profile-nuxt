@@ -17,7 +17,7 @@
           <div class="track__year">{{ item.year }}</div>
           <div>
             <h3 class="track__role">{{ item.role }}</h3>
-            <div class="track__org">{{ item.org }}</div>
+            <div class="track__org"><a v-if="item.website" :href="item.website" target="_blank" rel="noopener noreferrer">{{ item.org }} ↗</a><template v-else>{{ item.org }}</template></div>
           </div>
           <p class="track__description">{{ item.description }}</p>
         </article>

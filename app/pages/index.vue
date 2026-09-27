@@ -96,16 +96,16 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
         </div>
 
         <article id="lendi" class="home-project home-project--lendi">
-          <div class="home-project__visual home-lendi" aria-label="Lendi: from frontend development to AI leadership">
+          <div class="home-project__visual home-lendi" aria-label="Lendi: Frontend Lead in 2020–2023, AI Manager since 2024">
             <span class="home-visual__label">A LONG-TERM BUILD</span>
             <span class="home-lendi__wordmark">lendi<span>_</span></span>
-            <div class="home-lendi__path"><span>Frontend</span><span aria-hidden="true">→</span><span>Lead</span><span aria-hidden="true">→</span><span>R&D</span><span aria-hidden="true">→</span><strong>AI</strong></div>
-            <span class="home-visual__footer">2017 → NOW</span>
+            <div class="home-lendi__path"><span>Frontend Lead</span><span aria-hidden="true">→</span><strong>AI Manager</strong></div>
+            <span class="home-visual__footer">2020–2023 · 2024 → NOW</span>
           </div>
           <div class="home-project__body">
-            <p class="home-kicker">01 / Lendi <span>·</span> AI Manager & Builder</p>
+            <p class="home-kicker">01 / Lendi <span>·</span> AI Manager</p>
             <h3>Building the product.<br>Then the way we build.</h3>
-            <p>From writing the frontend to leading an eight-person team. Now I lead AI adoption across the company: tools, workflows, and the shift from shipping tickets to owning products.</p>
+            <p>I led an eight-person frontend team from 2020 to 2023. Since returning as AI Manager in 2024, I lead AI adoption across the company: tools, workflows, and the shift from shipping tickets to owning products.</p>
             <div class="home-project__tags"><span>AI adoption</span><span>Engineering leadership</span></div>
             <a class="home-text-link" href="#track">The full journey <span aria-hidden="true">↗</span></a>
           </div>
@@ -127,11 +127,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
           </div>
         </article>
 
-        <article class="home-maf">
-          <span class="home-maf__index">03</span>
-          <div><p class="home-kicker">MAF · Dubai · 2024</p><h3>Making large knowledge bases useful.</h3></div>
-          <p>A collaboration on vector search and retrieval for a Dubai mall network. Real data, operational context, practical AI.</p>
-          <a :href="profile.links.maf.href" target="_blank" rel="noreferrer" aria-label="Visit Majid Al Futtaim" class="home-maf__link">↗</a>
+        <article class="home-neoiq">
+          <span class="home-neoiq__index">03</span>
+          <div><p class="home-kicker">NeoIQ · AI Builder · 2023–2024</p><h3>Making large knowledge bases useful.</h3></div>
+          <p>As an AI Builder, I worked on vector search and retrieval at NeoIQ. Real data, operational context, practical AI.</p>
+          <a :href="profile.links.neoiq.href" target="_blank" rel="noreferrer" aria-label="Visit NeoIQ" class="home-neoiq__link">↗</a>
         </article>
       </section>
 
@@ -219,13 +219,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 .home-jasne__wordmark > span { display: inline-block; margin-left: 16px; font-size: 38px; vertical-align: top; transition: transform 200ms ease-out; }
 .home-jasne__sun { position: absolute; right: 68px; top: 90px; width: 1px; height: 1px; color: #77873b; }
 .home-jasne__sun span { position: absolute; top: -61px; left: -1.5px; width: 3px; height: 36px; background: currentColor; transform-origin: 50% 62px; transform: rotate(calc(var(--ray) * 30deg)); }
-.home-maf { display: grid; grid-template-columns: 36px 1fr .9fr 48px; gap: 20px; align-items: center; padding: 35px 0; border-block: 1px solid var(--home-line); }
-.home-maf__index { align-self: start; padding-top: 3px; color: var(--home-muted); font-size: 12px; }
-.home-maf .home-kicker { color: var(--home-muted); font-size: 10px; }
-.home-maf h3 { margin: 9px 0 0; font-size: 24px; line-height: 1.2; letter-spacing: -.6px; font-weight: 500; }
-.home-maf > p { color: var(--home-muted); font-size: 14px; line-height: 1.6; margin: 0; }
-.home-maf__link { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border: 1px solid var(--home-line); border-radius: 50%; text-decoration: none; font-size: 24px; }
-.home-maf__link:hover { background: var(--home-ink); color: white; }
+.home-neoiq { display: grid; grid-template-columns: 36px 1fr .9fr 48px; gap: 20px; align-items: center; padding: 35px 0; border-block: 1px solid var(--home-line); }
+.home-neoiq__index { align-self: start; padding-top: 3px; color: var(--home-muted); font-size: 12px; }
+.home-neoiq .home-kicker { color: var(--home-muted); font-size: 10px; }
+.home-neoiq h3 { margin: 9px 0 0; font-size: 24px; line-height: 1.2; letter-spacing: -.6px; font-weight: 500; }
+.home-neoiq > p { color: var(--home-muted); font-size: 14px; line-height: 1.6; margin: 0; }
+.home-neoiq__link { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border: 1px solid var(--home-line); border-radius: 50%; text-decoration: none; font-size: 24px; }
+.home-neoiq__link:hover { background: var(--home-ink); color: white; }
 @media (hover: hover) and (pointer: fine) {
   .home-poster:hover .poster-layer--top { transform: translateY(-7px); }
   .home-poster:hover .poster-layer--bottom { transform: translateY(7px); }
@@ -275,11 +275,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
   .home-project h3 { font-size: 32px; }
   .home-project__body > p:not(.home-kicker) { max-width: 520px; }
   .home-lendi__path { font-size: 13px; gap: 15px; }
-  .home-maf { grid-template-columns: 1fr 48px; gap: 15px; padding-block: 27px; }
-  .home-maf__index { display: none; }
-  .home-maf > p { grid-column: 1; }
-  .home-maf__link { grid-column: 2; grid-row: 1 / 3; }
-  .home-maf h3 { font-size: 25px; }
+  .home-neoiq { grid-template-columns: 1fr 48px; gap: 15px; padding-block: 27px; }
+  .home-neoiq__index { display: none; }
+  .home-neoiq > p { grid-column: 1; }
+  .home-neoiq__link { grid-column: 2; grid-row: 1 / 3; }
+  .home-neoiq h3 { font-size: 25px; }
 }
 @media (max-width: 370px) {
   .home-hero h1 { font-size: 57px; }

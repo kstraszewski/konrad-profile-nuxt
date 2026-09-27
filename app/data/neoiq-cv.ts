@@ -22,11 +22,11 @@ export const neoiqCv = {
       },
       {
         label: 'Leadership',
-        heading: 'Led an 8-person frontend team; progressed from developer through lead and R&D to AI Manager.'
+        heading: 'Frontend Lead at Lendi in 2020–2023, leading an 8-person team; AI Manager since 2024.'
       },
       {
-        label: 'MAF / Dubai',
-        heading: 'Collaborated on retrieval-heavy AI and vector search for a Dubai shopping mall network in 2024.'
+        label: 'NeoIQ / AI Builder',
+        heading: 'Built retrieval-heavy AI and vector search at NeoIQ in 2023–2024.'
       },
       {
         label: 'Product analytics',

@@ -2,7 +2,7 @@
   --accent: #111111;
   --brand-lendi: rgb(34, 199, 250);
   --brand-jasne: rgb(255, 214, 110);
-  --brand-maf: rgb(49, 38, 29);
+  --brand-neoiq: rgb(49, 38, 29);
   --ink: #111111;
   --bg: #ffffff;
   --dim: #666666;
@@ -174,9 +174,9 @@ select {
   color: var(--ink);
 }
 
-.kv--maf:hover .kv__value,
-.kv--maf:focus-visible .kv__value {
-  color: var(--brand-maf);
+.kv--neoiq:hover .kv__value,
+.kv--neoiq:focus-visible .kv__value {
+  color: var(--brand-neoiq);
   text-shadow: 0 0 18px rgba(49, 38, 29, 0.22);
 }
 

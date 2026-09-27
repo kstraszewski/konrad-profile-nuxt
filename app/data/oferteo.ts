@@ -2,7 +2,7 @@ export const oferteo = {
   company: 'Oferteo',
   title: 'Konrad Straszewski dla Oferteo | Forward Deployed Engineer / AI Manager',
   description:
-    'Propozycja współpracy z Oferteo: cztery pomysły na AI w zapytaniach, dopasowaniu, pracy wykonawców i obsłudze klienta. Od pilota do codziennego użycia.',
+    'Dwa działające demka AI dla Oferteo: szukanie wykonawcy przez rozmowę i kreator oferty dla wykonawców. Wypróbuj asystentów na własnym przykładzie.',
   role: { href: '' },
   labels: {
     home: 'Strona główna Konrada Straszewskiego',
@@ -98,7 +98,7 @@ export const oferteo = {
     rows: [
       {
         label: 'Lendi',
-        heading: 'Od frontend developera przez leada i R&D do AI Managera.',
+        heading: 'Frontend Lead w latach 2020–2023, AI Manager od 2024 roku.',
         description: 'Wieloletnia praca przy produktach finansowych B2B i B2C. Znam proces od interfejsu użytkownika po decyzje zespołu i rozwój produktu.'
       },
       {
@@ -122,9 +122,9 @@ export const oferteo = {
         description: 'Lejki, kohorty, nagrania sesji, flagi funkcji i MCP. Łączę dane z codziennymi decyzjami produktu i inżynierii.'
       },
       {
-        label: 'MAF / retrieval',
-        heading: 'Współpracowałem przy AI opartym na dużych bazach wiedzy.',
-        description: 'Wyszukiwanie wektorowe i kontekst operacyjny dla sieci centrów handlowych w Dubaju. Doświadczenie przydatne w pracy z wiedzą i dopasowaniem opisów.'
+        label: 'NeoIQ / AI Builder · 2023–2024',
+        heading: 'Budowałem AI oparte na dużych bazach wiedzy.',
+        description: 'Wyszukiwanie wektorowe, duże bazy wiedzy i kontekst operacyjny w NeoIQ. Doświadczenie przydatne w pracy z wiedzą i dopasowaniem opisów.'
       }
     ]
   },
@@ -139,43 +139,29 @@ export const oferteo = {
     ]
   },
   ideas: {
-    kicker: '4 pomysły dla Oferteo',
-    heading: 'Od lepszego zapytania do lepszej rozmowy.',
-    file: 'oferteo/pomysly',
-    cta: 'Zobacz 4 pomysły',
-    intro: 'Hipotezy do sprawdzenia z zespołem. Oparte na publicznym modelu działania Oferteo; priorytet zależy od danych, obecnych rozwiązań i rozmów z użytkownikami.',
+    kicker: '2 demka dla Oferteo',
+    heading: 'Szukanie wykonawcy i tworzenie oferty przez rozmowę.',
+    file: 'oferteo/demos',
+    cta: 'Wypróbuj 2 demka',
+    intro: 'Dwie strony jednego zlecenia: klient opisuje potrzebę i znajduje wykonawcę, a wykonawca przygotowuje ofertę z pomocą czatu.',
     items: [
       {
-        label: 'Brief gotowy do wyceny',
-        tag: '01 · Od tego bym zaczął',
-        description: 'Klient opisuje potrzebę własnymi słowami. AI dopytuje o brakujące szczegóły i układa podsumowanie do zatwierdzenia. Przy remoncie łazienki: metraż, zakres, materiały, lokalizacja i termin.',
-        pilot: 'Jedna kategoria i kilka pytań, których przydatność potwierdzą wykonawcy.',
-        metric: 'Kompletność briefu i odsetek wartościowych rozmów, przy zachowaniu ukończeń formularza.',
-        guardrail: 'Klient zatwierdza treść. AI nie dopisuje budżetu, zakresu ani terminu.'
+        label: 'Szukanie wykonawcy',
+        tag: 'Demo 1 · Dla klienta',
+        href: '/oferto/demo',
+        description: 'Klient opisuje potrzebę własnymi słowami. Asystent dopytuje, zbiera brief i pokazuje dopasowane profile Oferteo bezpośrednio w rozmowie.',
+        pilot: 'Dopasowanie publicznych profili do remontów łazienek w Warszawie.',
+        metric: 'Kompletność briefu i przejścia do profili wykonawców.',
+        guardrail: 'Cenę i dostępność potwierdza wykonawca. Rozmowa nie wysyła zapytania do firm.'
       },
       {
-        label: 'Dopasowanie z konkretnym powodem',
-        tag: '02 · Trafność kontaktu',
-        description: 'Rozwinąłbym dopasowanie o rozumienie opisu usługi, specjalizację, obszar pracy i deklarowaną dostępność firmy. Wykonawca widzi powód rekomendacji oraz informacje, których jeszcze brakuje.',
-        pilot: 'Porównanie rekomendacji z obecnym systemem na przykładach z jednej kategorii.',
-        metric: 'Kontakty prowadzące do rozmowy i zwroty z powodu niedopasowania.',
-        guardrail: 'Twarde ograniczenia lokalizacji i usługi, bez dopowiadania dostępności. Pomiar także dla nowych firm.'
-      },
-      {
-        label: 'Asystent pierwszej odpowiedzi',
-        tag: '03 · Mniej pracy wykonawcy',
-        description: 'Krótkie podsumowanie zlecenia, lista brakujących ustaleń i szkic odpowiedzi oparty na profilu firmy. Wykonawca może dopowiedzieć szczegóły głosem, kiedy jest w terenie.',
-        pilot: 'Szkic odpowiedzi do jednego typu zlecenia w mobilnym procesie wykonawcy.',
-        metric: 'Czas do pierwszej odpowiedzi, zakres poprawek i odsetek odpowiedzi prowadzących do rozmowy.',
-        guardrail: 'Wykonawca zatwierdza wiadomość. Cena, termin i wysyłka pozostają pod jego kontrolą.'
-      },
-      {
-        label: 'Copilot opiekuna klienta',
-        tag: '04 · AI w codziennej pracy',
-        description: 'Historia sprawy, wiedza produktowa i proponowany następny krok w jednym miejscu. Asystent przygotowuje odpowiedź ze źródłami, a powtarzalne problemy zamienia w materiał dla zespołu produktu.',
-        pilot: 'Jeden proces, np. wyjaśnianie jakości kontaktu, z małą grupą opiekunów.',
-        metric: 'Czas obsługi, rozwiązanie przy pierwszym kontakcie, ponowne zgłoszenia i użycie przez zespół.',
-        guardrail: 'Dostęp zgodny z uprawnieniami. Opiekun sprawdza odpowiedź i podejmuje decyzję w sprawie klienta.'
+        label: 'Kreator oferty',
+        tag: 'Demo 2 · Dla wykonawcy',
+        href: '/oferto/demo-2',
+        description: 'Wykonawca podaje zakres, cenę i termin w czacie. Asystent układa szkic oferty, aktualizuje podgląd i wprowadza poprawki z kolejnych wiadomości.',
+        pilot: 'Przygotowanie i edycja oferty usługi na podstawie informacji od wykonawcy.',
+        metric: 'Czas przygotowania oferty i liczba poprawek przed wykorzystaniem treści.',
+        guardrail: 'Asystent nie wymyśla cen ani terminów. Wykonawca sprawdza szkic, a demo niczego nie publikuje.'
       }
     ],
     sources: [
@@ -196,12 +182,12 @@ export const oferteo = {
       kicker: 'Evidence',
       heading: 'Product delivery, AI adoption and team leadership.',
       rows: [
-        { label: 'Lendi', heading: 'Progressed from frontend developer to lead, R&D and AI Manager across B2B/B2C products.' },
+        { label: 'Lendi', heading: 'Frontend Lead in 2020–2023, AI Manager since 2024; experience across B2B/B2C products.' },
         { label: 'Leadership', heading: 'Led an 8-person frontend team; owned stack decisions, mentoring and delivery.' },
         { label: 'AI adoption', heading: 'Lead company-wide AI adoption: strategy, tooling, training, KPIs and internal copilots.' },
         { label: 'jasne.ai', heading: 'Build a vertical AI product end-to-end: product, UX, code, infrastructure and distribution.' },
         { label: 'PostHog', heading: 'Implemented PostHog in two organizations; use funnels, recordings, flags and MCP.' },
-        { label: 'MAF / retrieval', heading: 'Collaborated on retrieval-heavy AI and vector search for a Dubai shopping mall network.' }
+        { label: 'NeoIQ / AI Builder', heading: 'Built retrieval-heavy AI and vector search at NeoIQ in 2023–2024.' }
       ]
     },
     loop: {

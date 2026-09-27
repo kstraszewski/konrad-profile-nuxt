@@ -139,7 +139,7 @@
 
       <div class="job-pitch-table" role="list">
         <article v-for="row in pitch.proof.rows" :key="row.label" class="job-pitch-table__row" role="listitem">
-          <span>{{ row.label }}</span>
+          <span><a v-if="row.label.startsWith('NeoIQ')" :href="profile.links.neoiq.href" target="_blank" rel="noopener noreferrer">{{ row.label }} ↗</a><template v-else>{{ row.label }}</template></span>
           <strong>{{ row.heading }}</strong>
           <p>{{ row.description }}</p>
         </article>

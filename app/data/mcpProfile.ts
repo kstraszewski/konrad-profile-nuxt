@@ -171,7 +171,7 @@ const allSections = {
       facts: profile.jasne.facts,
       beats: profile.jasne.beats
     },
-    maf: profile.track.experience.find((item) => item.org.includes('MAF'))
+    neoiq: profile.track.experience.find((item) => item.org.includes('NeoIQ'))
   },
   stack: {
     title: 'Technology stack',
@@ -337,11 +337,11 @@ export const profileDocuments: ProfileDocument[] = [
     metadata: { section: 'projects' }
   },
   {
-    id: 'maf-retrieval',
-    title: 'MAF retrieval collaboration',
-    url: absoluteUrl('/#track'),
+    id: 'neoiq-retrieval',
+    title: 'NeoIQ retrieval collaboration',
+    url: profile.links.neoiq.href,
     text:
-      profile.track.experience.find((item) => item.org.includes('MAF'))?.description ??
+      profile.track.experience.find((item) => item.org.includes('NeoIQ'))?.description ??
       'Collaborated on retrieval-heavy AI and vector search for operational knowledge bases.',
     metadata: { section: 'projects' }
   },
