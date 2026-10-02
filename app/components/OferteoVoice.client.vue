@@ -16,6 +16,7 @@
     </div>
     <p v-if="error" class="ov-error" role="alert">{{ error }}</p>
     <p v-else-if="notice" class="ov-note" role="status">{{ notice }}</p>
+    <p v-else-if="active && startupPhase === 'microphone'" class="ov-note" role="status">Zezwól tej stronie na mikrofon w przeglądarce. Jeśli pojawi się prośba systemu, zatwierdź ją również.</p>
     <p v-else-if="!compact" class="ov-note" role="status">{{ available ? 'Rozmowa z AI · mikrofon włączasz przyciskiem · do 3 minut' : availabilityLabel }}</p>
     <button v-if="!compact && !available && !active" class="ov-audio" type="button" :disabled="checking || disabled" @click="emit('retry')">{{ checking ? 'Sprawdzanie…' : 'Sprawdź połączenie ponownie' }}</button>
     <button v-if="connected" class="ov-audio" type="button" @click="resumePlayback">Nie słyszysz? Włącz dźwięk</button>
@@ -30,6 +31,7 @@ import type { OferteoMessage } from '~~/shared/types/oferteo'
 import { OFERTEO_REALTIME_MODEL, OFERTEO_VOICE_SECONDS, voiceInstructions, type OferteoVoiceMode, type VoiceMessage } from '~~/shared/oferteo-realtime'
 import type { OferteoRealtimeSession } from '~/utils/oferteoRealtimeSession'
 import { oferteoUiFailure } from '~~/shared/oferteo-errors'
+import { OferteoVoiceStartupError, waitForOferteoVoiceStep, type OferteoVoiceStartupPhase } from '~/utils/oferteoVoiceStartup'
 
 const props = defineProps<{
   mode: OferteoVoiceMode
@@ -50,9 +52,10 @@ const working = ref(false)
 const error = ref('')
 const notice = ref('')
 const remaining = ref(OFERTEO_VOICE_SECONDS)
+const startupPhase = ref<OferteoVoiceStartupPhase>('microphone')
 const remainingLabel = computed(() => `${Math.floor(remaining.value / 60)}:${String(remaining.value % 60).padStart(2, '0')}`)
 const availabilityLabel = computed(() => props.checking ? 'Sprawdzam dostępność rozmowy…' : props.unavailableReason || 'Rozmowa głosowa wymaga aktywnego połączenia z AI.')
-const label = computed(() => !active.value ? 'Wolisz porozmawiać?' : !connected.value ? 'Łączę rozmowę…' : working.value ? (props.mode === 'search' ? 'Szukam propozycji…' : 'Aktualizuję ofertę…') : playing.value ? 'Asystent mówi' : muted.value ? 'Mikrofon wyciszony' : 'Słucham Cię')
+const label = computed(() => !active.value ? 'Wolisz porozmawiać?' : !connected.value ? startupPhase.value === 'microphone' ? 'Czekam na mikrofon…' : startupPhase.value === 'loading' ? 'Przygotowuję rozmowę…' : 'Łączę rozmowę…' : working.value ? (props.mode === 'search' ? 'Szukam propozycji…' : 'Aktualizuję ofertę…') : playing.value ? 'Asystent mówi' : muted.value ? 'Mikrofon wyciszony' : 'Słucham Cię')
 let session: OferteoRealtimeSession | undefined
 let stream: MediaStream | undefined
 let timer: ReturnType<typeof setInterval> | undefined
@@ -92,11 +95,15 @@ function fail(cause: Error) {
     return
   }
   const status = cause.message.match(/setup: (\d+)/)?.[1]
-  if (status === '429') emit('request-failed', { statusCode: 429 })
+  if (failure.retryAt) emit('request-failed', cause)
   error.value = cause.name === 'NotAllowedError' ? 'Zezwól na mikrofon w ustawieniach przeglądarki i spróbuj ponownie. Możesz też napisać wiadomość.'
     : cause.name === 'NotFoundError' ? 'Nie znaleziono mikrofonu. Podłącz go lub kontynuuj tekstem.'
-      : status === '429' ? 'Limit rozmów w demo został osiągnięty. Spróbuj później.'
-        : 'Nie udało się utrzymać rozmowy głosowej. Spróbuj ponownie lub kontynuuj tekstem — dotychczasowa rozmowa jest zachowana.'
+      : cause.name === 'NotReadableError' ? 'Nie udało się uruchomić mikrofonu. Sprawdź dostęp w ustawieniach systemu i czy inna aplikacja go nie blokuje. Możesz kontynuować tekstem.'
+        : cause instanceof OferteoVoiceStartupError || cause.message === 'Realtime session startup timed out' ? cause instanceof OferteoVoiceStartupError && cause.phase === 'microphone'
+          ? 'Przeglądarka nie udostępniła mikrofonu w ciągu 20 sekund. Sprawdź zgodę na mikrofon w przeglądarce i systemie, a potem spróbuj ponownie. Możesz też pisać.'
+          : 'Uruchomienie rozmowy trwa zbyt długo. Spróbuj ponownie lub kontynuuj tekstem — dotychczasowa rozmowa jest zachowana.'
+          : status ? failure.message
+            : 'Nie udało się utrzymać rozmowy głosowej. Spróbuj ponownie lub kontynuuj tekstem — dotychczasowa rozmowa jest zachowana.'
   stop()
 }
 async function start() {
@@ -112,6 +119,7 @@ async function start() {
     return
   }
   active.value = true
+  startupPhase.value = 'microphone'
   emit('active', true)
   const attempt = ++generation
   controller = new AbortController()
@@ -119,16 +127,24 @@ async function start() {
   const current = () => attempt === generation && !signal.aborted
   localMessages = []; cachedKey = ''; cachedResult = undefined; muted.value = false
   try {
-    const acquired = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }, video: false })
+    const acquired = await waitForOferteoVoiceStep(navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }, video: false }), {
+      phase: 'microphone', signal, timeoutMs: 20_000,
+      onLateValue: lateStream => lateStream.getTracks().forEach(track => track.stop()),
+    })
     if (!current()) { acquired.getTracks().forEach(track => track.stop()); return }
     stream = acquired
     acquired.getAudioTracks().forEach(track => track.addEventListener('ended', () => { if (current()) fail(new Error('Microphone disconnected')) }, { once: true }))
-    const [{ OferteoRealtimeSession: Session }, { gateway }] = await Promise.all([import('~/utils/oferteoRealtimeSession'), import('ai')])
+    startupPhase.value = 'loading'
+    const [{ OferteoRealtimeSession: Session }, { gateway }] = await waitForOferteoVoiceStep(Promise.all([import('~/utils/oferteoRealtimeSession'), import('ai')]), { phase: 'loading', signal, timeoutMs: 15_000 })
     if (!current()) return
+    startupPhase.value = 'connecting'
+    let markReady: () => void = () => {}
+    const ready = new Promise<void>(resolve => { markReady = resolve })
     session = new Session({
       model: gateway.experimental_realtime(OFERTEO_REALTIME_MODEL),
       api: { token: `/api/oferto/realtime?mode=${props.mode}` },
       maxEvents: 40,
+      startupTimeoutMs: 25_000,
       sessionConfig: {
         instructions: voiceInstructions(props.mode, context),
         outputModalities: ['audio'],
@@ -172,6 +188,7 @@ async function start() {
       if (key === 'status') {
         if (value === 'connected' && !connected.value) {
           connected.value = true
+          markReady()
           session?.startAudioCapture(acquired)
           void session?.resumePlayback().catch(cause => { if (current()) fail(cause) })
           remaining.value = OFERTEO_VOICE_SECONDS
@@ -180,8 +197,9 @@ async function start() {
             remaining.value = Math.max(0, Math.ceil((deadline - Date.now()) / 1000))
             if (!remaining.value) stop('Minęły 3 minuty. Możesz kontynuować tekstem lub rozpocząć kolejną rozmowę głosową.')
           }, 500)
-        } else if (value === 'error') fail(new Error('Connection failed'))
-        else if (value === 'disconnected') stop('Rozmowa głosowa zakończona. Możesz kontynuować tekstem.')
+        } else if (value === 'disconnected') stop('Rozmowa głosowa zakończona. Możesz kontynuować tekstem.')
+        // The SDK publishes `error` before invoking onError with its cause.
+        // Teardown here would retire the attempt and suppress that callback.
       }
       if (key === 'isPlaying') playing.value = Boolean(value)
       if (key === 'messages') {
@@ -193,7 +211,10 @@ async function start() {
         if (props.messages.reduce((sum, message) => sum + message.content.length, 0) > 9000 || props.messages.length >= 16) stop('Osiągnięto limit rozmowy w demie. Rozpocznij nową rozmowę.')
       }
     })
-    if (current()) { await session.connect(); await session.resumePlayback() }
+    if (current()) await Promise.all([
+      session.connect(),
+      waitForOferteoVoiceStep(ready, { phase: 'connecting', signal, timeoutMs: 30_000 }),
+    ])
   } catch (cause) { if (current()) fail(cause instanceof Error ? cause : new Error('Voice failed')) }
 }
 function toggleMute() {
@@ -207,7 +228,13 @@ function sendText(text: string) {
   session.sendTextMessage(text.trim())
   return true
 }
-async function resumePlayback() { try { await session?.resumePlayback() } catch (cause) { fail(cause instanceof Error ? cause : new Error('Playback failed')) } }
+async function resumePlayback() {
+  const attempt = generation
+  const currentSession = session
+  try { await currentSession?.resumePlayback() } catch (cause) {
+    if (attempt === generation && currentSession === session) fail(cause instanceof Error ? cause : new Error('Playback failed'))
+  }
+}
 function hide() { if (document.hidden && active.value) stop('Rozmowa wstrzymana po opuszczeniu karty. Włącz ją ponownie, gdy wrócisz.') }
 function leave() { stop() }
 onMounted(() => { document.addEventListener('visibilitychange', hide); window.addEventListener('pagehide', leave) })

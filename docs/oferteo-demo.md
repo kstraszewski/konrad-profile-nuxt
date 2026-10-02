@@ -132,6 +132,14 @@ voice UI. Stop, navigation, a hidden tab, connection failure, and unmount releas
 microphone tracks and audio resources. Cancelled starts also release late-arriving
 microphone streams. There is no silent fallback to simulated voice.
 
+Startup distinguishes microphone permission, loading the voice runtime, and
+connecting to AI. These stages are bounded to 20, 15, and 30 seconds respectively;
+the SDK also has its own 25-second transport startup deadline. Ignoring a permission
+prompt no longer leaves the composer busy indefinitely. Timeout and cancellation
+release late microphone streams, and no connection starts after an expired attempt.
+SDK `error` status is observational: teardown happens in `onError`, preserving the
+original cause and the existing credit/quota recovery behavior.
+
 The UI ends a session after three minutes. This is a **client-side UX limit**, not a
 server-enforced monetary cap. The 60-second token TTL limits opening a socket, not
 its connected duration. Keep the project's Gateway budget configured separately;
