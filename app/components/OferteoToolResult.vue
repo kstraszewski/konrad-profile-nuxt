@@ -3,7 +3,7 @@
     <summary class="ot-summary">
       <span class="ot-search" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6" /><path d="m15 15 4.5 4.5" /></svg></span>
       <span class="ot-summary-text">
-        <strong>Dopasowani wykonawcy</strong>
+        <strong>{{ offers.length ? 'Dopasowani wykonawcy' : 'Brak dopasowań w katalogu demo' }}</strong>
         <span>{{ brief.service }}<span v-if="brief.city"> · {{ brief.city }}</span></span>
       </span>
       <span class="ot-count" :aria-label="offers.length + ' ' + profileLabel(offers.length)">{{ offers.length }}</span>
@@ -11,7 +11,8 @@
     </summary>
 
     <div class="ot-output">
-      <div class="ot-offers">
+      <p v-if="!offers.length" class="ot-note">Doprecyzuj usługę, lokalizację i zakres. Katalog demonstracyjny obejmuje remonty łazienek w Warszawie.</p>
+      <div v-else class="ot-offers">
         <article v-for="(offer, index) in offers" :key="offer.id" class="ot-offer" :aria-label="offer.name">
           <div class="ot-offer-heading">
             <span class="ot-avatar" :class="'ot-avatar-' + index % 3" aria-hidden="true">{{ initials(offer.name) }}</span>
@@ -46,7 +47,7 @@
         </article>
       </div>
 
-      <div class="ot-source">
+      <div v-if="offers.length" class="ot-source">
         <span class="ot-source-mark" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="M5 3h7l3 3v11H5V3Zm7 0v4h3M8 10h4m-4 3h4" /></svg></span>
         <div><p class="ot-source-title">Publiczne profile Oferteo <span>· dane z {{ sourceDate }}</span></p><p class="ot-note">Cenę i dostępność potwierdź z wykonawcą. Opinie mogą obejmować niepotwierdzone transakcje.</p></div>
       </div>

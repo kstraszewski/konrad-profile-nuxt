@@ -1,5 +1,5 @@
 import { checkBotId } from 'botid/server'
-import { createError, getRequestHeaders } from 'h3'
+import { createError } from 'h3'
 import type { H3Event } from 'h3'
 
 export function isOferteoApiPath(pathname: string) {
@@ -10,11 +10,23 @@ export function isOferteoApiPath(pathname: string) {
 }
 
 export async function assertOferteoHuman(event: H3Event, verify: typeof checkBotId = checkBotId) {
+  // The SDK defaults to simulation whenever NODE_ENV is not "production".
+  // Only the local development server may use it; previews must verify for real.
+  const localDevelopment = process.env.NODE_ENV === 'development'
+    && process.env.VERCEL !== '1' && !process.env.VERCEL_ENV
+  const headers = event.node.req.headers
+  if (!localDevelopment && !headers['x-is-human']) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Nie udało się potwierdzić, że korzystasz z przeglądarki. Odśwież stronę i spróbuj ponownie.',
+    })
+  }
   let verdict: Awaited<ReturnType<typeof checkBotId>>
   try {
     verdict = await verify({
+      developmentOptions: { isDevelopment: localDevelopment },
       advancedOptions: {
-        headers: getRequestHeaders(event),
+        headers,
         checkLevel: 'basic',
       },
     })
@@ -25,7 +37,7 @@ export async function assertOferteoHuman(event: H3Event, verify: typeof checkBot
       statusMessage: 'Weryfikacja przeglądarki jest chwilowo niedostępna. Odśwież stronę i spróbuj ponownie.',
     })
   }
-  if (verdict.isBot || !verdict.isHuman) {
+  if (verdict.isBot !== false || verdict.isHuman !== true || (!localDevelopment && verdict.bypassed === true)) {
     throw createError({
       statusCode: 403,
       statusMessage: 'Nie udało się potwierdzić, że korzystasz z przeglądarki. Odśwież stronę i spróbuj ponownie.',

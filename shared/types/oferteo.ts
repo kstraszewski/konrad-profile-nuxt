@@ -44,6 +44,7 @@ export interface OferteoChatResponse {
 
 export interface OferteoStatus {
   mode: 'live' | 'demo' | 'unavailable'
+  aiAvailability?: 'ready' | 'unconfigured' | 'unavailable' | 'credits_exhausted'
   aiConfigured: boolean
   databaseConfigured: boolean
   model: string

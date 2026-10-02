@@ -63,7 +63,7 @@ export function analyzeDemoConversation(messages: OferteoMessage[]): OferteoAnal
   if (area) brief.area = `${area[1]} m²`
   const budget = userText.match(/\b(?:do\s+)?\d[\d\s]*(?:[–-]\s*\d[\d\s]*)?\s*(?:tys\.?\s*(?:zł)?|zł|PLN)/i)
   if (budget) brief.budget = budget[0].trim()
-  const timing = userText.match(/(?:w ciągu|za)\s+\d+\s+(?:tygodni\w*|miesi\w*|dni)|jak najszybciej|w przyszłym miesiącu|w październiku|w listopadzie|w grudniu|nie spieszy mi się/i)
+  const timing = userText.match(/(?:w ciągu|za)\s+\d+\s+(?:tygodni\w*|miesi[\w\p{L}]*|dni)|jak najszybciej|w przyszłym miesiącu|w październiku|w listopadzie|w grudniu|nie spieszy mi się/iu)
   if (timing) brief.timing = timing[0]
   const intent = /co.*(?:wycen|ofert)|wycen.*zawier|rozpis.*wycen/.test(latest) ? 'quote_checklist'
     : /tani|tansz|cen|koszt|wycen/.test(latest) ? 'price' : /dostepn|woln.*termin|kiedy.*zacz/.test(latest) ? 'availability' : /porown/.test(latest) ? 'compare' : 'search'

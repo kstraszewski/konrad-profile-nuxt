@@ -26,6 +26,6 @@ export async function getOferteoCatalog(databaseUrl: string): Promise<{ catalog:
     return { catalog, source: 'neon' }
   } catch {
     // Never disguise a configured database failure as a healthy snapshot.
-    throw createError({ statusCode: 503, statusMessage: 'Katalog wykonawców jest chwilowo niedostępny. Spróbuj ponownie za chwilę.' })
+    throw createError({ statusCode: 503, statusMessage: 'Catalog unavailable', message: 'Katalog wykonawców jest chwilowo niedostępny. Spróbuj ponownie za chwilę.', data: { code: 'CATALOG_UNAVAILABLE', retryable: true } })
   }
 }

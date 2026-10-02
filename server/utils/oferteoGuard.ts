@@ -3,6 +3,7 @@ import { createError, getHeader, getRequestURL, getRequestWebStream, setHeader }
 import type { H3Event } from 'h3'
 import { MAX_BODY_BYTES, chatRequestSchema } from './oferteoCore'
 import { oferteoSql } from './oferteoDatabase'
+import { createOferteoDemoLimitError, createOferteoLimitStorageError, probeOferteoLimitStorage } from './oferteoLimitStorage.ts'
 
 export function assertOferteoOrigin(event: H3Event) {
   const origin = getHeader(event, 'origin')
@@ -57,6 +58,14 @@ export async function readOferteoRequest(event: H3Event) {
 
 const demoWindows = new Map<string, { hits: number, expiresAt: number }>()
 
+export function checkOferteoLimitStorage(databaseUrl: string) {
+  if (!databaseUrl) return Promise.resolve(true)
+  return probeOferteoLimitStorage((statements, options) => {
+    const sql = oferteoSql(databaseUrl)
+    return sql.transaction(statements.map(statement => sql.query(statement)), options)
+  })
+}
+
 // Only a one-way, daily rotating HMAC enters Neon. No IP addresses, messages,
 // contact details, prompts, or completion text are stored by this application.
 export async function enforceOferteoRateLimit(event: H3Event, databaseUrl: string, live: boolean) {
@@ -90,7 +99,7 @@ export async function enforceOferteoRateLimit(event: H3Event, databaseUrl: strin
       ])
       counts = rows.slice(0, 3).map(result => Number(result[0]?.hits ?? Infinity))
     } catch {
-      throw createError({ statusCode: 503, statusMessage: 'Nie udało się sprawdzić limitu rozmów. Spróbuj ponownie później.' })
+      throw createOferteoLimitStorageError()
     }
   } else {
     for (const [key, value] of demoWindows) if (value.expiresAt < now) demoWindows.delete(key)
@@ -102,7 +111,8 @@ export async function enforceOferteoRateLimit(event: H3Event, databaseUrl: strin
   }
   const exceeded = windows.find((window, index) => counts[index]! > window.limit)
   if (exceeded) {
-    setHeader(event, 'Retry-After', String(Math.ceil((exceeded.expiresAt - now) / 1_000)))
-    throw createError({ statusCode: 429, statusMessage: 'Limit rozmów w demo został osiągnięty. Spróbuj ponownie później.' })
+    const retryAfterSeconds = Math.ceil((exceeded.expiresAt - now) / 1_000)
+    setHeader(event, 'Retry-After', retryAfterSeconds)
+    throw createOferteoDemoLimitError(retryAfterSeconds)
   }
 }

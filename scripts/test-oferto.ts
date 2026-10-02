@@ -40,6 +40,13 @@ test('sample mode extracts scope and brief only from users, and respects city co
   assert.equal(groundOffers(catalog, analysis).length, 0)
 })
 
+test('sample mode keeps the complete Polish timing phrase in the project plan', () => {
+  for (const timing of ['w ciągu 2 miesięcy', 'za 1 miesiąc', 'za 3 miesiące', 'za 3 tygodnie', 'w ciągu 10 dni']) {
+    const analysis = analyzeDemoConversation(conversation(`Chcę wyremontować łazienkę ${timing}. Kogo polecasz?`))
+    assert.equal(analysis.brief.timing, timing)
+  }
+})
+
 test('unknown IDs, duplicates and wrong-city profiles cannot fabricate offers', () => {
   const analysis = { brief, intent: 'search' as const, contractorIds: ['invented-company', 'oferteo-7004785', catalog[0]!.id, catalog[0]!.id] }
   const offers = groundOffers(catalog, analysis)
