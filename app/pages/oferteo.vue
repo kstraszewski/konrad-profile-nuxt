@@ -19,36 +19,38 @@
 
     <main id="main-content" tabindex="-1">
       <!-- Hero -->
-      <section class="hero wrap" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="hero-kicker">
-            Propozycja współpracy dla <strong>Oferteo</strong>
-            <span class="hero-role">Forward Deployed Engineer / AI Manager</span>
-          </p>
-          <h1 id="hero-title">Od pierwszego pytania <em>do&nbsp;dobrego zlecenia.</em></h1>
-          <p class="hero-lead">
-            Przygotowałem dwa działające demka AI: jedno dla klienta, który szuka wykonawcy, drugie dla wykonawcy, który pisze ofertę.
-            Tak wyobrażam sobie pracę w&nbsp;Oferteo — blisko ludzi, procesu i&nbsp;realnych zleceń.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#demos" @click="track('demos')">Wypróbuj dwa demka <span aria-hidden="true">↓</span></a>
-            <a class="link-quiet" :href="cvHref" :download="cvFilename" @click="track('download_cv')">Pobierz CV <span class="link-meta">PDF</span></a>
-          </div>
-          <p class="hero-sign">
-            <strong>Konrad Straszewski</strong>
-            <span>AI Manager w Lendi · founder jasne.ai</span>
-          </p>
-        </div>
+      <section class="hero" aria-labelledby="hero-title">
         <figure class="hero-figure">
           <img
             src="https://static.oferteo.pl/images/oferteo/o-hero.l.webp"
             alt="Jasna kuchnia z drewnianymi szafkami — zdjęcie ze strony Oferteo"
-            width="720"
-            height="820"
+            width="1440"
+            height="640"
             fetchpriority="high"
           >
-          <figcaption>Usługi dla domu — tu zaczyna się każde zapytanie. <span>Fot. Oferteo</span></figcaption>
+          <figcaption>Fot. Oferteo</figcaption>
         </figure>
+        <div class="wrap hero-inner">
+          <div class="hero-copy">
+            <p class="hero-kicker">
+              Propozycja współpracy dla <strong>Oferteo</strong>
+              <span class="hero-role">Forward Deployed Engineer / AI Manager</span>
+            </p>
+            <h1 id="hero-title">Od pierwszego pytania<br> do dobrego zlecenia.</h1>
+            <p class="hero-lead">
+              Przygotowałem dwa demka AI: klient znajduje wykonawcę, a&nbsp;wykonawca przygotowuje ofertę.
+              Zobacz, jak rozmowa może prowadzić do dobrego zlecenia.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#demos" @click="track('demos')">Wypróbuj dwa demka <span aria-hidden="true">↓</span></a>
+              <a class="link-quiet" :href="cvHref" :download="cvFilename" @click="track('download_cv')">Pobierz CV <span class="link-meta">PDF</span></a>
+            </div>
+            <p class="hero-sign">
+              <strong>Konrad Straszewski</strong>
+              <span>AI Manager w Lendi · founder jasne.ai</span>
+            </p>
+          </div>
+        </div>
       </section>
 
       <!-- Demos: primary product proof -->
@@ -57,7 +59,7 @@
         <div class="wrap">
           <div class="demos-head">
             <div>
-              <p class="eyebrow eyebrow-on-dark only-wide">Dwa działające demka</p>
+              <p class="eyebrow only-wide">Dwa działające demka</p>
               <h2 id="demos-title">
                 <span class="only-wide">Dwie strony jednego zlecenia.</span>
                 <span class="only-narrow">Wypróbuj dwa demka.</span>
@@ -80,8 +82,9 @@
               <h3 id="demo-1-title">Znajdź wykonawcę<span class="only-wide"> przez rozmowę</span></h3>
               <p class="demo-desc only-wide">Opisz potrzebę własnymi słowami. Asystent dopyta o szczegóły i pokaże dopasowane profile Oferteo bezpośrednio w czacie.</p>
               <p class="demo-desc only-narrow">Opisz potrzebę — asystent dopyta i pokaże pasujące profile Oferteo.</p>
-              <NuxtLink class="launch" to="/oferto/demo" @click="track('demo_1')">
-                <span>Uruchom demo klienta</span>
+              <NuxtLink class="launch" to="/oferto/demo" aria-label="Uruchom demo klienta" @click="track('demo_1')">
+                <span class="only-wide">Uruchom demo klienta</span>
+                <span class="only-narrow">Demo klienta</span>
                 <span class="launch-arrow" aria-hidden="true">→</span>
               </NuxtLink>
               <div class="demo-example">
@@ -100,8 +103,9 @@
               <h3 id="demo-2-title">Przygotuj ofertę<span class="only-wide"> przez rozmowę</span></h3>
               <p class="demo-desc only-wide">Podaj zakres, cenę i termin. Asystent ułoży szkic oferty, zaktualizuje podgląd i wprowadzi poprawki z kolejnych wiadomości.</p>
               <p class="demo-desc only-narrow">Podaj zakres, cenę i termin — asystent ułoży szkic i naniesie poprawki.</p>
-              <NuxtLink class="launch" to="/oferto/demo-2" @click="track('demo_2')">
-                <span>Uruchom demo wykonawcy</span>
+              <NuxtLink class="launch" to="/oferto/demo-2" aria-label="Uruchom demo wykonawcy" @click="track('demo_2')">
+                <span class="only-wide">Uruchom demo wykonawcy</span>
+                <span class="only-narrow">Demo wykonawcy</span>
                 <span class="launch-arrow" aria-hidden="true">→</span>
               </NuxtLink>
               <div class="demo-example">
@@ -186,7 +190,7 @@
       <section id="contact" class="contact" aria-labelledby="contact-title">
         <div class="wrap contact-inner">
           <div class="contact-copy">
-            <p class="eyebrow eyebrow-on-dark">Kontakt</p>
+            <p class="eyebrow">Kontakt</p>
             <h2 id="contact-title">Porozmawiajmy o pierwszym procesie do usprawnienia.</h2>
             <p>Chętnie przejdę przez demka na rozmowie i posłucham, gdzie AI może dziś najbardziej pomóc Oferteo.</p>
           </div>
@@ -220,6 +224,7 @@
 
 <script setup>
 import { profile } from '~/data/profile'
+import '~/assets/css/oferteo-fonts.css'
 const pitch = profile.oferteo
 const posthog = usePostHog()
 const cvHref = '/api/cv/oferteo-fde-ai-manager.pdf'
@@ -236,9 +241,8 @@ useRouteSeo('/oferteo')
 useHead({
   htmlAttrs: { lang: 'pl' },
   link: [
-    { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-    { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-    { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Mulish:wght@400..900&display=swap' }
+    { rel: 'preload', href: '/fonts/oferteo/Mulish-400-latin.woff2', as: 'font', type: 'font/woff2', crossorigin: '' },
+    { rel: 'preload', href: '/fonts/oferteo/Mulish-500-latin.woff2', as: 'font', type: 'font/woff2', crossorigin: '' }
   ]
 })
 onMounted(() => posthog?.capture('oferteo_page_viewed'))
