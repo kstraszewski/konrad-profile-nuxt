@@ -22,7 +22,7 @@ export const neoiqCv = {
       },
       {
         label: 'Leadership',
-        heading: 'Frontend Lead at Lendi in 2020–2023, leading an 8-person team; AI Manager since 2024.'
+        heading: 'Frontend Lead at Lendi in 2020–2023, leading a 6-person team; AI Manager since 2024.'
       },
       {
         label: 'NeoIQ / AI Builder',

@@ -61,7 +61,8 @@
 </template>
 
 <script setup lang="ts">
-import { buildProfileContext } from '../data/mcpProfile'
+import { buildProfileContext, cvDownloads } from '../data/mcpProfile'
+import { profile } from '../data/profile'
 
 defineMcpApp({
   name: 'konrad-cv',
@@ -90,8 +91,43 @@ defineMcpApp({
 const { data, openLink, sendPrompt } = useMcpApp<ReturnType<typeof buildProfileContext>>()
 
 const context = computed(() => data.value ?? buildProfileContext({ focus: 'full' }))
-const downloads = computed(() => context.value.sections.cv.downloads)
-const experience = computed(() => context.value.sections.experience.roles.slice(0, 5))
+type Download = Pick<(typeof cvDownloads)[number], 'url' | 'label' | 'description'>
+type ExperienceRole = {
+  year: string
+  role: string
+  org: string
+  description: string
+  website?: string
+}
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null
+
+const isDownload = (value: unknown): value is Download =>
+  isRecord(value) && typeof value.url === 'string' && typeof value.label === 'string' && typeof value.description === 'string'
+
+const isExperienceRole = (value: unknown): value is ExperienceRole =>
+  isRecord(value) &&
+  typeof value.year === 'string' &&
+  typeof value.role === 'string' &&
+  typeof value.org === 'string' &&
+  typeof value.description === 'string' &&
+  (value.website === undefined || typeof value.website === 'string')
+
+const downloads = computed(() => {
+  const section = context.value.sections?.cv
+  return isRecord(section) && Array.isArray(section.downloads)
+    ? section.downloads.filter(isDownload)
+    : cvDownloads
+})
+
+const experience = computed<ExperienceRole[]>(() => {
+  const section = context.value.sections?.experience
+  const roles = isRecord(section) && Array.isArray(section.roles)
+    ? section.roles.filter(isExperienceRole)
+    : profile.track.experience
+  return roles.slice(0, 5)
+})
 const facts = computed(() => [
   { label: 'Current', value: context.value.person.currentRole },
   { label: 'Location', value: context.value.person.location },

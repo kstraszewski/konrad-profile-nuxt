@@ -33,7 +33,7 @@
             {{ option.label }}
           </a>
           <NuxtLink class="job-pitch-button" to="/mcp" @click="onHeroCta('mcp')">
-            MCP CV
+            {{ mcpLabel }}
           </NuxtLink>
           <a
             v-for="(option, index) in resolvedJobLinks"
@@ -241,6 +241,10 @@ const props = defineProps({
     type: String,
     default: 'CV'
   },
+  mcpLabel: {
+    type: String,
+    default: 'MCP CV'
+  },
   cvDownload: {
     type: String,
     default: 'Konrad-Straszewski-CV.pdf'
@@ -317,6 +321,8 @@ onMounted(() => {
 
 useRouteSeo(props.routePath)
 </script>
+
+<style scoped src="~/assets/css/plane-pitch.css"></style>
 
 <style scoped>
 .job-pitch-page {

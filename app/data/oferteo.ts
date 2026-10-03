@@ -103,7 +103,7 @@ export const oferteo = {
       },
       {
         label: 'Przywództwo',
-        heading: 'Prowadziłem 8-osobowy zespół frontendowy.',
+        heading: 'Prowadziłem 6-osobowy zespół frontendowy.',
         description: 'Odpowiedzialność za technologię, mentoring i rozwój zespołu. Dziś pomagam inżynierom przejmować większą odpowiedzialność za wynik produktu.'
       },
       {
@@ -183,7 +183,7 @@ export const oferteo = {
       heading: 'Product delivery, AI adoption and team leadership.',
       rows: [
         { label: 'Lendi', heading: 'Frontend Lead in 2020–2023, AI Manager since 2024; experience across B2B/B2C products.' },
-        { label: 'Leadership', heading: 'Led an 8-person frontend team; owned stack decisions, mentoring and delivery.' },
+        { label: 'Leadership', heading: 'Led a 6-person frontend team; owned stack decisions, mentoring and delivery.' },
         { label: 'AI adoption', heading: 'Lead company-wide AI adoption: strategy, tooling, training, KPIs and internal copilots.' },
         { label: 'jasne.ai', heading: 'Build a vertical AI product end-to-end: product, UX, code, infrastructure and distribution.' },
         { label: 'PostHog', heading: 'Implemented PostHog in two organizations; use funnels, recordings, flags and MCP.' },

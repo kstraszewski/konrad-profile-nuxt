@@ -1,7 +1,9 @@
 import { oferteo } from './oferteo'
 import { neoiqCv } from './neoiq-cv'
+import { plane } from './plane'
 
 export const profile = {
+  plane,
   oferteo,
   neoiq: { cv: neoiqCv },
   person: {
@@ -167,7 +169,7 @@ export const profile = {
       rest: 'is where I learned the building, the leading, and the unbuilding.'
     },
     intro:
-      'I started as a Frontend Developer at Finpack in 2017, then led an 8-person frontend team at Lendi from 2020 to 2023. After a year as an AI Builder at NeoIQ, I returned to Lendi as AI Manager in 2024.',
+      'I started as a Frontend Developer at Finpack in 2017, then led a 6-person frontend team at Lendi from 2020 to 2023. After a year as an AI Builder at NeoIQ, I returned to Lendi as AI Manager in 2024.',
     pride:
       "The part I'm especially proud of: helping scale Lendi from a startup into Poland's #1 broker and the fastest-growing broker in Europe.",
     phases: [
@@ -180,7 +182,7 @@ export const profile = {
       {
         year: '2020–2023',
         label: 'Frontend Lead · Lendi',
-        description: 'Owned the front-end stack. Led an 8-person frontend team. Nuxt 2 -> 3 from alpha.',
+        description: 'Owned the front-end stack. Led a 6-person frontend team. Nuxt 2 -> 3 from alpha.',
         ordinal: '04'
       },
       {
@@ -354,7 +356,7 @@ export const profile = {
         role: 'Frontend Lead',
         org: 'Lendi',
         description:
-          'Led an 8-person frontend team for three years. Owned the frontend stack across B2B and B2C surfaces and shipped Nuxt 2/3 from alpha.'
+          'Led a 6-person frontend team for three years. Owned the frontend stack across B2B and B2C surfaces and shipped Nuxt 2/3 from alpha.'
       },
       {
         year: '2017 - 2020',
@@ -497,6 +499,11 @@ export const profile = {
       'Based in Szczecin, Poland (GMT+2), inside PostHog timezone range; strong async writing, docs, and product-context habits.'
     ],
     downloads: [
+      {
+        label: 'Plane',
+        description: 'PDF dla Plane: AI, product building, fintech UX i integracje MCP',
+        href: '/api/cv/plane.pdf'
+      },
       {
         label: 'NeoIQ Forward Deployed Engineer / AI Manager',
         description: 'English CV: brand context, AI product delivery, retrieval and team adoption',

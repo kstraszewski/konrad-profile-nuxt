@@ -1,6 +1,7 @@
 type Profile = typeof import('../../app/data/profile').profile
 type CvVariant =
   | 'general'
+  | 'plane'
   | 'neoiq-fde-ai-manager'
   | 'oferteo-fde-ai-manager'
   | 'posthog-pe'
@@ -14,6 +15,7 @@ type CvVariant =
   | 'polar-senior-product-engineer'
   | 'lago-product-engineer-growth'
 type TargetedCvContent =
+  | Profile['plane']['cv']
   | Profile['neoiq']['cv']
   | Profile['oferteo']['cv']
   | Profile['posthog']
@@ -29,7 +31,7 @@ type TargetedCvContent =
 type Color = [number, number, number]
 type PdfLink = { href: string; rect: [number, number, number, number] }
 type PdfPage = { content: string; links: PdfLink[] }
-type CvThemeName = 'posthog' | 'linear' | 'medusa' | 'plain' | 'n8n' | 'lago' | 'oferteo' | 'neoiq'
+type CvThemeName = 'posthog' | 'linear' | 'medusa' | 'plain' | 'n8n' | 'lago' | 'oferteo' | 'neoiq' | 'plane'
 
 const PAGE = {
   width: 595.28,
@@ -91,7 +93,9 @@ const colors = {
 }
 
 const cvThemeName = (variant: CvVariant): CvThemeName =>
-  variant.includes('neoiq')
+  variant === 'plane'
+    ? 'plane'
+    : variant.includes('neoiq')
     ? 'neoiq'
     : variant.includes('oferteo')
     ? 'oferteo'
@@ -124,6 +128,18 @@ const cvThemes: Record<
     dark: boolean
   }
 > = {
+  plane: {
+    bg: [1, 1, 1],
+    panel: [1, 1, 1],
+    line: [0.878, 0.878, 0.863],
+    text: [0.267, 0.271, 0.247],
+    muted: [0.408, 0.412, 0.392],
+    accent: [0.51, 0.392, 0.671],
+    accentSoft: [0.957, 0.941, 0.973],
+    grid: true,
+    shadow: false,
+    dark: false
+  },
   neoiq: {
     bg: [0.969, 0.961, 0.941],
     panel: [1, 1, 1],
@@ -223,6 +239,10 @@ const cvThemes: Record<
 }
 
 const gridStyle = (theme: (typeof cvThemes)[CvThemeName]) => {
+  if (theme === cvThemes.plane) {
+    return { step: 96, color: [0.957, 0.957, 0.949] as Color, width: 0.25 }
+  }
+
   if (theme === cvThemes.linear) {
     return { step: 96, color: [0.118, 0.129, 0.157] as Color, width: 0.3 }
   }
@@ -630,7 +650,7 @@ const targetHeader = (doc: PdfDoc, profile: Profile, subtitle = 'Product Enginee
         ? colors.medusaPanel
         : theme === cvThemes.oferteo
           ? colors.oferteoNavy
-          : colors.paper
+          : theme === cvThemes.plane ? [1, 1, 1] as Color : colors.paper
 
   doc.panel(PAGE.margin, 42, 32, 32, markFill, theme.line, theme.shadow)
   doc.text(profile.person.initials, 57, 64, 11, 'F2', markText)
@@ -649,10 +669,12 @@ const targetCard = (doc: PdfDoc, x: number, y: number, width: number, height: nu
 const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>) => {
   const doc = new PdfDoc(variant)
   const theme = doc.theme
-  const headlineFont = theme === cvThemes.medusa || theme === cvThemes.plain || theme === cvThemes.lago || theme === cvThemes.oferteo || theme === cvThemes.neoiq ? 'F2' : 'F4'
+  const headlineFont = theme === cvThemes.medusa || theme === cvThemes.plain || theme === cvThemes.lago || theme === cvThemes.oferteo || theme === cvThemes.neoiq || theme === cvThemes.plane ? 'F2' : 'F4'
   const heroHeadlineColor = theme === cvThemes.plain ? theme.accent : theme.text
   const content: TargetedCvContent =
-    variant === 'neoiq-fde-ai-manager'
+    variant === 'plane'
+      ? profile.plane.cv
+      : variant === 'neoiq-fde-ai-manager'
       ? profile.neoiq.cv
       : variant === 'oferteo-fde-ai-manager'
       ? profile.oferteo.cv
@@ -676,7 +698,9 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
         ? profile.posthogPm
         : profile.posthog
   const roleLabel =
-    variant === 'neoiq-fde-ai-manager'
+    variant === 'plane'
+      ? 'AI & Product Builder / Plane'
+      : variant === 'neoiq-fde-ai-manager'
       ? 'neoIQ Forward Deployed Engineer / AI Manager'
       : variant === 'oferteo-fde-ai-manager'
       ? 'Oferteo Forward Deployed Engineer / AI Manager'
@@ -814,7 +838,7 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
   )
 
   const contactFill = theme === cvThemes.oferteo ? colors.oferteoOrange : theme.accent
-  const contactText = theme === cvThemes.oferteo ? colors.oferteoNavy : theme.dark ? colors.linearText : colors.paper
+  const contactText = theme === cvThemes.oferteo ? colors.oferteoNavy : theme === cvThemes.plane ? [1, 1, 1] as Color : theme.dark ? colors.linearText : colors.paper
   doc.panel(PAGE.margin, 746, 499, 54, contactFill, theme.line, theme.shadow)
   doc.text('CONTACT', 64, 768, 8, 'F2', contactText)
   doc.text(profile.person.email, 142, 768, 10, 'F2', contactText)

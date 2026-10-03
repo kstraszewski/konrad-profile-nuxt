@@ -105,7 +105,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
           <div class="home-project__body">
             <p class="home-kicker">01 / Lendi <span>·</span> AI Manager</p>
             <h3>Building the product.<br>Then the way we build.</h3>
-            <p>I led an eight-person frontend team from 2020 to 2023. Since returning as AI Manager in 2024, I lead AI adoption across the company: tools, workflows, and the shift from shipping tickets to owning products.</p>
+            <p>I led a six-person frontend team from 2020 to 2023. Since returning as AI Manager in 2024, I lead AI adoption across the company: tools, workflows, and the shift from shipping tickets to owning products.</p>
             <div class="home-project__tags"><span>AI adoption</span><span>Engineering leadership</span></div>
             <a class="home-text-link" href="#track">The full journey <span aria-hidden="true">↗</span></a>
           </div>

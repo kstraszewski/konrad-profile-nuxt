@@ -17,6 +17,28 @@ Section components live in `app/components`, shared styles and design tokens liv
 
 The previous HTML/JSX export files are left in place as source references.
 
+## MCP CV connection
+
+`/mcp` contains connection instructions for the public read-only server at
+`https://www.koonrad.dev/mcp/server`. No authentication is required.
+
+With the dev server running, verify the MCP handshake, tools, profile retrieval,
+MCP App resources, install links, and CV downloads:
+
+```bash
+npm run test:mcp -- http://127.0.0.1:3000/mcp/server --local-downloads
+```
+
+After deployment, check the public server and the exact download URLs it advertises:
+
+```bash
+npm run test:mcp -- https://www.koonrad.dev/mcp/server
+```
+
+The checks include the Plane context. An older deployment will fail those checks
+until it includes the new content. The smoke test uses the MCP SDK installed by
+`@nuxtjs/mcp-toolkit`; it does not modify any AI client's configuration.
+
 ## Oferteo demos
 
 `/oferteo` links to two full-screen experiences: `/oferto/demo` finds contractor

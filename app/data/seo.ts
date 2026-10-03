@@ -30,6 +30,14 @@ export const seoSite = {
 
 export const seoPages: SeoPage[] = [
   {
+    path: '/plane',
+    title: profile.plane.title,
+    description: profile.plane.description,
+    lastmod: '2026-10-03',
+    index: false,
+    sitemap: false
+  },
+  {
     path: '/',
     title: 'Konrad Straszewski | AI Manager & Full-Stack TypeScript Engineer',
     description:

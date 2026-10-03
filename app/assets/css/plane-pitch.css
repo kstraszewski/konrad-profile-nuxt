@@ -1,0 +1,277 @@
+.job-pitch-page.job-pitch-page--plane {
+  --ph-bg: #ffffff;
+  --ph-paper: #ffffff;
+  --ph-ink: #44453f;
+  --ph-muted: #646660;
+  --ph-line: #e2e2df;
+  --ph-orange: #735292;
+  --ph-yellow: #f4f0f8;
+  --ph-green: #718269;
+  background: #ffffff;
+  font-family: "Inter", var(--font-body);
+}
+
+.job-pitch-page--plane .job-pitch-nav {
+  min-height: 80px;
+  border-bottom-width: 1px;
+  background: rgb(255 255 255 / 95%);
+}
+
+.job-pitch-page--plane .job-pitch-nav__brand {
+  font-weight: 500;
+}
+
+.job-pitch-page--plane .job-pitch-nav__mark {
+  border: 0;
+  border-radius: 4px;
+  background: var(--ph-ink);
+  box-shadow: none;
+  font: 600 0.75rem "Inter", sans-serif;
+}
+
+.job-pitch-page--plane .job-pitch-nav__links a {
+  padding-inline: 10px;
+  border-width: 1px;
+  border-radius: 4px;
+  font: 400 0.85rem "Inter", sans-serif;
+  text-transform: none;
+}
+
+.job-pitch-page--plane .job-pitch-hero {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 64px;
+  max-width: 1440px;
+  min-height: auto;
+  padding: 80px 5vw 72px;
+  background: repeating-linear-gradient(90deg, transparent 0, transparent calc(20% - 1px), #f0f0ed calc(20% - 1px), #f0f0ed 20%);
+}
+
+.job-pitch-page--plane .job-pitch-kicker {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ph-orange);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+}
+
+.job-pitch-page--plane :is(.job-pitch-hero h1, .job-pitch-section h2, .job-pitch-card h3, .job-pitch-table__row strong, .job-pitch-loop__steps span, .job-pitch-score__value) {
+  font-family: "Inter", var(--font-body);
+  letter-spacing: -0.045em;
+  font-weight: 500;
+}
+
+.job-pitch-page--plane .job-pitch-hero h1 {
+  max-width: 1060px;
+  font-size: clamp(3.25rem, 7.8vw, 7rem);
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.job-pitch-page--plane .job-pitch-hero__lead {
+  max-width: 730px;
+  margin-top: 32px;
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+.job-pitch-page--plane .job-pitch-hero__actions {
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.job-pitch-page--plane .job-pitch-button {
+  min-height: 46px;
+  padding: 10px 20px;
+  border: 1px solid var(--ph-line);
+  border-radius: 5px;
+  background: #ffffff;
+  box-shadow: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.job-pitch-page--plane .job-pitch-button--primary {
+  min-width: 160px;
+  border-color: #8264ab;
+  background: linear-gradient(180deg, #9070b0, #765699);
+  color: #ffffff;
+}
+
+.job-pitch-page--plane .job-pitch-button:hover {
+  transform: none;
+  border-color: #a58cb9;
+  background: #f4f0f8;
+  box-shadow: none;
+}
+
+.job-pitch-page--plane .job-pitch-button--primary:hover {
+  background: #735292;
+}
+
+.job-pitch-page--plane a:focus-visible {
+  outline: 2px solid var(--ph-orange);
+  outline-offset: 5px;
+}
+
+.job-pitch-page--plane :is(.job-pitch-panel, .job-pitch-card, .job-pitch-table, .job-pitch-terminal, .job-pitch-loop__steps li, .job-pitch-contact__links a) {
+  border: 1px solid var(--ph-line);
+  border-radius: 6px;
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.job-pitch-page--plane .job-pitch-panel--hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 0.85fr) minmax(0, 1.3fr);
+  width: 100%;
+  justify-self: stretch;
+  overflow: hidden;
+  box-shadow: 0 8px 36px rgb(68 69 63 / 4%);
+}
+
+.job-pitch-page--plane .job-pitch-panel__bar {
+  grid-column: 1 / -1;
+  border-bottom-width: 1px;
+  background: #fafaf9;
+  font-size: 0.68rem;
+}
+
+.job-pitch-page--plane .job-pitch-panel__bar span {
+  width: 7px;
+  height: 7px;
+  border: 0;
+  background: #b7a0c8;
+}
+
+.job-pitch-page--plane .job-pitch-panel__bar span:nth-child(2) { background: #d3ccba; }
+.job-pitch-page--plane .job-pitch-panel__bar span:nth-child(3) { background: #9eae96; }
+
+.job-pitch-page--plane :is(.job-pitch-score, .job-pitch-role-badge, .job-pitch-facts) {
+  min-width: 0;
+  margin: 0;
+  padding: 28px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ph-ink);
+}
+
+.job-pitch-page--plane .job-pitch-score {
+  background: #f5f1f8;
+}
+
+.job-pitch-page--plane .job-pitch-score__label {
+  color: var(--ph-orange);
+  font-size: 0.65rem;
+}
+
+.job-pitch-page--plane .job-pitch-score__value {
+  margin-top: 20px;
+  font-size: 2rem;
+  line-height: 1.15;
+}
+
+.job-pitch-page--plane .job-pitch-role-badge {
+  border-right: 1px solid var(--ph-line);
+}
+
+.job-pitch-page--plane .job-pitch-role-badge p {
+  margin-bottom: 18px;
+  color: var(--ph-muted);
+  font-size: 0.72rem;
+  font-weight: 400;
+}
+
+.job-pitch-page--plane .job-pitch-role-badge strong {
+  color: var(--ph-ink);
+  font-size: 1.35rem;
+  font-weight: 500;
+}
+
+.job-pitch-page--plane .job-pitch-role-badge span {
+  color: var(--ph-muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.job-pitch-page--plane .job-pitch-facts {
+  padding: 14px 24px;
+  align-content: center;
+}
+
+.job-pitch-page--plane .job-pitch-facts div {
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 10px;
+  padding: 11px 0;
+  border-bottom-width: 1px;
+}
+
+.job-pitch-page--plane .job-pitch-facts div:last-child { border-bottom: 0; }
+.job-pitch-page--plane .job-pitch-facts dt { font-size: 0.6rem; line-height: 1.7; }
+.job-pitch-page--plane .job-pitch-facts dd { font-size: 0.8rem; font-weight: 500; }
+
+.job-pitch-page--plane .job-pitch-section {
+  max-width: 1440px;
+  padding-block: 80px;
+  border-top: 1px solid var(--ph-line);
+  scroll-margin-top: 90px;
+}
+
+.job-pitch-page--plane .job-pitch-section h2 {
+  max-width: 730px;
+  font-size: clamp(2.25rem, 3.5vw, 3.5rem);
+  line-height: 1.1;
+}
+
+.job-pitch-page--plane .job-pitch-card {
+  padding: 28px;
+}
+
+.job-pitch-page--plane .job-pitch-card__index {
+  margin-bottom: 24px;
+  font-size: 0.68rem;
+  font-weight: 500;
+}
+
+.job-pitch-page--plane .job-pitch-card h3 { font-size: 1.4rem; line-height: 1.2; }
+.job-pitch-page--plane .job-pitch-card p { font-size: 0.9rem; line-height: 1.7; }
+.job-pitch-page--plane .job-pitch-relationship__copy { font-size: 1rem; line-height: 1.7; }
+.job-pitch-page--plane .job-pitch-table__row { padding: 28px; border-bottom-width: 1px; }
+.job-pitch-page--plane .job-pitch-table__row strong { font-size: 1.3rem; line-height: 1.25; }
+.job-pitch-page--plane .job-pitch-table__row p { font-size: 0.9rem; line-height: 1.7; }
+.job-pitch-page--plane .job-pitch-loop__steps span { font-size: 1.5rem; line-height: 1.2; }
+.job-pitch-page--plane .job-pitch-loop__steps p { font-size: 0.9rem; line-height: 1.7; }
+.job-pitch-page--plane .job-pitch-terminal { background: #faf9fc; }
+.job-pitch-page--plane .job-pitch-terminal ul { padding: 28px; }
+.job-pitch-page--plane .job-pitch-terminal li { font-size: 0.9rem; line-height: 1.8; }
+.job-pitch-page--plane .job-pitch-terminal :is(strong, li::before) { color: var(--ph-orange); }
+.job-pitch-page--plane .job-pitch-contact__links strong { font-family: "Inter", sans-serif; font-size: 1rem; font-weight: 500; overflow-wrap: anywhere; }
+.job-pitch-page--plane .job-pitch-footer { border-top-width: 1px; }
+
+@media (max-width: 980px) {
+  .job-pitch-page--plane .job-pitch-panel--hero { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .job-pitch-page--plane .job-pitch-role-badge { border-right: 0; }
+  .job-pitch-page--plane .job-pitch-facts { grid-column: 1 / -1; border-top: 1px solid var(--ph-line); }
+}
+
+@media (max-width: 720px) {
+  .job-pitch-page--plane .job-pitch-nav { gap: 12px; padding: 14px 20px; }
+  .job-pitch-page--plane .job-pitch-nav__links { gap: 2px; }
+  .job-pitch-page--plane .job-pitch-nav__links a { padding-inline: 8px; font-size: 0.8rem; }
+  .job-pitch-page--plane .job-pitch-hero { gap: 40px; padding: 48px 20px; }
+  .job-pitch-page--plane .job-pitch-hero h1 { font-size: clamp(2.6rem, 10.8vw, 4.75rem); }
+  .job-pitch-page--plane .job-pitch-hero__lead { font-size: 1rem; margin-top: 24px; }
+  .job-pitch-page--plane .job-pitch-hero__actions { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .job-pitch-page--plane .job-pitch-button { padding-inline: 14px; font-size: 0.8rem; }
+  .job-pitch-page--plane .job-pitch-button--primary { min-width: 0; }
+  .job-pitch-page--plane .job-pitch-panel--hero { grid-template-columns: minmax(0, 1fr); }
+  .job-pitch-page--plane :is(.job-pitch-score, .job-pitch-role-badge) { margin: 0; padding: 24px; }
+  .job-pitch-page--plane .job-pitch-section { padding: 48px 20px; scroll-margin-top: 130px; }
+  .job-pitch-page--plane .job-pitch-section h2 { font-size: 2.25rem; }
+  .job-pitch-page--plane :is(.job-pitch-card, .job-pitch-table__row) { padding: 24px; }
+}

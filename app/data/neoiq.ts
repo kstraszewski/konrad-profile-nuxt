@@ -31,7 +31,7 @@ export const neoiqEn = {
   proofHeading: ['Still building products.', 'Still making AI useful.'],
   proofIntro: 'Behind the unnecessarily elaborate hello: hands-on engineering, product ownership and the work of helping teams adopt AI.',
   proof: [
-    { label: 'Lendi / AI Manager', title: 'From building interfaces to leading AI adoption.', text: 'I led an eight-person frontend team at Lendi from 2020 to 2023 and returned as AI Manager in 2024. I now work on AI strategy, tools, training and adoption.' },
+    { label: 'Lendi / AI Manager', title: 'From building interfaces to leading AI adoption.', text: 'I led a six-person frontend team at Lendi from 2020 to 2023 and returned as AI Manager in 2024. I now work on AI strategy, tools, training and adoption.' },
     { label: 'jasne.ai / Founder', title: 'The whole path from an idea to a product.', text: 'Product direction, UX, code, infrastructure, AI integration and distribution. Building my own vertical AI product keeps me close to the decisions that make a workflow useful.' },
     { label: 'NeoIQ / AI Builder · 2023–2024', title: 'Experience with knowledge that needs to be found.', text: 'As an AI Builder, I worked on retrieval-heavy AI at NeoIQ, working with vector search and large knowledge bases. That is a practical connection to context-driven AI.' }
   ],

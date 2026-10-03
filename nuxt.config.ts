@@ -25,6 +25,7 @@ export default defineNuxtConfig({
     }
   },
   routeRules: {
+    '/plane': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
     '/neoiq': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
     '/neoiq/ar': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
     '/offerteo': { redirect: '/oferteo' },
@@ -79,6 +80,7 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       routes: [
+        '/api/cv/plane.pdf',
         '/api/cv/neoiq-fde-ai-manager.pdf',
         '/api/cv/oferteo-fde-ai-manager.pdf',
         '/api/cv/general.pdf',

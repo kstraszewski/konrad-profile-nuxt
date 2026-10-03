@@ -8,7 +8,7 @@ export const mcpServer = {
   name: 'Konrad Profile MCP',
   endpoint: absoluteUrl('/mcp/server'),
   appTool: 'konrad-cv',
-  updated: '2026-05-16'
+  updated: '2026-10-03'
 } as const
 
 export const profileFocusOptions = [
@@ -23,6 +23,7 @@ export const profileFocusOptions = [
   'medusa',
   'n8n',
   'plain',
+  'plane',
   'polar',
   'lago',
   'contact'
@@ -129,6 +130,14 @@ const targetedRoleContexts = [
   }
 ]
 
+const planeCompanyContext = {
+  id: 'plane',
+  title: 'Plane company context',
+  summary: profile.plane.description,
+  proof: profile.plane.proof.rows,
+  ideas: profile.plane.ideas.items
+}
+
 const allSections = {
   overview: {
     title: 'Overview',
@@ -180,6 +189,7 @@ const allSections = {
   },
   posthog: {
     title: 'PostHog-tailored contexts',
+    relationship: 'Konrad has implemented and used PostHog as a product analytics tool. He has never been employed by PostHog; these are application materials.',
     roles: posthogRoleContexts
   },
   linear: {
@@ -207,6 +217,10 @@ const allSections = {
     title: 'Plain-tailored context',
     role: targetedRoleContexts.find((role) => role.id === 'plain-ai-product-engineer')
   },
+  plane: {
+    title: 'Plane company context',
+    company: planeCompanyContext
+  },
   polar: {
     title: 'Polar-tailored context',
     role: targetedRoleContexts.find((role) => role.id === 'polar-senior-product-engineer')
@@ -225,17 +239,18 @@ const allSections = {
 } as const
 
 const sectionIdsByFocus: Record<ProfileFocus, (keyof typeof allSections)[]> = {
-  full: ['overview', 'cv', 'experience', 'projects', 'ai', 'stack', 'posthog', 'n8n', 'plain', 'polar', 'lago', 'contact'],
+  full: ['overview', 'cv', 'experience', 'projects', 'ai', 'stack', 'posthog', 'n8n', 'plain', 'plane', 'polar', 'lago', 'contact'],
   overview: ['overview', 'experience', 'projects', 'stack', 'contact'],
   cv: ['cv', 'experience', 'stack', 'contact'],
   experience: ['experience', 'projects', 'ai'],
-  ai: ['ai', 'projects', 'stack', 'posthog', 'linear', 'medusa', 'n8n', 'plain', 'polar', 'lago'],
+  ai: ['ai', 'projects', 'stack', 'posthog', 'linear', 'medusa', 'n8n', 'plain', 'plane', 'polar', 'lago'],
   projects: ['projects', 'experience', 'stack'],
   posthog: ['posthog', 'experience', 'ai', 'cv', 'contact'],
   linear: ['linear', 'experience', 'ai', 'cv', 'contact'],
   medusa: ['medusa', 'experience', 'ai', 'cv', 'contact'],
   n8n: ['n8n', 'experience', 'ai', 'cv', 'contact'],
   plain: ['plain', 'experience', 'ai', 'cv', 'contact'],
+  plane: ['plane', 'experience', 'ai', 'cv', 'contact'],
   polar: ['polar', 'experience', 'ai', 'cv', 'contact'],
   lago: ['lago', 'experience', 'ai', 'cv', 'contact'],
   contact: ['contact', 'cv']
@@ -356,8 +371,9 @@ export const profileDocuments: ProfileDocument[] = [
     id: 'posthog-context',
     title: 'PostHog-tailored role contexts',
     url: absoluteUrl('/posthog'),
-    text: lines(
-      posthogRoleContexts.map((role) =>
+    text: lines([
+      allSections.posthog.relationship,
+      ...posthogRoleContexts.map((role) =>
         lines([
           role.title,
           role.summary,
@@ -365,7 +381,7 @@ export const profileDocuments: ProfileDocument[] = [
           ...role.ideas.map((idea) => `${idea.label}: ${idea.description}`)
         ])
       )
-    ),
+    ]),
     metadata: { section: 'posthog' }
   },
   {
@@ -420,6 +436,18 @@ export const profileDocuments: ProfileDocument[] = [
       ...profile.plain.ideas.items.map((idea) => `${idea.label}: ${idea.description}`)
     ]),
     metadata: { section: 'plain' }
+  },
+  {
+    id: 'plane',
+    title: 'Plane company context',
+    url: absoluteUrl('/plane'),
+    text: lines([
+      profile.plane.title,
+      planeCompanyContext.summary,
+      ...planeCompanyContext.proof.map((row) => `${row.label}: ${row.heading} ${row.description}`),
+      ...planeCompanyContext.ideas.map((idea) => `${idea.label}: ${idea.description}`)
+    ]),
+    metadata: { section: 'plane', scope: 'company' }
   },
   {
     id: 'polar-context',
