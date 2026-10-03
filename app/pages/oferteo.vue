@@ -38,25 +38,33 @@
     <section id="demos" class="demos-section">
       <span id="ideas" aria-hidden="true" />
       <div class="page-width">
-        <div class="section-heading"><div><p class="eyebrow"><span /> Dwa działające demka</p><h2>Po obu stronach zlecenia.<br>Jedna dobra rozmowa.</h2></div><p>Klient szuka właściwej osoby. Wykonawca przygotowuje ofertę. Zobacz, jak w obu momentach może pomóc AI.</p></div>
+        <div class="section-heading"><div><p class="eyebrow"><span /> Dwa działające demka</p><h2>Wybierz demo</h2></div><p>Szukasz wykonawcy czy przygotowujesz ofertę? Wybierz jedną z rozmów poniżej.</p></div>
         <div class="demo-grid">
           <article class="demo-card demo-card-search">
             <div class="demo-card-heading"><span class="demo-number">DEMO 01</span><span class="demo-audience">Dla szukającego wykonawcy</span></div>
+            <div class="demo-card-copy">
+              <h3>Znajdź wykonawcę</h3>
+              <p>Opisz, czego potrzebujesz. Asystent dopyta o szczegóły i pokaże dopasowane profile w czacie.</p>
+              <NuxtLink class="demo-open" to="/oferto/demo" aria-label="Uruchom demo 1: szukanie wykonawcy" @click="track('demo_1')"><span>Uruchom demo 1</span><span aria-hidden="true">↗</span></NuxtLink>
+            </div>
             <div class="demo-visual demo-search-visual" aria-hidden="true">
               <div class="mini-message"><span>Ty</span><p>Szukam ekipy do remontu<br>łazienki w Warszawie.</p></div>
               <div class="mini-search-result"><div class="mini-result-title"><span>✳</span><strong>Oto dopasowane profile</strong><span>3</span></div><div class="mini-contractor"><span class="mini-contractor-mark">MŁ</span><div><strong>Remonty łazienek</strong><span>Warszawa · kompleksowy zakres</span></div><span>↗</span></div><div class="mini-match-note"><span>✓</span> Wiesz, dlaczego pasują</div></div>
               <span class="demo-preview-note">Podgląd przykładowej rozmowy</span>
             </div>
-            <div class="demo-card-copy"><h3>Opisz potrzebę.<br>Znajdź wykonawcę.</h3><p>Asystent dopyta o szczegóły i pokaże dopasowane profile bezpośrednio w czacie, razem z uzasadnieniem.</p><ul><li>Rozmowa zamiast formularza</li><li>Profile z publicznego katalogu Oferteo</li></ul><NuxtLink class="demo-open" to="/oferto/demo" @click="track('demo_1')"><span>Demo 1 · Szukanie wykonawcy</span><span aria-hidden="true">↗</span></NuxtLink></div>
           </article>
           <article class="demo-card demo-card-create">
             <div class="demo-card-heading"><span class="demo-number">DEMO 02</span><span class="demo-audience">Dla wykonawcy</span></div>
+            <div class="demo-card-copy">
+              <h3>Przygotuj ofertę</h3>
+              <p>Podaj zakres, cenę i termin. Asystent ułoży szkic oferty, który dopracujesz w rozmowie.</p>
+              <NuxtLink class="demo-open" to="/oferto/demo-2" aria-label="Uruchom demo 2: kreator oferty" @click="track('demo_2')"><span>Uruchom demo 2</span><span aria-hidden="true">↗</span></NuxtLink>
+            </div>
             <div class="demo-visual demo-create-visual" aria-hidden="true">
               <div class="mini-offer"><div class="mini-offer-top"><span>OFERTA DLA KLIENTA</span><span>Wersja 2</span></div><strong>Remont łazienki<br>od A do Z.</strong><div class="mini-offer-lines"><span/><span/></div><div class="mini-offer-facts"><div>Zakres<strong>Ustalony w rozmowie</strong></div><div>Wycena<strong>Twoje warunki</strong></div></div></div>
               <div class="mini-edit"><span>✳</span><p>„Skróć opis i zaznacz,<br>że materiały są po stronie klienta.”</p><span>✓</span></div>
               <span class="demo-preview-note">Podgląd przykładowej oferty</span>
             </div>
-            <div class="demo-card-copy"><h3>Opowiedz o usłudze.<br>Ułóż dobrą ofertę.</h3><p>Podaj zakres, cenę i termin. Czat przygotuje szkic oferty, który dopracujesz kolejnymi wiadomościami.</p><ul><li>Podgląd aktualizowany w rozmowie</li><li>Gotowy tekst do skopiowania lub pobrania</li></ul><NuxtLink class="demo-open" to="/oferto/demo-2" @click="track('demo_2')"><span>Demo 2 · Kreator oferty</span><span aria-hidden="true">↗</span></NuxtLink></div>
           </article>
         </div>
         <div class="demos-note"><span class="demos-note-mark" aria-hidden="true">✳</span><p>Wypróbuj własny scenariusz lub zacznij od przykładu. To niezależne demonstracje — niczego nie publikują i nie wysyłają do firm.</p></div>
