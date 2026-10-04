@@ -36,13 +36,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
         koonrad<span>.dev</span>
       </a>
       <button ref="menuButton" class="home-menu" type="button" :aria-expanded="menuOpen" aria-controls="home-navigation" @click="menuOpen = !menuOpen">
-        {{ menuOpen ? 'Close' : 'Menu' }} <span aria-hidden="true">{{ menuOpen ? '−' : '+' }}</span>
+        {{ menuOpen ? 'Close' : 'Menu' }} <HomeIcon :name="menuOpen ? 'x' : 'plus'" />
       </button>
       <nav id="home-navigation" class="home-nav__links" :class="{ 'is-open': menuOpen }" aria-label="Main navigation">
         <a href="#work" @click="menuOpen = false">Selected work</a>
         <a href="#track" @click="menuOpen = false">About</a>
-        <a href="#contact" @click="menuOpen = false">Get in touch <span aria-hidden="true">↗</span></a>
-        <NuxtLink class="home-nav__cv" to="/cv">CV <span aria-hidden="true">↗</span></NuxtLink>
+        <a href="#contact" @click="menuOpen = false">Get in touch <HomeIcon name="arrow-up-right" :size="18" /></a>
+        <NuxtLink class="home-nav__cv" to="/cv">CV <HomeIcon name="arrow-up-right" :size="18" /></NuxtLink>
       </nav>
     </header>
 
@@ -61,27 +61,25 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
             Independently building <NuxtLink to="/jasne.ai" @click="trackJasne">jasne.ai</NuxtLink>.
           </p>
           <div class="home-hero__actions home-reveal" style="--d: 6">
-            <a class="home-button" href="#work">Explore my work <span aria-hidden="true">↘</span></a>
-            <a class="home-text-link" href="#contact">Let’s talk <span aria-hidden="true">↗</span></a>
+            <a class="home-button" href="#work">Explore my work <HomeIcon name="arrow-down-right" :size="22" /></a>
+            <a class="home-text-link" href="#contact">Let’s talk <HomeIcon name="arrow-up-right" /></a>
             <a class="home-text-link home-hero__cv" href="/api/cv/general.pdf" download="Konrad-Straszewski-CV.pdf" aria-label="Download CV as PDF" @click="trackCvDownload">
               Download CV
-              <svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                <path d="M10 2v11m-4-4 4 4 4-4M3 14v4h14v-4" />
-              </svg>
+              <HomeIcon name="download" />
             </a>
           </div>
         </div>
 
         <aside class="home-poster" aria-label="My approach: think, build, ship, learn, repeat." data-stack-focus>
-          <div class="home-poster__top"><span>ALWAYS IN THE MAKING</span><span aria-hidden="true">↗</span></div>
+          <div class="home-poster__top"><span>ALWAYS IN THE MAKING</span><HomeIcon name="arrow-up-right" :size="23" /></div>
           <HomeBuildStack class="home-poster__art" />
-          <div class="home-poster__bottom"><p>Think. Build.<br>Ship. Repeat.</p><span class="home-poster__loop" aria-hidden="true">↻</span></div>
+          <div class="home-poster__bottom"><p>Think. Build.<br>Ship. Repeat.</p><HomeIcon class="home-poster__loop" name="rotate-cw" :size="48" /></div>
           <div class="home-poster__caption"><span>IDEAS ARE ONLY THE START.</span><span>01—∞</span></div>
         </aside>
 
         <div class="home-hero__foot">
           <span class="home-availability"><i aria-hidden="true" /> Open to senior AI roles · remote</span>
-          <span>Szczecin, Poland <span class="home-hero__location" aria-hidden="true">↗</span></span>
+          <span>Szczecin, Poland <HomeIcon class="home-hero__location" name="arrow-up-right" :size="15" /></span>
         </div>
       </section>
 
@@ -92,42 +90,28 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
         </div>
 
         <article id="lendi" class="home-project home-project--lendi">
-          <div class="home-project__visual home-lendi" role="img" aria-label="Lendi: Frontend Lead in 2020–2023, AI Manager since 2024">
-            <span class="home-visual__label">A LONG-TERM BUILD</span>
-            <span class="home-lendi__wordmark">lendi<span>_</span></span>
-            <div class="home-lendi__path"><span>Frontend Lead</span><span aria-hidden="true">→</span><strong>AI Manager</strong></div>
-            <div class="home-lendi__timeline" aria-hidden="true">
-              <span class="home-lendi__bar home-lendi__bar--lead" />
-              <span class="home-lendi__bar home-lendi__bar--ai" />
-              <span class="home-lendi__tick home-lendi__tick--start" style="--at: 0">’20</span>
-              <span class="home-lendi__tick" style="--at: .5">’23</span>
-              <span class="home-lendi__tick" style="--at: .6667">’24</span>
-              <span class="home-lendi__tick home-lendi__tick--end" style="--at: 1">NOW</span>
-            </div>
-            <span class="home-visual__footer">2020–2023 · 2024 → NOW</span>
+          <div class="home-project__visual home-lendi">
+            <HomeLendiPreview />
           </div>
           <div class="home-project__body">
             <p class="home-kicker">01 / Lendi <span>·</span> AI Manager</p>
             <h3>Building the product.<br>Then the way we build.</h3>
             <p>I led a six-person frontend team from 2020 to 2023. Since returning as AI Manager in 2024, I lead AI adoption across the company: tools, workflows, and the shift from shipping tickets to owning products.</p>
             <div class="home-project__tags"><span>AI adoption</span><span>Engineering leadership</span></div>
-            <a class="home-text-link" href="#track">The full journey <span aria-hidden="true">↗</span></a>
+            <a class="home-text-link" href="#track">The full journey <HomeIcon name="arrow-up-right" /></a>
           </div>
         </article>
 
         <article id="jasne" class="home-project home-project--jasne">
           <NuxtLink class="home-project__visual home-jasne" to="/jasne.ai" aria-label="Read the jasne.ai case study">
-            <span class="home-visual__label">INDEPENDENTLY BUILT</span>
-            <span class="home-jasne__sun" aria-hidden="true"><span v-for="ray in 12" :key="ray" :style="{ '--ray': ray }" /></span>
-            <span class="home-jasne__wordmark">jasne.ai<span aria-hidden="true">↗</span></span>
-            <span class="home-visual__footer">FROM PRODUCT TO DISTRIBUTION</span>
+            <HomeJasnePreview />
           </NuxtLink>
           <div class="home-project__body">
             <p class="home-kicker">02 / jasne.ai <span>·</span> Founder & builder</p>
-            <h3>My own ideas.<br>Out in the real world.</h3>
-            <p>A vertical AI product connecting product truth with better distribution. I own the whole thing: product, design, code, infrastructure, and getting it into people’s hands.</p>
-            <div class="home-project__tags"><span>0 → 1 product</span><span>AI</span><span>Distribution</span></div>
-            <NuxtLink class="home-text-link" to="/jasne.ai">Explore jasne.ai <span aria-hidden="true">↗</span></NuxtLink>
+            <h3>Clear knowledge.<br>Confident teams.</h3>
+            <p>I’m building jasne.ai to help sales teams find product answers, learn faster, and put knowledge to work. An AI assistant, knowledge base, and tailored training — owned end to end, from product and design to code and rollout.</p>
+            <div class="home-project__tags"><span>AI assistant</span><span>Knowledge & learning</span><span>0 to 1 product</span></div>
+            <NuxtLink class="home-text-link" to="/jasne.ai">Explore jasne.ai <HomeIcon name="arrow-up-right" /></NuxtLink>
           </div>
         </article>
 
@@ -135,7 +119,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
           <span class="home-neoiq__index">03</span>
           <div><p class="home-kicker">NeoIQ · AI Builder · 2023–2024</p><h3>Making large knowledge bases useful.</h3></div>
           <p>As an AI Builder, I worked on vector search and retrieval at NeoIQ. Real data, operational context, practical AI.</p>
-          <a :href="profile.links.neoiq.href" target="_blank" rel="noreferrer" aria-label="Visit NeoIQ" class="home-neoiq__link">↗</a>
+          <a :href="profile.links.neoiq.href" target="_blank" rel="noreferrer" aria-label="Visit NeoIQ" class="home-neoiq__link"><HomeIcon name="arrow-up-right" :size="22" /></a>
         </article>
       </section>
 
@@ -195,9 +179,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 .home-button { position: relative; display: inline-flex; align-items: center; gap: 42px; min-height: 48px; padding: 0 20px; overflow: hidden; isolation: isolate; background: var(--home-ink); color: white; font-size: 14px; text-decoration: none; transition: transform 160ms ease-out; }
 .home-button::before { position: absolute; inset: 0; z-index: -1; background: var(--home-blue); content: ''; transform: translateY(101%); transition: transform 380ms var(--home-ease); }
 .home-button:active { transform: scale(.98); }
-.home-button > span { font-size: 22px; transition: transform 380ms var(--home-ease); }
+.home-button > svg { transition: transform 180ms ease-out; }
 .home-text-link { display: inline-flex; align-items: center; gap: 24px; width: fit-content; min-height: 44px; font-size: 14px; font-weight: 500; text-decoration: none; }
-.home-text-link > span { font-size: 20px; transition: transform 180ms ease-out; }
+.home-text-link > svg { transition: transform 180ms ease-out; }
 .home-text-link:hover { color: var(--home-blue); }
 
 /* ——— Poster with the 3D build stack ——— */
@@ -216,11 +200,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 /* A soft light pool under the sculpture. */
 .home-poster::after { position: absolute; left: 50%; top: 46%; z-index: -1; width: 120%; aspect-ratio: 1; content: ''; background: radial-gradient(closest-side, rgb(116 140 255 / .55), rgb(41 73 237 / 0)); transform: translate(-50%, -50%); }
 .home-poster__top, .home-poster__caption { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 9px; font-weight: 500; letter-spacing: 1.2px; }
-.home-poster__top > span:last-child { font-size: 23px; line-height: 1; }
 .home-poster__art { margin: 12px 0 2px; }
 .home-poster__bottom { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 6px; }
 .home-poster__bottom p { margin: 0; font-size: clamp(28px, 3.1vw, 42px); font-weight: 500; line-height: 1.05; letter-spacing: -1.5px; }
-.home-poster__loop { display: inline-block; color: var(--home-lime); font-size: 61px; line-height: 1; font-weight: 400; transition: transform 900ms var(--home-ease); }
+.home-poster__loop { color: var(--home-lime); transition: transform 240ms ease-out; }
 .home-poster__caption { border-top: 1px solid #ffffff55; padding-top: 16px; margin-top: 24px; font-size: 8px; letter-spacing: 1px; }
 
 .home-hero__foot { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 35px 0 27px; margin-top: 12px; border-bottom: 1px solid var(--home-line); color: var(--home-muted); font-size: 12px; }
@@ -228,7 +211,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 .home-availability i { position: relative; width: 7px; height: 7px; border-radius: 50%; background: #42832a; }
 /* Finite pulse: draws the eye once, then settles. */
 .home-availability i::after { position: absolute; inset: 0; border-radius: 50%; background: #42832a; content: ''; opacity: 0; animation: home-pulse 1800ms ease-out 1200ms 3; }
-.home-hero__location { margin-left: 15px; }
+.home-hero__location { margin-left: 10px; vertical-align: middle; }
 
 /* ——— Work ——— */
 .home-work { padding-top: 79px; padding-bottom: 72px; }
@@ -238,26 +221,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 .home-work h2 mark { padding: 0 .06em; margin: 0 -.06em; color: inherit; background: linear-gradient(transparent 60%, var(--home-lime) 60%, var(--home-lime) 92%, transparent 92%); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .home-work__count { color: var(--home-muted); font-size: 11px; letter-spacing: 1px; padding-bottom: 4px; font-variant-numeric: tabular-nums; }
 .home-project { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; padding-block: 28px; border-top: 1px solid var(--home-line); }
-.home-project__visual { min-height: 315px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; isolation: isolate; padding: 23px 28px; text-decoration: none; }
-.home-visual__label, .home-visual__footer { position: relative; font-size: 9px; letter-spacing: 1.4px; font-weight: 500; }
+.home-project__visual { display: block; min-width: 0; position: relative; overflow: hidden; isolation: isolate; padding: 0; text-decoration: none; }
 
-/* Lendi */
-.home-lendi { background: #e2e7ec; }
-.home-lendi::before { position: absolute; inset: 0; z-index: -1; content: ''; background-image: radial-gradient(circle, rgb(23 25 27 / .14) 1px, transparent 1.3px); background-size: 16px 16px; -webkit-mask-image: linear-gradient(115deg, transparent 35%, #000 100%); mask-image: linear-gradient(115deg, transparent 35%, #000 100%); }
-.home-lendi__wordmark { margin: 14px 0 12px; font-size: 89px; letter-spacing: -6px; font-weight: 600; line-height: 1; }
-.home-lendi__wordmark > span { color: var(--home-blue); }
-.home-lendi__path { display: flex; align-items: center; gap: 15px; margin-bottom: 18px; font-size: 13px; }
-.home-lendi__path > span:nth-child(even) { color: #747b88; }
-.home-lendi__path strong { background: var(--home-blue); color: white; padding: 8px 13px; font-weight: 500; }
-.home-lendi__timeline { position: relative; height: 30px; margin: 0 6px 16px 0; }
-.home-lendi__timeline::before { position: absolute; left: 0; right: 0; top: 3px; border-top: 1px dashed #9aa1ad; content: ''; }
-.home-lendi__bar { position: absolute; top: 0; height: 7px; transform-origin: left; }
-.home-lendi__bar--lead { left: 0; width: 50%; background: var(--home-ink); }
-.home-lendi__bar--ai { left: 66.67%; right: 0; background: var(--home-blue); }
-.home-lendi__bar--ai::after { position: absolute; right: -1px; top: -4px; width: 2px; height: 15px; background: var(--home-blue); content: ''; }
-.home-lendi__tick { position: absolute; top: 14px; left: calc(var(--at) * 100%); color: #6b7280; font-size: 9px; font-weight: 500; letter-spacing: .8px; font-variant-numeric: tabular-nums; transform: translateX(-50%); }
-.home-lendi__tick--start { transform: none; }
-.home-lendi__tick--end { color: var(--home-blue); transform: translateX(-100%); }
+.home-lendi { background: #fffdfb; }
 
 .home-project__body { padding: 14px 0; }
 .home-project__body .home-kicker { color: var(--home-muted); font-size: 10px; letter-spacing: .8px; }
@@ -266,15 +232,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 .home-project__tags { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 20px 0 8px; color: var(--home-muted); font-size: 11px; }
 .home-project__tags span { padding-bottom: 5px; border-bottom: 1px solid var(--home-line); }
 
-/* jasne.ai */
-.home-jasne { background: #e2edb9; color: #28331a; }
-.home-jasne::before { position: absolute; right: -90px; top: -90px; z-index: -1; width: 380px; aspect-ratio: 1; content: ''; background: radial-gradient(closest-side, rgb(255 255 255 / .85), rgb(255 255 255 / 0)); opacity: .45; transition: opacity 500ms var(--home-ease), transform 700ms var(--home-ease); }
-.home-jasne__wordmark { position: relative; z-index: 1; font-size: 76px; font-weight: 500; letter-spacing: -4px; line-height: 1; margin: auto 0 20px; }
-.home-jasne__wordmark > span { display: inline-block; margin-left: 16px; font-size: 38px; vertical-align: top; transition: transform 200ms ease-out; }
-.home-jasne__sun { position: absolute; right: 68px; top: 90px; width: 1px; height: 1px; color: #77873b; transition: transform 900ms var(--home-ease); }
-.home-jasne__sun span { position: absolute; top: -61px; left: -1.5px; width: 3px; height: 36px; background: currentColor; transform-origin: 50% 62px; transform: rotate(calc(var(--ray) * 30deg)); }
-.home-jasne:focus-visible::before { opacity: 1; transform: scale(1.08); }
-.home-jasne:focus-visible .home-jasne__sun { transform: rotate(30deg) scale(1.08); }
+.home-jasne { --home-focus: #312319; background: #ffd66e; color: #312319; }
 
 /* NeoIQ */
 .home-neoiq { display: grid; grid-template-columns: 36px 1fr .9fr 48px; gap: 20px; align-items: center; padding: 35px 0; border-block: 1px solid var(--home-line); }
@@ -285,33 +243,22 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 .home-neoiq__link { position: relative; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; overflow: hidden; isolation: isolate; border: 1px solid var(--home-line); border-radius: 50%; text-decoration: none; font-size: 24px; transition: color 200ms ease, border-color 200ms ease; }
 .home-neoiq__link::before { position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--home-blue); content: ''; transform: scale(0); transition: transform 360ms var(--home-ease); }
 .home-neoiq__link:focus-visible { color: white; border-color: var(--home-blue); }
-.home-neoiq__link:focus-visible::before { transform: scale(1); }
+.home-neoiq__link:focus-visible::before { transform: scale(1); transition: none; }
+.home-button:focus-visible, .home-button:focus-visible::before, .home-button:focus-visible > svg, .home-text-link:focus-visible > svg, .home-brand:focus-visible svg { transform: none; transition: none; }
 
 @media (hover: hover) and (pointer: fine) {
-  .home-brand:hover svg { transform: rotate(-8deg); }
+  .home-brand:hover:not(:focus-visible) svg { transform: rotate(-8deg); }
   .home-nav__links a:hover::after { transform: scaleX(1); transform-origin: left; }
   .home-button:hover::before { transform: translateY(0); }
-  .home-button:hover > span { transform: translate(2px, 2px); }
+  .home-button:hover:not(:focus-visible) > svg { transform: translate(2px, 2px); }
   .home-poster:hover .home-poster__loop { transform: rotate(180deg); }
-  .home-text-link:hover > span, .home-jasne:hover .home-jasne__wordmark > span { transform: translate(2px, -2px); }
-  .home-project--lendi:hover .home-lendi__wordmark > span { animation: home-blink 1.1s steps(1) infinite; }
-  .home-jasne:hover::before { opacity: 1; transform: scale(1.08); }
-  .home-jasne:hover .home-jasne__sun { transform: rotate(30deg) scale(1.08); }
   .home-neoiq__link:hover { color: white; border-color: var(--home-blue); }
   .home-neoiq__link:hover::before { transform: scale(1); }
-}
-
-/* Progressive enhancement: timeline bars draw in as the card scrolls into view. */
-@supports (animation-timeline: view()) {
-  .home-lendi__bar { animation: home-draw linear both; animation-timeline: view(); animation-range: entry 10% cover 40%; }
-  .home-lendi__bar--ai { animation-range: entry 25% cover 50%; }
 }
 
 @keyframes home-rise { from { transform: translateY(108%); } to { transform: translateY(0); } }
 @keyframes home-fade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes home-pulse { 0% { opacity: .55; transform: scale(1); } 100% { opacity: 0; transform: scale(3.2); } }
-@keyframes home-blink { 50% { opacity: 0; } }
-@keyframes home-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 @media (min-width: 1450px) { .home-hero { padding-top: 70px; } }
 @media (max-width: 1000px) {
@@ -321,13 +268,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
   .home-hero .home-kicker { font-size: 9px; letter-spacing: .7px; }
   .home-poster { padding: 22px; }
   .home-project { gap: 32px; }
-  .home-lendi__path { gap: 9px; font-size: 11px; }
 }
 @media (max-width: 760px) {
   .home-wrap { width: calc(100% - 40px); }
   .home-nav { min-height: 80px; flex-wrap: wrap; }
   .home-menu { display: flex; align-items: center; gap: 18px; padding: 0 4px 0 12px; border: 0; min-height: 44px; background: none; color: var(--home-ink); font-size: 14px; cursor: pointer; }
-  .home-menu span { font-size: 23px; }
   .home-nav__links { display: none; width: 100%; padding: 6px 0 20px; gap: 0; }
   .home-nav__links.is-open { display: grid; grid-template-columns: 1fr 1fr; }
   .home-nav__links a { min-height: 48px; }
@@ -352,13 +297,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
   .home-work h2 { font-size: 32px; letter-spacing: -1.3px; }
   .home-work__count { display: none; }
   .home-project { grid-template-columns: 1fr; gap: 12px; padding-block: 20px 28px; }
-  .home-project__visual { min-height: 270px; }
-  .home-jasne__wordmark { font-size: clamp(56px, 15vw, 76px); letter-spacing: -3px; }
-  .home-jasne__wordmark > span { font-size: 28px; margin-left: 12px; }
   .home-project__body { padding: 10px 0; }
   .home-project h3 { font-size: 32px; }
   .home-project__body > p:not(.home-kicker) { max-width: 520px; }
-  .home-lendi__path { font-size: 13px; gap: 15px; }
   .home-neoiq { grid-template-columns: 1fr 48px; gap: 15px; padding-block: 27px; }
   .home-neoiq__index { display: none; }
   .home-neoiq > p { grid-column: 1; }
@@ -376,13 +317,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
   .home-hero h1 { font-size: 57px; }
   .home-hero__actions { gap: 12px 18px; }
   .home-button { gap: 19px; padding-inline: 15px; }
-  .home-lendi__path { gap: 10px; font-size: 11px; }
-  .home-lendi__wordmark { font-size: 76px; letter-spacing: -5px; }
   .home-poster { padding-inline: 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .home :deep(*), .home :deep(*::before), .home :deep(*::after) { animation: none !important; transition: none !important; }
-  .home-text-link > span, .home-jasne__wordmark > span, .home-button > span, .home-poster__loop, .home-jasne__sun, .home-brand svg { transform: none !important; }
+  .home-text-link > svg, .home-button > svg, .home-poster__loop, .home-brand svg { transform: none !important; }
 }
 </style>
 

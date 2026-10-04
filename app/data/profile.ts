@@ -236,7 +236,7 @@ export const profile = {
     sub: 'Case study · 2024 →',
     name: 'jasne.ai',
     intro:
-      "A vertical AI product I'm building end-to-end - design, code, infra, distribution. The thesis I sell at Lendi, proven on my own time.",
+      "An AI assistant, knowledge base, and tailored training for sales teams. I'm building jasne.ai end to end - product, design, code, infrastructure, and rollout.",
     shotLabel: 'FIG. 03.01 - JASNE.AI · PRODUCT SURFACE',
     shotFooter: ['VERTICAL AI · 0→1 PRODUCT', '2024 → NOW'],
     facts: [
@@ -256,9 +256,9 @@ export const profile = {
       },
       {
         number: '02',
-        heading: 'Distribution is the product',
+        heading: 'Knowledge becomes useful',
         description:
-          'jasne.ai exists to help companies turn product truth into distribution: sharper positioning, faster campaigns, stronger proof, and tighter loops between product and market.'
+          'jasne.ai helps sales teams find product answers, learn company processes, and build confidence through tailored training. The goal is to make shared knowledge useful in everyday work.'
       },
       {
         number: '03',

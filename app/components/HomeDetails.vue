@@ -10,7 +10,7 @@
             to 2023, and worked as an AI Builder at <a :href="profile.links.neoiq.href" target="_blank" rel="noopener noreferrer">NeoIQ</a> in 2023–2024. Since 2024,
             I’ve been Lendi’s AI Manager.
           </p>
-          <NuxtLink to="/cv" class="text-link">Read my CV <span aria-hidden="true">↗</span></NuxtLink>
+          <NuxtLink to="/cv" class="text-link">Read my CV <HomeIcon name="arrow-up-right" /></NuxtLink>
         </div>
 
         <div class="history-list">
@@ -19,7 +19,7 @@
               <span class="history-year">{{ item.year }}</span>
               <span class="history-position">
                 <strong>{{ item.role }}</strong>
-                <span><a v-if="item.website" :href="item.website" target="_blank" rel="noopener noreferrer" @click.stop>{{ item.org }} ↗</a><template v-else>{{ item.org }}</template></span>
+                <span><a v-if="item.website" :href="item.website" target="_blank" rel="noopener noreferrer" @click.stop>{{ item.org }} <HomeIcon name="arrow-up-right" :size="15" /></a><template v-else>{{ item.org }}</template></span>
               </span>
               <span class="expand-mark" aria-hidden="true" />
             </summary>
@@ -66,7 +66,7 @@
             </li>
           </ul>
           <NuxtLink :to="profile.links.mcp.href" class="text-link">
-            Try my profile as an MCP app <span aria-hidden="true">↗</span>
+            Try my profile as an MCP app <HomeIcon name="arrow-up-right" />
           </NuxtLink>
         </section>
       </div>
@@ -89,9 +89,7 @@
             <p>Products, teams, or a new way of doing things.<br />I’d like to hear what you’re working on.</p>
             <a class="email-link" :href="profile.links.email.href" @click="onContactLinkClick(profile.links.email)">
               <span>{{ profile.links.email.value }}</span>
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
-                <path d="M5 19 19 5M5 5h14v14" stroke="currentColor" stroke-width="1.7" />
-              </svg>
+              <HomeIcon name="arrow-up-right" :size="22" />
             </a>
           </div>
         </div>
@@ -105,15 +103,15 @@
             :rel="item.external ? 'noopener noreferrer' : undefined"
             @click="onContactLinkClick(item)"
           >
-            {{ item.label === 'Phone' ? item.value : item.label }} <span aria-hidden="true">↗</span>
+            {{ item.label === 'Phone' ? item.value : item.label }} <HomeIcon name="arrow-up-right" :size="18" />
           </a>
-          <NuxtLink to="/cv">CV <span aria-hidden="true">↗</span></NuxtLink>
+          <NuxtLink to="/cv">CV <HomeIcon name="arrow-up-right" :size="18" /></NuxtLink>
         </div>
 
         <div class="site-signoff">
           <span>© {{ profile.person.name }} · 2026</span>
           <span>{{ profile.person.location }}</span>
-          <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
+          <a href="#top">Back to top <HomeIcon name="arrow-up" :size="18" /></a>
         </div>
       </div>
     </footer>
@@ -204,9 +202,8 @@ h2 {
   text-decoration: none;
 }
 
-.text-link > span {
+.text-link > .home-icon {
   color: var(--home-blue, #2949ed);
-  font-size: 19px;
 }
 
 .history-list,
@@ -265,6 +262,12 @@ summary::marker {
   color: var(--home-muted, #666b75);
   font-size: 13px;
   line-height: 1.4;
+}
+
+.history-position a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .expand-mark {
@@ -526,7 +529,7 @@ details[open]:has(> summary:focus-visible) > p {
   overflow-wrap: anywhere;
 }
 
-.email-link svg {
+.email-link > .home-icon {
   flex: 0 0 22px;
   width: 22px;
   height: 22px;
@@ -549,7 +552,7 @@ details[open]:has(> summary:focus-visible) > p {
   text-decoration: none;
 }
 
-.contact-links a > span {
+.contact-links a > .home-icon {
   color: #c5d0ff;
 }
 
@@ -591,8 +594,8 @@ a:focus-visible {
     color: var(--home-blue, #2949ed);
   }
 
-  .history-item summary:hover .history-position,
-  .principle-item summary:hover strong {
+  .history-item summary:hover:not(:focus-visible) .history-position,
+  .principle-item summary:hover:not(:focus-visible) strong {
     transform: translateX(4px);
   }
 
@@ -601,13 +604,20 @@ a:focus-visible {
     text-underline-offset: 5px;
   }
 
-  .email-link:hover svg {
+  .email-link:hover:not(:focus-visible) > .home-icon {
     transform: translate(3px, -3px);
   }
 }
 
-.email-link svg {
+.email-link > .home-icon {
   transition: transform 320ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.history-item summary:focus-visible .history-position,
+.principle-item summary:focus-visible strong,
+.email-link:focus-visible > .home-icon {
+  transform: none;
+  transition: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -618,7 +628,7 @@ a:focus-visible {
   .expand-mark::after,
   .history-position,
   .principle-item strong,
-  .email-link svg {
+  .email-link > .home-icon {
     transition: none;
   }
 }
