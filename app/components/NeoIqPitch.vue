@@ -54,7 +54,7 @@ const props = defineProps<{ locale: 'en' | 'ar' }>()
 const isArabic = computed(() => props.locale === 'ar')
 const copy = computed(() => isArabic.value ? neoiqAr : neoiqEn)
 const cvHref = '/api/cv/neoiq-fde-ai-manager.pdf'
-const cvFilename = 'Konrad-Straszewski-CV-NeoIQ-FDE-AI-Manager.pdf'
+const cvFilename = 'Konrad Straszewski CV.pdf'
 const posthog = usePostHog()
 const track = (action: string) => posthog?.capture('neoiq_cta_clicked', { action, locale: props.locale })
 useRouteSeo()

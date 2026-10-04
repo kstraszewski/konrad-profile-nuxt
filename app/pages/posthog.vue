@@ -6,7 +6,7 @@
     analytics-prefix="posthog"
     cv-href="/api/cv/posthog-pe.pdf"
     cv-label="PE CV"
-    cv-download="Konrad-Straszewski-CV-PostHog-PE.pdf"
+    cv-download="Konrad Straszewski CV.pdf"
     theme="posthog"
     relationship-id="posthog-use"
   />

@@ -167,12 +167,10 @@ try {
       assert.equal(response.status, 200, `${url} returned HTTP ${response.status}`)
       assert.match(response.headers.get('content-type') || '', /application\/pdf/i)
       const disposition = response.headers.get('content-disposition') || ''
-      // Static prerendered PDFs can omit this header. Dynamic fallback responses
-      // include it, so reject a generic CV masquerading as a company variant.
-      if (disposition && advertised.pathname === '/api/cv/plane.pdf') {
-        assert.match(disposition, /filename="Konrad-Straszewski-CV-Plane\.pdf"/, 'Plane URL returned the wrong CV variant')
-      } else if (advertised.pathname !== '/api/cv/general.pdf') {
-        assert.doesNotMatch(disposition, /filename="Konrad-Straszewski-CV\.pdf"/, 'Company CV silently fell back to the generic CV')
+      // Static prerendered PDFs can omit this header. Dynamic responses use the
+      // same download filename for every CV variant.
+      if (disposition) {
+        assert.match(disposition, /filename="Konrad Straszewski CV\.pdf"/, 'CV download filename is incorrect')
       }
       const bytes = Buffer.from(await response.arrayBuffer())
       assert.equal(bytes.subarray(0, 5).toString(), '%PDF-', 'Response is not a PDF file')

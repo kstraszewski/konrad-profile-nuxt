@@ -6,7 +6,7 @@
     analytics-prefix="linear"
     cv-href="/api/cv/linear-fullstack-engineer.pdf"
     cv-label="Linear CV"
-    cv-download="Konrad-Straszewski-CV-Linear-Fullstack-Engineer.pdf"
+    cv-download="Konrad Straszewski CV.pdf"
     :job-href="profile.linear.role.href"
     job-label="Linear role"
     theme="linear"

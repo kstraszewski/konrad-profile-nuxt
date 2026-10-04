@@ -6,7 +6,7 @@
     analytics-prefix="polar"
     cv-href="/api/cv/polar-senior-product-engineer.pdf"
     cv-label="Polar CV"
-    cv-download="Konrad-Straszewski-CV-Polar-Senior-Product-Engineer.pdf"
+    cv-download="Konrad Straszewski CV.pdf"
     :job-href="profile.polar.role.href"
     job-label="Polar role"
     theme="linear"

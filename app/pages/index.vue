@@ -63,7 +63,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
           <div class="home-hero__actions home-reveal" style="--d: 6">
             <a class="home-button" href="#work">Explore my work <HomeIcon name="arrow-down-right" :size="22" /></a>
             <a class="home-text-link" href="#contact">Let’s talk <HomeIcon name="arrow-up-right" /></a>
-            <a class="home-text-link home-hero__cv" href="/api/cv/general.pdf" download="Konrad-Straszewski-CV.pdf" aria-label="Download CV as PDF" @click="trackCvDownload">
+            <a class="home-text-link home-hero__cv" href="/api/cv/general.pdf" download="Konrad Straszewski CV.pdf" aria-label="Download CV as PDF" @click="trackCvDownload">
               Download CV
               <HomeIcon name="download" />
             </a>

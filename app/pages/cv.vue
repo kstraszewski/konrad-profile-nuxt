@@ -24,7 +24,7 @@
               <p>{{ option.description }}</p>
             </div>
 
-            <a :href="option.href" :download="downloadName(option.label)" @click="onDownload(option.label)">Download</a>
+            <a :href="option.href" download="Konrad Straszewski CV.pdf" @click="onDownload(option.label)">Download</a>
           </div>
 
           <div
@@ -81,61 +81,6 @@ const posthog = usePostHog()
 const generalPreviewSummary =
   'Product Engineer and AI-native builder with PostgreSQL, Redis, product engineering, frontend leadership, and AI adoption.'
 
-const downloadName = (label) => {
-  if (label.includes('Plane')) {
-    return 'Konrad-Straszewski-CV-Plane.pdf'
-  }
-
-  if (label.includes('NeoIQ')) {
-    return 'Konrad-Straszewski-CV-NeoIQ-FDE-AI-Manager.pdf'
-  }
-
-  if (label.includes('Oferteo')) {
-    return 'Konrad-Straszewski-CV-Oferteo-FDE-AI-Manager.pdf'
-  }
-
-  if (label.includes('Plain')) {
-    return 'Konrad-Straszewski-CV-Plain-AI-Product-Engineer.pdf'
-  }
-
-  if (label.includes('Polar')) {
-    return 'Konrad-Straszewski-CV-Polar-Senior-Product-Engineer.pdf'
-  }
-
-  if (label.includes('Lago')) {
-    return 'Konrad-Straszewski-CV-Lago-Product-Engineer-Growth.pdf'
-  }
-
-  if (label.includes('Linear')) {
-    return 'Konrad-Straszewski-CV-Linear-Fullstack-Engineer.pdf'
-  }
-
-  if (label.includes('Medusa')) {
-    return 'Konrad-Straszewski-CV-Medusa-Product-Engineer.pdf'
-  }
-
-  if (label.includes('n8n') && label.includes('AI Engineer')) {
-    return 'Konrad-Straszewski-CV-n8n-Sr-AI-Engineer.pdf'
-  }
-
-  if (label.includes('n8n') && label.includes('Product Engineer')) {
-    return 'Konrad-Straszewski-CV-n8n-Product-Engineer.pdf'
-  }
-
-  if (label.includes('AI Research')) {
-    return 'Konrad-Straszewski-CV-PostHog-AI-Research-Engineer.pdf'
-  }
-
-  if (label.includes('Product Manager')) {
-    return 'Konrad-Straszewski-CV-PostHog-PM.pdf'
-  }
-
-  if (label.includes('Product Engineer')) {
-    return 'Konrad-Straszewski-CV-PostHog-PE.pdf'
-  }
-
-  return 'Konrad-Straszewski-CV.pdf'
-}
 const isPosthogDownload = (label) => label.includes('PostHog')
 const isN8nDownload = (label) => label.includes('n8n')
 const isLinearDownload = (label) => label.includes('Linear')

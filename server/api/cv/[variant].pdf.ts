@@ -32,23 +32,7 @@ export default defineEventHandler((event) => {
         : 'posthog-pe'
   }
 
-  const filenames: Record<Parameters<typeof buildCvPdf>[1], string> = {
-    general: 'Konrad-Straszewski-CV.pdf',
-    plane: 'Konrad-Straszewski-CV-Plane.pdf',
-    'neoiq-fde-ai-manager': 'Konrad-Straszewski-CV-NeoIQ-FDE-AI-Manager.pdf',
-    'oferteo-fde-ai-manager': 'Konrad-Straszewski-CV-Oferteo-FDE-AI-Manager.pdf',
-    'posthog-pe': 'Konrad-Straszewski-CV-PostHog-PE.pdf',
-    'posthog-pm': 'Konrad-Straszewski-CV-PostHog-PM.pdf',
-    'posthog-ai-research': 'Konrad-Straszewski-CV-PostHog-AI-Research-Engineer.pdf',
-    'linear-fullstack-engineer': 'Konrad-Straszewski-CV-Linear-Fullstack-Engineer.pdf',
-    'medusa-product-engineer': 'Konrad-Straszewski-CV-Medusa-Product-Engineer.pdf',
-    'n8n-ai-engineer': 'Konrad-Straszewski-CV-n8n-Sr-AI-Engineer.pdf',
-    'n8n-product-engineer': 'Konrad-Straszewski-CV-n8n-Product-Engineer.pdf',
-    'plain-ai-product-engineer': 'Konrad-Straszewski-CV-Plain-AI-Product-Engineer.pdf',
-    'polar-senior-product-engineer': 'Konrad-Straszewski-CV-Polar-Senior-Product-Engineer.pdf',
-    'lago-product-engineer-growth': 'Konrad-Straszewski-CV-Lago-Product-Engineer-Growth.pdf'
-  }
-  const filename = filenames[variant]
+  const filename = 'Konrad Straszewski CV.pdf'
   const disposition = requestPath.includes('preview=1') || requestPath.includes('inline=1') ? 'inline' : 'attachment'
 
   setHeader(event, 'Content-Type', 'application/pdf')

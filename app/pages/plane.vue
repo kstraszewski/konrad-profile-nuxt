@@ -6,7 +6,7 @@
     analytics-prefix="plane"
     cv-href="/api/cv/plane.pdf"
     cv-label="Plane CV"
-    cv-download="Konrad-Straszewski-CV-Plane.pdf"
+    cv-download="Konrad Straszewski CV.pdf"
     mcp-label="Connect your AI to my CV"
     relationship-id="why-plane"
     theme="plane"

@@ -17,13 +17,13 @@ const cvOptions = [
   {
     href: '/api/cv/n8n-ai-engineer.pdf',
     label: 'AI Engineer CV',
-    download: 'Konrad-Straszewski-CV-n8n-Sr-AI-Engineer.pdf',
+    download: 'Konrad Straszewski CV.pdf',
     action: 'download_cv_ai_engineer'
   },
   {
     href: '/api/cv/n8n-product-engineer.pdf',
     label: 'Product Engineer CV',
-    download: 'Konrad-Straszewski-CV-n8n-Product-Engineer.pdf',
+    download: 'Konrad Straszewski CV.pdf',
     action: 'download_cv_product_engineer'
   }
 ]

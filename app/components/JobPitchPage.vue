@@ -247,7 +247,7 @@ const props = defineProps({
   },
   cvDownload: {
     type: String,
-    default: 'Konrad-Straszewski-CV.pdf'
+    default: 'Konrad Straszewski CV.pdf'
   },
   jobHref: {
     type: String,

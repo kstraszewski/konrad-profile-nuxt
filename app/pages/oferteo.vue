@@ -228,7 +228,7 @@ import '~/assets/css/oferteo-fonts.css'
 const pitch = profile.oferteo
 const posthog = usePostHog()
 const cvHref = '/api/cv/oferteo-fde-ai-manager.pdf'
-const cvFilename = 'Konrad-Straszewski-CV-Oferteo-FDE-AI-Manager.pdf'
+const cvFilename = 'Konrad Straszewski CV.pdf'
 const steps = [
   { title: 'Zrozumieć', description: 'Rozmowy z zespołem i wykonawcami. Przegląd zapytań i wspólna definicja dobrego kontaktu.' },
   { title: 'Zbudować', description: 'Prototyp dla jednej kategorii. Kilka trafnych pytań i brief zatwierdzany przez klienta.' },
