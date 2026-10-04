@@ -84,7 +84,7 @@
       <div class="details-wrap">
         <span class="contact-kicker">Let’s make something useful</span>
         <div class="contact-main">
-          <h2 id="contact-heading">Have a<br />good problem?</h2>
+          <h2 id="contact-heading">Have a<br /><span>good problem?</span></h2>
           <div class="contact-invitation">
             <p>Products, teams, or a new way of doing things.<br />I’d like to hear what you’re working on.</p>
             <a class="email-link" :href="profile.links.email.href" @click="onContactLinkClick(profile.links.email)">
@@ -288,13 +288,19 @@ summary::marker {
 
 .expand-mark::after {
   transform: rotate(90deg);
+  transition: transform 180ms cubic-bezier(.22, 1, .36, 1);
 }
 
 details[open] .expand-mark::after {
-  display: none;
+  transform: rotate(0deg);
 }
 
 details[open] summary {
+  color: var(--home-blue, #2949ed);
+}
+
+details[open] .principle-number,
+details[open] .history-year {
   color: var(--home-blue, #2949ed);
 }
 
@@ -304,6 +310,28 @@ details > p {
   color: var(--home-muted, #666b75);
   font-size: 14px;
   line-height: 1.65;
+}
+
+details[open] > p {
+  animation: details-in 240ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+details:has(> summary:focus-visible) .expand-mark::after {
+  transition: none;
+}
+
+details[open]:has(> summary:focus-visible) > p {
+  animation: none;
+}
+
+.history-position,
+.principle-item strong {
+  transition: transform 260ms cubic-bezier(.22, 1, .36, 1);
+}
+
+@keyframes details-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .principles-section {
@@ -426,9 +454,26 @@ details > p {
 
 .contact-section {
   --home-focus: #fff;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   padding-top: 55px;
   background: var(--home-blue, #2949ed);
   color: #fff;
+}
+
+/* Same blueprint grid as the hero poster, so the page opens and closes on one motif. */
+.contact-section::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgb(255 255 255 / .08) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / .08) 1px, transparent 1px);
+  background-size: 28px 28px;
+  content: '';
+  -webkit-mask-image: radial-gradient(ellipse 60% 80% at 85% 10%, #000 10%, transparent 70%);
+  mask-image: radial-gradient(ellipse 60% 80% at 85% 10%, #000 10%, transparent 70%);
 }
 
 .contact-kicker {
@@ -449,6 +494,10 @@ details > p {
   font-weight: 500;
   line-height: 0.98;
   letter-spacing: -0.055em;
+}
+
+.contact-main h2 > span {
+  color: var(--home-lime, #deef78);
 }
 
 .contact-invitation p {
@@ -542,9 +591,35 @@ a:focus-visible {
     color: var(--home-blue, #2949ed);
   }
 
+  .history-item summary:hover .history-position,
+  .principle-item summary:hover strong {
+    transform: translateX(4px);
+  }
+
   .contact-section a:hover {
     text-decoration: underline;
     text-underline-offset: 5px;
+  }
+
+  .email-link:hover svg {
+    transform: translate(3px, -3px);
+  }
+}
+
+.email-link svg {
+  transition: transform 320ms cubic-bezier(.22, 1, .36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  details[open] > p {
+    animation: none;
+  }
+
+  .expand-mark::after,
+  .history-position,
+  .principle-item strong,
+  .email-link svg {
+    transition: none;
   }
 }
 

@@ -293,9 +293,9 @@ export const profile = {
       },
       {
         number: '04',
-        heading: 'Vendor lock-in got cheaper',
+        heading: 'Soft skills will matter more',
         description:
-          "I still prefer vendor-agnostic systems. Knowing PostgreSQL directly matters here: if Supabase or Neon stops fitting, migration is a product decision, not a company trauma."
+          'As AI handles more technical work, I believe soft skills will become even more important. Clear communication, empathy, trust, and the ability to bring people together will increasingly define how much impact an engineer can have.'
       }
     ]
   },
