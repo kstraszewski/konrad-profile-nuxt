@@ -496,7 +496,7 @@ export const profile = {
       'Implemented PostHog in two organizations, used PostHog MCP heavily, and advocated for evidence-first product loops.',
       'Strong with PostgreSQL and Redis: product data modeling, queryable workflows, caching, queues, and runtime state around real product surfaces.',
       'Built jasne.ai as a 0->1 vertical AI product across product, UX, code, infra, AI integration, and distribution.',
-      'Based in Szczecin, Poland (GMT+2), inside PostHog timezone range; strong async writing, docs, and product-context habits.'
+      'Based in Szczecin, Poland (GMT+2); strong async writing, docs, and product-context habits.'
     ],
     downloads: [
       {
