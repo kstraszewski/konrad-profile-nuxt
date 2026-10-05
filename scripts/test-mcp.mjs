@@ -167,11 +167,7 @@ try {
       assert.equal(response.status, 200, `${url} returned HTTP ${response.status}`)
       assert.match(response.headers.get('content-type') || '', /application\/pdf/i)
       const disposition = response.headers.get('content-disposition') || ''
-      // Static prerendered PDFs can omit this header. Dynamic responses use the
-      // same download filename for every CV variant.
-      if (disposition) {
-        assert.match(disposition, /filename="Konrad Straszewski CV\.pdf"/, 'CV download filename is incorrect')
-      }
+      assert.match(disposition, /^attachment; filename="Konrad Straszewski CV\.pdf"$/, 'CV download filename is incorrect')
       const bytes = Buffer.from(await response.arrayBuffer())
       assert.equal(bytes.subarray(0, 5).toString(), '%PDF-', 'Response is not a PDF file')
       assert.ok(bytes.length > 1_000, 'PDF is unexpectedly small')

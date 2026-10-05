@@ -25,6 +25,7 @@ export default defineNuxtConfig({
     }
   },
   routeRules: {
+    '/api/cv/**': { prerender: false },
     '/plane': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
     '/neoiq': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
     '/neoiq/ar': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
@@ -80,18 +81,6 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       routes: [
-        '/api/cv/plane.pdf',
-        '/api/cv/neoiq-fde-ai-manager.pdf',
-        '/api/cv/oferteo-fde-ai-manager.pdf',
-        '/api/cv/general.pdf',
-        '/api/cv/posthog.pdf',
-        '/api/cv/posthog-pe.pdf',
-        '/api/cv/posthog-pm.pdf',
-        '/api/cv/posthog-ai-research.pdf',
-        '/api/cv/linear-fullstack-engineer.pdf',
-        '/api/cv/medusa-product-engineer.pdf',
-        '/api/cv/n8n-ai-engineer.pdf',
-        '/api/cv/n8n-product-engineer.pdf',
         '/robots.txt',
         '/sitemap.xml'
       ]
