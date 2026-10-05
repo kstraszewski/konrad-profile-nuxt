@@ -1,20 +1,28 @@
 <script setup lang="ts">
+import { bindSceneDrag } from '~/utils/sceneDrag'
+
 const root = ref<HTMLElement | null>(null)
 const rig = ref<HTMLElement | null>(null)
+const dragSurface = ref<HTMLElement | null>(null)
 let cleanup: (() => void) | undefined
 
 onMounted(() => {
   const element = root.value
   const sculpture = rig.value
-  if (!element || !sculpture) return
+  const surface = dragSurface.value
+  if (!element || !sculpture || !surface) return
+
+  const conversation = element.querySelector<HTMLElement>('.flow-scene__slot--conversation')
+  const brief = element.querySelector<HTMLElement>('.flow-scene__slot--brief')
+  const result = element.querySelector<HTMLElement>('.flow-scene__slot--result')
 
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
   const pointer = window.matchMedia('(hover: hover) and (pointer: fine)')
   const hero = element.closest<HTMLElement>('.hero') ?? element
-  const axes = ['x', 'y', 'scroll'] as const
-  const position = { x: 0, y: 0, scroll: 0 }
-  const target = { x: 0, y: 0, scroll: 0 }
-  const velocity = { x: 0, y: 0, scroll: 0 }
+  const axes = ['x', 'y', 'scroll', 'spread'] as const
+  const position = { x: 0, y: 0, scroll: 0, spread: 0 }
+  const target = { x: 0, y: 0, scroll: 0, spread: 0 }
+  const velocity = { x: 0, y: 0, scroll: 0, spread: 0 }
   let frame = 0
   let previous = 0
   let visible = true
@@ -25,6 +33,7 @@ onMounted(() => {
     frame = previous = 0
     for (const axis of axes) position[axis] = target[axis] = velocity[axis] = 0
     sculpture.style.removeProperty('transform')
+    for (const layer of [conversation, brief, result]) layer?.style.removeProperty('transform')
   }
   const tick = (time: number) => {
     const dt = Math.min((time - (previous || time - 16)) / 1000, 0.032)
@@ -38,6 +47,13 @@ onMounted(() => {
       + 'px, 0) rotateX(' + (12 - position.y * 5 + position.scroll * 8).toFixed(3)
       + 'deg) rotateY(' + (-17 + position.x * 7 + position.scroll * 4).toFixed(3)
       + 'deg) rotateZ(' + (-5 + position.scroll * 2).toFixed(3) + 'deg)'
+    const spread = position.spread
+    if (conversation) conversation.style.transform = 'translate3d(calc(-50% - 35px), calc(-50% - '
+      + (117 + spread * 10).toFixed(3) + 'px), ' + (-spread * 12).toFixed(3) + 'px) rotateZ(-5deg)'
+    if (brief) brief.style.transform = 'translate3d(calc(-50% + 39px), calc(-50% - 2px), '
+      + (38 + spread * 8).toFixed(3) + 'px) rotateZ(5deg)'
+    if (result) result.style.transform = 'translate3d(calc(-50% - 17px), calc(-50% + '
+      + (112 + spread * 10).toFixed(3) + 'px), ' + (78 + spread * 24).toFixed(3) + 'px) rotateZ(-2deg)'
     if (axes.reduce((distance, axis) => distance + Math.abs(target[axis] - position[axis])
       + Math.abs(velocity[axis]), 0) < 0.004) {
       frame = previous = 0
@@ -49,16 +65,30 @@ onMounted(() => {
     if (!frame) frame = requestAnimationFrame(tick)
   }
   const move = (event: PointerEvent) => {
-    if (event.pointerType === 'touch') return
+    if (event.pointerType === 'touch' || drag.isDragging()) return
     const rect = element.getBoundingClientRect()
     target.x = Math.max(-1, Math.min(1, (event.clientX - rect.left) / rect.width * 2 - 1))
     target.y = Math.max(-1, Math.min(1, (event.clientY - rect.top) / rect.height * 2 - 1))
     schedule()
   }
   const leave = () => {
+    if (drag.isDragging()) return
     target.x = target.y = 0
     schedule()
   }
+  const drag = bindSceneDrag(surface, {
+    isEnabled: () => visible && !document.hidden && !motion.matches,
+    onMove: ({ x, y }) => {
+      target.x = x
+      target.y = y
+      target.spread = 1
+      schedule()
+    },
+    onEnd: () => {
+      target.x = target.y = target.spread = 0
+      schedule()
+    },
+  })
   const updateScroll = () => {
     if (!visible || document.hidden || motion.matches) return
     const rect = hero.getBoundingClientRect()
@@ -76,9 +106,10 @@ onMounted(() => {
       element.removeEventListener('pointermove', move)
       element.removeEventListener('pointerleave', leave)
       listening = false
-      target.x = target.y = 0
+      if (!drag.isDragging()) target.x = target.y = 0
     }
     if (!active) {
+      drag.cancel()
       stop()
     } else {
       updateScroll()
@@ -98,6 +129,7 @@ onMounted(() => {
   sync()
   cleanup = () => {
     observer.disconnect()
+    drag.destroy()
     stop()
     element.removeEventListener('pointermove', move)
     element.removeEventListener('pointerleave', leave)
@@ -114,7 +146,7 @@ onBeforeUnmount(() => cleanup?.())
 <template>
   <figure ref="root" class="flow-scene">
     <div class="flow-scene__eyebrow"><span class="flow-scene__dot" /> DWA DEMKA. JEDEN PROCES.</div>
-    <div class="flow-scene__viewport" aria-hidden="true">
+    <div ref="dragSurface" class="flow-scene__viewport" aria-hidden="true">
       <div class="flow-scene__halo" />
       <div class="flow-scene__scale">
       <div ref="rig" class="flow-scene__rig">
@@ -152,6 +184,7 @@ onBeforeUnmount(() => cleanup?.())
       </div>
     </div>
     <figcaption class="flow-scene__caption"><span>Rozmowa <i>→</i> Konkret <i>→</i> Działanie</span><span class="flow-scene__asterisk" aria-hidden="true">✳</span></figcaption>
+    <p class="flow-scene__gesture-hint">Przeciągnij w bok, aby obrócić <span aria-hidden="true">↔</span></p>
   </figure>
 </template>
 
@@ -165,7 +198,9 @@ onBeforeUnmount(() => cleanup?.())
 }
 .flow-scene__eyebrow { display: flex; align-items: center; gap: 9px; font-size: 10px; letter-spacing: .11em; font-weight: 800; }
 .flow-scene__dot { width: 6px; height: 6px; border-radius: 50%; background: #e7760d; }
-.flow-scene__viewport { position: relative; height: 414px; perspective: 1200px; }
+.flow-scene__viewport { position: relative; height: 414px; perspective: 1200px; touch-action: pan-y pinch-zoom; user-select: none; cursor: grab; }
+.flow-scene__viewport[data-dragging='true'] { cursor: grabbing; }
+.flow-scene__gesture-hint { display: none; margin: 10px 0 0; color: #575756; font-size: 11px; text-align: center; }
 .flow-scene__halo { position: absolute; inset: 10% 0; border-radius: 50%; background: radial-gradient(ellipse, #e2edff, transparent 70%); }
 .flow-scene__scale { position: absolute; inset: 0; transform-style: preserve-3d; }
 .flow-scene__rig { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(12deg) rotateY(-17deg) rotateZ(-5deg); }
@@ -221,5 +256,10 @@ onBeforeUnmount(() => cleanup?.())
   .flow-scene__cube { display: none; }
   .flow-scene__caption { font-size: 10px; }
 }
-@media (prefers-reduced-motion: reduce) { .flow-card { animation: none; } }
+@media (max-width: 640px), (hover: none), (pointer: coarse) { .flow-scene__gesture-hint { display: block; } }
+@media (prefers-reduced-motion: reduce) {
+  .flow-card { animation: none; }
+  .flow-scene__viewport { touch-action: auto; cursor: default; }
+  .flow-scene__gesture-hint { display: none; }
+}
 </style>

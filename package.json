@@ -12,6 +12,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "typecheck": "nuxt typecheck",
+    "test:motion": "node --experimental-strip-types --test scripts/test-scene-drag.ts",
     "test:mcp": "node scripts/test-mcp.mjs",
     "test:oferteo": "NODE_ENV=development node --experimental-strip-types --test scripts/test-oferto*.ts"
   },

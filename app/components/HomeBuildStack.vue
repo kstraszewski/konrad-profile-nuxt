@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { bindSceneDrag } from '~/utils/sceneDrag'
+
 /**
  * Decorative CSS 3D "build stack" for the homepage hero poster.
  *
@@ -9,6 +11,8 @@
  *   never re-renders on mousemove.
  * - Hero scroll subtly opens the layers on desktop and touch. Geometry is read
  *   once per animation frame, using the existing tilt/spread style properties.
+ * - Horizontal pointer drag works on the sculpture for touch, pen and mouse;
+ *   vertical page scroll stays native, and release returns the tilt with a spring.
  * - Ambient CSS motion is paused while the element is offscreen or the tab is hidden.
  */
 const root = ref<HTMLElement | null>(null)
@@ -32,6 +36,7 @@ onMounted(() => {
 
   const current = { x: 0, y: 0, spread: 0, scroll: 0 }
   const target = { x: 0, y: 0, spread: 0, scroll: 0 }
+  const velocity = { x: 0, y: 0 }
   let frame = 0
   let lastTime = 0
   let rect: DOMRect | null = null
@@ -73,10 +78,15 @@ onMounted(() => {
     }
     const dt = lastTime ? Math.min(now - lastTime, 64) : 16
     lastTime = now
-    // Frame-rate independent exponential smoothing (~150ms time constant).
-    const k = 1 - Math.exp(-dt / 150)
-    current.x += (target.x - current.x) * k
-    current.y += (target.y - current.y) * k
+    // Spring: mass 1, stiffness 100, damping 10; substeps keep slow frames stable.
+    const steps = Math.max(1, Math.ceil(dt / 16))
+    const step = dt / steps / 1000
+    for (let i = 0; i < steps; i++) {
+      for (const axis of ['x', 'y'] as const) {
+        velocity[axis] += (100 * (target[axis] - current[axis]) - 10 * velocity[axis]) * step
+        current[axis] += velocity[axis] * step
+      }
+    }
     current.spread += (target.spread - current.spread) * (1 - Math.exp(-dt / 220))
     current.scroll += (target.scroll - current.scroll) * (1 - Math.exp(-dt / 220))
 
@@ -84,13 +94,15 @@ onMounted(() => {
       Math.abs(target.x - current.x) < 0.001 &&
       Math.abs(target.y - current.y) < 0.001 &&
       Math.abs(target.spread - current.spread) < 0.001 &&
-      Math.abs(target.scroll - current.scroll) < 0.001
+      Math.abs(target.scroll - current.scroll) < 0.001 &&
+      Math.abs(velocity.x) + Math.abs(velocity.y) < 0.004
 
     if (settled) {
       current.x = target.x
       current.y = target.y
       current.spread = target.spread
       current.scroll = target.scroll
+      velocity.x = velocity.y = 0
       write()
       frame = 0
       lastTime = 0
@@ -119,7 +131,7 @@ onMounted(() => {
   const clamp = (value: number) => Math.max(-1, Math.min(1, value))
 
   const onMove = (event: PointerEvent) => {
-    if (event.pointerType === 'touch' || !active() || !pointerQuery.matches) return
+    if (event.pointerType === 'touch' || !active() || !pointerQuery.matches || drag.isDragging()) return
     rect ??= el.getBoundingClientRect()
     zoneRect ??= zone.getBoundingClientRect()
     const cx = rect.left + rect.width / 2
@@ -130,12 +142,27 @@ onMounted(() => {
     schedule()
   }
 
-  const onLeave = () => {
+  const releaseTilt = () => {
     target.x = 0
     target.y = 0
     target.spread = 0
     schedule()
   }
+
+  const onLeave = () => {
+    if (!drag.isDragging()) releaseTilt()
+  }
+
+  const drag = bindSceneDrag(el, {
+    isEnabled: active,
+    onMove: ({ x, y }) => {
+      target.x = x
+      target.y = y
+      target.spread = 1
+      schedule()
+    },
+    onEnd: releaseTilt,
+  })
 
   const attach = () => {
     if (listening) return
@@ -178,19 +205,21 @@ onMounted(() => {
       attach()
     } else {
       detach()
-      target.x = target.y = target.spread = 0
+      if (!drag.isDragging()) target.x = target.y = target.spread = 0
     }
     if (enabled) {
       attachScroll()
       invalidate()
       schedule()
     } else {
+      drag.cancel()
       detachScroll()
       stopFrame()
       current.x = target.x = 0
       current.y = target.y = 0
       current.spread = target.spread = 0
       current.scroll = target.scroll = 0
+      velocity.x = velocity.y = 0
       clearStyles()
       invalidate()
     }
@@ -213,6 +242,7 @@ onMounted(() => {
   teardown = () => {
     detach()
     detachScroll()
+    drag.destroy()
     stopFrame()
     observer.disconnect()
     document.removeEventListener('visibilitychange', syncActivity)
@@ -292,11 +322,16 @@ onBeforeUnmount(() => {
   position: relative;
   container-type: inline-size;
   width: 100%;
-  pointer-events: none;
+  pointer-events: auto;
   user-select: none;
+  touch-action: pan-y pinch-zoom;
+  cursor: grab;
 }
 
+.stack[data-dragging='true'] { cursor: grabbing; }
+
 .stack__scene {
+  pointer-events: none;
   /* Footprint of one slab: scales with the poster, capped for desktop. */
   --s: clamp(92px, 44cqi, 206px);
   --t: calc(var(--s) * .165);
@@ -593,6 +628,7 @@ onBeforeUnmount(() => {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .stack { cursor: default; touch-action: auto; }
   .stack__drop,
   .stack__bob,
   .stack__spin,

@@ -81,6 +81,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
           <HomeBuildStack class="home-poster__art" />
           <div class="home-poster__bottom"><p>Think. Build.<br>Ship. Repeat.</p><HomeIcon class="home-poster__loop" name="rotate-cw" :size="48" /></div>
           <div class="home-poster__caption"><span>IDEAS ARE ONLY THE START.</span><span>01—∞</span></div>
+          <p class="home-poster__gesture">Drag sideways to explore <span aria-hidden="true">↔</span></p>
         </aside>
 
         <div class="home-hero__foot">
@@ -212,6 +213,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 .home-poster__bottom p { margin: 0; font-size: clamp(28px, 3.1vw, 42px); font-weight: 500; line-height: 1.05; letter-spacing: -1.5px; }
 .home-poster__loop { color: var(--home-lime); transition: transform 200ms var(--home-ease); }
 .home-poster__caption { border-top: 1px solid #ffffff55; padding-top: 16px; margin-top: 24px; font-size: 8px; letter-spacing: 1px; }
+.home-poster__gesture { display: none; margin: 12px 0 0; font-size: 11px; text-align: center; }
+@media (max-width: 640px), (hover: none), (pointer: coarse) { .home-poster__gesture { display: block; } }
 
 .home-hero__foot { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 35px 0 27px; margin-top: 12px; border-bottom: 1px solid var(--home-line); color: var(--home-muted); font-size: 12px; }
 .home-availability { display: flex; align-items: center; gap: 9px; }
@@ -331,6 +334,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
   .home-poster { padding-inline: 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .home-poster__gesture { display: none; }
   .home :deep(*), .home :deep(*::before), .home :deep(*::after) { animation: none !important; transition: none !important; }
   .home-text-link, .home-button, .home-text-link > svg, .home-button > svg, .home-poster__loop, .home-brand svg { transform: none !important; }
   .home-neoiq__link::before { transform: none !important; }
