@@ -579,14 +579,6 @@ const drawGeneralCv = (profile: Profile) => {
     doc.line(PAGE.margin, doc.y - 18, PAGE.width - PAGE.margin, doc.y - 18, colors.rule)
   })
 
-  doc.y += 16
-  sectionTitle(doc, 'Selected work')
-  doc.text('Lendi', PAGE.margin, doc.y, 14, 'F4')
-  doc.y = doc.textBlock(profile.lendi.pride, 142, doc.y, 396, 10, 14, { color: colors.ink })
-  doc.y += 18
-  doc.text(profile.jasne.name, PAGE.margin, doc.y, 14, 'F4')
-  doc.y = doc.textBlock(profile.jasne.intro, 142, doc.y, 396, 10, 14, { color: colors.ink })
-
   doc.y += 28
   sectionTitle(doc, 'Technologies')
   doc.ensure(50)
