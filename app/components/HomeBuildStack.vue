@@ -7,6 +7,8 @@
  * - Pointer tilt runs only on fine/hover pointers without reduced motion. It writes
  *   CSS custom properties straight to the root element inside a rAF loop, so Vue
  *   never re-renders on mousemove.
+ * - Hero scroll subtly opens the layers on desktop and touch. Geometry is read
+ *   once per animation frame, using the existing tilt/spread style properties.
  * - Ambient CSS motion is paused while the element is offscreen or the tab is hidden.
  */
 const root = ref<HTMLElement | null>(null)
@@ -28,22 +30,29 @@ onMounted(() => {
   const pointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)')
   const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
 
-  const current = { x: 0, y: 0, spread: 0 }
-  const target = { x: 0, y: 0, spread: 0 }
+  const current = { x: 0, y: 0, spread: 0, scroll: 0 }
+  const target = { x: 0, y: 0, spread: 0, scroll: 0 }
   let frame = 0
   let lastTime = 0
   let rect: DOMRect | null = null
   let zoneRect: DOMRect | null = null
   let listening = false
+  let scrollListening = false
+  let scrollDirty = true
   let inView = true
+
+  const active = () => inView && !document.hidden && !motionQuery.matches
 
   const write = () => {
     const style = el.style
+    // Scroll adds at most 3° of tilt and 35% of the existing layer expansion.
+    const y = current.y - current.scroll * .375
+    const spread = Math.min(1, current.spread + current.scroll * .35)
     style.setProperty('--stack-x', current.x.toFixed(4))
-    style.setProperty('--stack-y', current.y.toFixed(4))
-    style.setProperty('--stack-spread', current.spread.toFixed(4))
+    style.setProperty('--stack-y', y.toFixed(4))
+    style.setProperty('--stack-spread', spread.toFixed(4))
     style.setProperty('--stack-rz', String(Math.round(45 - current.x * 16)))
-    style.setProperty('--stack-rx', String(Math.round(58 + current.y * 8)))
+    style.setProperty('--stack-rx', String(Math.round(58 + y * 8)))
   }
 
   const clearStyles = () => {
@@ -53,6 +62,15 @@ onMounted(() => {
   }
 
   const tick = (now: number) => {
+    if (!active()) {
+      frame = lastTime = 0
+      return
+    }
+    if (scrollDirty) {
+      zoneRect ??= zone.getBoundingClientRect()
+      target.scroll = Math.max(0, Math.min(1, -zoneRect.top / Math.max(zoneRect.height, 1)))
+      scrollDirty = false
+    }
     const dt = lastTime ? Math.min(now - lastTime, 64) : 16
     lastTime = now
     // Frame-rate independent exponential smoothing (~150ms time constant).
@@ -60,16 +78,19 @@ onMounted(() => {
     current.x += (target.x - current.x) * k
     current.y += (target.y - current.y) * k
     current.spread += (target.spread - current.spread) * (1 - Math.exp(-dt / 220))
+    current.scroll += (target.scroll - current.scroll) * (1 - Math.exp(-dt / 220))
 
     const settled =
       Math.abs(target.x - current.x) < 0.001 &&
       Math.abs(target.y - current.y) < 0.001 &&
-      Math.abs(target.spread - current.spread) < 0.001
+      Math.abs(target.spread - current.spread) < 0.001 &&
+      Math.abs(target.scroll - current.scroll) < 0.001
 
     if (settled) {
       current.x = target.x
       current.y = target.y
       current.spread = target.spread
+      current.scroll = target.scroll
       write()
       frame = 0
       lastTime = 0
@@ -81,18 +102,24 @@ onMounted(() => {
   }
 
   const schedule = () => {
-    if (!frame) frame = requestAnimationFrame(tick)
+    if (active() && !frame) frame = requestAnimationFrame(tick)
   }
 
   const invalidate = () => {
     rect = null
     zoneRect = null
+    scrollDirty = true
+  }
+
+  const onScroll = () => {
+    invalidate()
+    schedule()
   }
 
   const clamp = (value: number) => Math.max(-1, Math.min(1, value))
 
   const onMove = (event: PointerEvent) => {
-    if (event.pointerType === 'touch' || !inView) return
+    if (event.pointerType === 'touch' || !active() || !pointerQuery.matches) return
     rect ??= el.getBoundingClientRect()
     zoneRect ??= zone.getBoundingClientRect()
     const cx = rect.left + rect.width / 2
@@ -115,8 +142,6 @@ onMounted(() => {
     listening = true
     zone.addEventListener('pointermove', onMove, { passive: true })
     zone.addEventListener('pointerleave', onLeave, { passive: true })
-    window.addEventListener('scroll', invalidate, { passive: true })
-    window.addEventListener('resize', invalidate, { passive: true })
   }
 
   const detach = () => {
@@ -124,8 +149,20 @@ onMounted(() => {
     listening = false
     zone.removeEventListener('pointermove', onMove)
     zone.removeEventListener('pointerleave', onLeave)
-    window.removeEventListener('scroll', invalidate)
-    window.removeEventListener('resize', invalidate)
+  }
+
+  const attachScroll = () => {
+    if (scrollListening) return
+    scrollListening = true
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll, { passive: true })
+  }
+
+  const detachScroll = () => {
+    if (!scrollListening) return
+    scrollListening = false
+    window.removeEventListener('scroll', onScroll)
+    window.removeEventListener('resize', onScroll)
   }
 
   const stopFrame = () => {
@@ -134,46 +171,53 @@ onMounted(() => {
     lastTime = 0
   }
 
-  const syncInteractivity = () => {
-    if (pointerQuery.matches && !motionQuery.matches) {
+  const syncActivity = () => {
+    const enabled = active()
+    el.dataset.paused = String(!enabled)
+    if (enabled && pointerQuery.matches) {
       attach()
-      return
+    } else {
+      detach()
+      target.x = target.y = target.spread = 0
     }
-    detach()
-    stopFrame()
-    current.x = target.x = 0
-    current.y = target.y = 0
-    current.spread = target.spread = 0
-    clearStyles()
-  }
-
-  const syncPaused = () => {
-    el.dataset.paused = String(!inView || document.hidden)
+    if (enabled) {
+      attachScroll()
+      invalidate()
+      schedule()
+    } else {
+      detachScroll()
+      stopFrame()
+      current.x = target.x = 0
+      current.y = target.y = 0
+      current.spread = target.spread = 0
+      current.scroll = target.scroll = 0
+      clearStyles()
+      invalidate()
+    }
   }
 
   const observer = new IntersectionObserver(
     ([entry]) => {
       inView = entry?.isIntersecting ?? true
-      if (!inView) onLeave()
-      syncPaused()
+      syncActivity()
     },
     { threshold: 0 }
   )
   observer.observe(el)
 
-  document.addEventListener('visibilitychange', syncPaused)
-  pointerQuery.addEventListener('change', syncInteractivity)
-  motionQuery.addEventListener('change', syncInteractivity)
-  syncInteractivity()
-  syncPaused()
+  document.addEventListener('visibilitychange', syncActivity)
+  pointerQuery.addEventListener('change', syncActivity)
+  motionQuery.addEventListener('change', syncActivity)
+  syncActivity()
 
   teardown = () => {
     detach()
+    detachScroll()
     stopFrame()
     observer.disconnect()
-    document.removeEventListener('visibilitychange', syncPaused)
-    pointerQuery.removeEventListener('change', syncInteractivity)
-    motionQuery.removeEventListener('change', syncInteractivity)
+    document.removeEventListener('visibilitychange', syncActivity)
+    pointerQuery.removeEventListener('change', syncActivity)
+    motionQuery.removeEventListener('change', syncActivity)
   }
 })
 
@@ -303,6 +347,7 @@ onBeforeUnmount(() => {
   inset: calc(var(--s) * -.2);
   border: 1px dashed rgb(255 255 255 / .32);
   transform: translateZ(-2px);
+  animation: stack-register 800ms var(--ease-out) both;
 }
 
 .stack__ground::before,
@@ -328,8 +373,8 @@ onBeforeUnmount(() => {
 }
 
 .stack__drop {
-  animation: stack-drop 1100ms var(--ease-out) both;
-  animation-delay: calc(180ms + var(--i) * 140ms);
+  animation: stack-drop 1000ms var(--ease-out) both;
+  animation-delay: calc(100ms + var(--i) * 80ms);
 }
 
 .stack__bob {
@@ -454,6 +499,7 @@ onBeforeUnmount(() => {
   width: 46%;
   height: 46%;
   transform: rotate(45deg);
+  animation: stack-check 800ms var(--ease-out) 420ms both;
 }
 
 /* ——— Repeat: a small cube orbiting the middle layer ——— */
@@ -516,13 +562,25 @@ onBeforeUnmount(() => {
 
 .stack[data-paused='true'] .stack__bob,
 .stack[data-paused='true'] .stack__spin,
-.stack[data-paused='true'] .stack__drop {
+.stack[data-paused='true'] .stack__drop,
+.stack[data-paused='true'] .stack__ground,
+.stack[data-paused='true'] .stack__check {
   animation-play-state: paused;
 }
 
 @keyframes stack-drop {
   from { transform: translateZ(calc(var(--s) * (.5 + var(--i) * .25))); }
   to { transform: translateZ(0); }
+}
+
+@keyframes stack-register {
+  from { opacity: .15; }
+  to { opacity: 1; }
+}
+
+@keyframes stack-check {
+  from { opacity: 0; transform: rotate(45deg) scale(.94); }
+  to { opacity: 1; transform: rotate(45deg) scale(1); }
 }
 
 @keyframes stack-bob {
@@ -537,7 +595,9 @@ onBeforeUnmount(() => {
 @media (prefers-reduced-motion: reduce) {
   .stack__drop,
   .stack__bob,
-  .stack__spin {
+  .stack__spin,
+  .stack__ground,
+  .stack__check {
     animation: none;
   }
 

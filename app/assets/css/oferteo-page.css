@@ -13,6 +13,7 @@
   --text-2: #575756;
   --sans: 'Mulish', ui-sans-serif, system-ui, sans-serif;
   --header-h: 64px;
+  --motion-ease: cubic-bezier(0.23, 1, 0.32, 1);
   min-height: 100vh;
   color: var(--text);
   background: #fff;
@@ -55,22 +56,26 @@
 .link-arrow { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--blue); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
 
 /* The kitchen background and white rounded card follow the official hero. */
-.hero { position: relative; isolation: isolate; padding-block: 48px; background: var(--panel); }
+.hero { position: relative; isolation: isolate; padding-block: 48px; background: var(--blue-bg); }
 .hero-figure { position: absolute; inset: 0; z-index: -1; }
-.hero-figure::after { position: absolute; inset: 0; content: ''; background: rgb(0 0 0 / 16%); }
+.hero-figure::after { position: absolute; inset: 0; content: ''; background: linear-gradient(110deg, rgb(248 251 255 / .95), rgb(238 244 255 / .82) 55%, rgb(238 244 255 / .76)); }
 .hero-figure img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .hero-figure figcaption { position: absolute; z-index: 1; right: 20px; bottom: 10px; padding: 2px 8px; border-radius: 4px; color: #fff; background: rgb(0 0 0 / 65%); font-size: 12px; }
-.hero-inner { display: flex; justify-content: center; }
-.hero-copy { width: 100%; max-width: 760px; padding: 32px 40px; background: #fff; border-radius: 16px; text-align: center; }
+.hero-inner { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); align-items: center; gap: 32px; }
+.hero-copy { width: 100%; padding: 34px 32px; border: 1px solid rgb(255 255 255 / .8); background: rgb(255 255 255 / .96); border-radius: 24px; text-align: left; box-shadow: 0 16px 48px rgb(8 39 84 / .05); }
 .hero-kicker { color: var(--text-2); font-size: 14px; font-weight: 400; line-height: 21px; }
 .hero-kicker strong { color: var(--navy); font-weight: 700; }
 .hero-role { display: block; margin-top: 4px; font-size: 13px; }
-.hero h1 { margin-top: 20px; font-size: 40px; line-height: 48px; font-weight: 500; }
+.hero h1 { margin-top: 20px; font-size: clamp(35px, 3.45vw, 44px); line-height: 1.17; font-weight: 700; }
+.hero-title-accent { background: linear-gradient(transparent 76%, #fbe3cd 76%, #fbe3cd 96%, transparent 96%); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.hero-kicker, .hero h1, .hero-lead { animation: oferteo-enter 620ms var(--motion-ease) backwards; }
+.hero h1 { animation-delay: 60ms; }
+.hero-lead { animation-delay: 120ms; }
 .hero-lead { max-width: 36em; margin: 20px auto 0 !important; color: var(--text); font-size: 18px; line-height: 28px; }
-.hero-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 24px; margin-top: 24px; }
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 12px 24px; margin-top: 24px; }
 .link-quiet { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--blue); font-size: 16px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
 .link-meta { color: var(--text-2); font-size: 12px; font-weight: 400; }
-.hero-sign { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 12px; margin-top: 24px !important; padding-top: 18px; border-top: 1px solid var(--rule); color: var(--text-2); font-size: 14px; }
+.hero-sign { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 2px 12px; margin-top: 24px !important; padding-top: 18px; border-top: 1px solid var(--rule); color: var(--text-2); font-size: 14px; }
 .hero-sign strong { color: var(--navy); font-weight: 700; }
 
 /* Compact working demos; examples sit below the launch buttons. */
@@ -144,11 +149,26 @@
 .footer-sources a { display: inline-flex; align-items: center; min-height: 40px; color: var(--text-2); text-decoration: underline; text-underline-offset: 4px; }
 .footer-sources > span { display: inline-flex; align-items: center; min-height: 40px; color: var(--text); font-weight: 700; }
 
+/* Small feedback on real actions; no hover movement on touch or keyboard focus. */
+.btn, .launch, .header-cta { transition: background 160ms ease, transform 160ms var(--motion-ease); }
+.btn:active:not(:focus-visible), .launch:active:not(:focus-visible), .header-cta:active:not(:focus-visible) { transform: scale(.98); }
+.launch-arrow, .btn > span { transition: transform 200ms var(--motion-ease); }
+.demo { transition: transform 200ms var(--motion-ease), border-color 200ms ease; }
+.header-nav a { position: relative; }
+.header-nav a::after { position: absolute; right: 12px; bottom: 5px; left: 12px; height: 2px; content: ''; background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform 200ms var(--motion-ease); }
+.btn:focus-visible, .launch:focus-visible, .header-cta:focus-visible { transform: none; transition: none; }
+.demo:focus-within, .launch:focus-visible .launch-arrow, .btn:focus-visible > span { transform: none; transition: none; }
+@keyframes oferteo-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
 @media (hover: hover) and (pointer: fine) {
   .header-nav a:hover, .contact-links a:hover, .footer-sources a:hover { color: var(--blue); }
   .header-cta:hover { background: var(--orange-bg); }
   .btn-primary:hover, .launch:hover { background: var(--orange-hover); }
   .link-arrow:hover, .link-quiet:hover, .contact-email:hover { color: #104ea9; }
+  .demo:hover:not(:focus-within) { transform: translateY(-3px); border-color: #cbd9ee; }
+  .launch:hover:not(:focus-visible) .launch-arrow { transform: translateX(3px); }
+  .btn-primary:hover:not(:focus-visible) > span { transform: translateY(2px); }
+  .header-nav a:hover:not(:focus-visible)::after { transform: scaleX(1); }
 }
 @media (max-width: 1040px) {
   .launch .only-wide { display: none; }
@@ -161,6 +181,8 @@
   .header-inner { gap: 12px; }
 }
 @media (max-width: 860px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 24px; }
+  .hero-copy { max-width: 680px; margin-inline: auto; }
   .demos-head, .plan-head, .contact-inner { grid-template-columns: 1fr; align-items: start; }
   .contact-inner { gap: 28px; }
   .contact-actions .btn { min-width: 0; }
@@ -173,7 +195,7 @@
   .oferteo-page { --header-h: 60px; }
   .brand-mark { font-size: 26px; }
   .header-cta { padding-inline: 16px; font-size: 14px; }
-  .hero { padding-block: 100px 28px; }
+  .hero { padding-block: 24px 28px; }
   .hero-inner { width: calc(100% - 32px); }
   .hero-copy { padding: 24px 20px; border-radius: 16px; }
   .hero-kicker { font-size: 13px; }
@@ -227,4 +249,6 @@
 @media (prefers-reduced-motion: reduce) {
   :global(html:has(.oferteo-page)) { scroll-behavior: auto; }
   .oferteo-page *, .oferteo-page *::before, .oferteo-page *::after { transition: none !important; }
+  .hero-kicker, .hero h1, .hero-lead { animation: none; }
+  .btn, .launch, .header-cta, .demo, .launch-arrow, .btn > span { transform: none !important; }
 }

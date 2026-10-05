@@ -5,6 +5,7 @@ useRouteSeo('/')
 useHead({ meta: [{ name: 'theme-color', content: '#f4f5f6' }] })
 
 const posthog = usePostHog()
+const homeRoot = ref(null)
 const menuOpen = ref(false)
 const menuButton = ref(null)
 const closeMenu = (event) => {
@@ -20,12 +21,17 @@ const trackCvDownload = () => posthog?.capture('cv_downloaded', {
   source: 'hero',
 })
 
+useLandingReveal(homeRoot, {
+  selector: '[data-reveal]',
+  easing: 'cubic-bezier(.22, 1, .36, 1)',
+})
+
 onMounted(() => window.addEventListener('keydown', closeMenu))
 onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 </script>
 
 <template>
-  <div id="top" class="home">
+  <div id="top" ref="homeRoot" class="home">
     <a class="home-skip" href="#main">Skip to content</a>
 
     <header class="home-nav home-wrap">
@@ -60,7 +66,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
             Currently at <a :href="profile.links.lendi.href" target="_blank" rel="noreferrer">Lendi</a>.
             Independently building <NuxtLink to="/jasne.ai" @click="trackJasne">jasne.ai</NuxtLink>.
           </p>
-          <div class="home-hero__actions home-reveal" style="--d: 6">
+          <div class="home-hero__actions">
             <a class="home-button" href="#work">Explore my work <HomeIcon name="arrow-down-right" :size="22" /></a>
             <a class="home-text-link" href="#contact">Let’s talk <HomeIcon name="arrow-up-right" /></a>
             <a class="home-text-link home-hero__cv" href="/api/cv/general.pdf" download="Konrad Straszewski CV.pdf" aria-label="Download CV as PDF" @click="trackCvDownload">
@@ -84,12 +90,12 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
       </section>
 
       <section id="work" class="home-work home-wrap" aria-labelledby="work-title">
-        <div id="now" class="home-work__heading">
+        <div id="now" class="home-work__heading" data-reveal>
           <div><p class="home-kicker">A selection of what I do</p><h2 id="work-title">Less theory. <mark>More doing.</mark></h2></div>
           <span class="home-work__count">01 — 03</span>
         </div>
 
-        <article id="lendi" class="home-project home-project--lendi">
+        <article id="lendi" class="home-project home-project--lendi" data-reveal data-reveal-delay="60">
           <div class="home-project__visual home-lendi">
             <HomeLendiPreview />
           </div>
@@ -102,7 +108,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
           </div>
         </article>
 
-        <article id="jasne" class="home-project home-project--jasne">
+        <article id="jasne" class="home-project home-project--jasne" data-reveal>
           <NuxtLink class="home-project__visual home-jasne" to="/jasne.ai" aria-label="Read the jasne.ai case study">
             <HomeJasnePreview />
           </NuxtLink>
@@ -115,7 +121,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
           </div>
         </article>
 
-        <article class="home-neoiq">
+        <article class="home-neoiq" data-reveal>
           <span class="home-neoiq__index">03</span>
           <div><p class="home-kicker">NeoIQ · AI Builder · 2023–2024</p><h3>Making large knowledge bases useful.</h3></div>
           <p>As an AI Builder, I worked on vector search and retrieval at NeoIQ. Real data, operational context, practical AI.</p>
@@ -150,11 +156,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 /* ——— Navigation ——— */
 .home-nav { display: flex; justify-content: space-between; align-items: center; min-height: 100px; border-bottom: 1px solid var(--home-line); }
 .home-brand { display: inline-flex; align-items: center; gap: 9px; font-size: 23px; font-weight: 600; letter-spacing: -1px; text-decoration: none; }
-.home-brand svg { margin-right: 4px; color: var(--home-blue); transition: transform 420ms var(--home-ease); }
+.home-brand svg { margin-right: 4px; color: var(--home-blue); transition: transform 200ms var(--home-ease); }
 .home-brand span { margin-left: -8px; color: var(--home-muted); font-weight: 400; }
 .home-nav__links { display: flex; align-items: center; gap: 34px; font-size: 14px; }
 .home-nav__links a { position: relative; display: inline-flex; align-items: center; gap: 12px; min-height: 44px; text-decoration: none; }
-.home-nav__links a::after { position: absolute; left: 0; right: 0; bottom: 10px; height: 1px; background: currentColor; content: ''; transform: scaleX(0); transform-origin: right; transition: transform 320ms var(--home-ease); }
+.home-nav__links a::after { position: absolute; left: 0; right: 0; bottom: 10px; height: 1px; background: currentColor; content: ''; transform: scaleX(0); transform-origin: right; transition: transform 200ms var(--home-ease); }
 .home-nav__links a:hover { color: var(--home-blue); }
 .home-nav__cv { border-left: 1px solid var(--home-line); padding-left: 28px; }
 .home-nav__links .home-nav__cv::after { left: 28px; }
@@ -167,21 +173,22 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 .home-hero h1 { margin: 24px 0 25px -5px; font-size: clamp(68px, 7.25vw, 102px); line-height: .96; letter-spacing: -.065em; font-weight: 600; }
 /* Each headline line is a clipping mask; the inner span rises into place once on load. */
 .home-line { display: inline-block; overflow: hidden; vertical-align: top; padding: 0 .08em .12em 0; margin-bottom: -.12em; }
-.home-line > span { display: inline-block; animation: home-rise 1000ms var(--home-ease) both; animation-delay: calc(80ms + var(--d, 0) * 85ms); }
+.home-line > span { display: inline-block; animation: home-rise 800ms var(--home-ease) both; animation-delay: calc(40ms + var(--d, 0) * 60ms); }
 .home-line--accent { color: var(--home-blue); }
-.home-reveal { animation: home-fade 900ms var(--home-ease) both; animation-delay: calc(80ms + var(--d, 0) * 85ms); }
+.home-reveal { animation: home-fade 800ms var(--home-ease) both; animation-delay: calc(40ms + var(--d, 0) * 60ms); }
+.home-hero__copy:focus-within { animation: none; }
 .home-hero__copy { max-width: 420px; margin: 0; font-size: 18px; line-height: 1.6; color: var(--home-muted); text-wrap: pretty; }
 .home-hero__copy a { color: var(--home-ink); text-decoration-color: #b3b6be; text-underline-offset: 4px; }
 .home-hero__copy a:hover { color: var(--home-blue); text-decoration-color: currentColor; }
 .home-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 30px; margin-top: 30px; }
 .home-text-link.home-hero__cv { gap: 10px; white-space: nowrap; }
 .home-hero__cv svg { flex: 0 0 auto; }
-.home-button { position: relative; display: inline-flex; align-items: center; gap: 42px; min-height: 48px; padding: 0 20px; overflow: hidden; isolation: isolate; background: var(--home-ink); color: white; font-size: 14px; text-decoration: none; transition: transform 160ms ease-out; }
-.home-button::before { position: absolute; inset: 0; z-index: -1; background: var(--home-blue); content: ''; transform: translateY(101%); transition: transform 380ms var(--home-ease); }
-.home-button:active { transform: scale(.98); }
-.home-button > svg { transition: transform 180ms ease-out; }
-.home-text-link { display: inline-flex; align-items: center; gap: 24px; width: fit-content; min-height: 44px; font-size: 14px; font-weight: 500; text-decoration: none; }
-.home-text-link > svg { transition: transform 180ms ease-out; }
+.home-button { position: relative; display: inline-flex; align-items: center; gap: 42px; min-height: 48px; padding: 0 20px; overflow: hidden; isolation: isolate; background: var(--home-ink); color: white; font-size: 14px; text-decoration: none; transition: transform 160ms var(--home-ease); }
+.home-button::before { position: absolute; inset: 0; z-index: -1; background: var(--home-blue); content: ''; transform: translateY(101%); transition: transform 200ms var(--home-ease); }
+.home-button:active:not(:focus-visible) { transform: scale(.98); }
+.home-button > svg { transition: transform 160ms var(--home-ease); }
+.home-text-link { display: inline-flex; align-items: center; gap: 24px; width: fit-content; min-height: 44px; font-size: 14px; font-weight: 500; text-decoration: none; transition: transform 160ms var(--home-ease); }
+.home-text-link > svg { transition: transform 160ms var(--home-ease); }
 .home-text-link:hover { color: var(--home-blue); }
 
 /* ——— Poster with the 3D build stack ——— */
@@ -203,7 +210,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 .home-poster__art { margin: 12px 0 2px; }
 .home-poster__bottom { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 6px; }
 .home-poster__bottom p { margin: 0; font-size: clamp(28px, 3.1vw, 42px); font-weight: 500; line-height: 1.05; letter-spacing: -1.5px; }
-.home-poster__loop { color: var(--home-lime); transition: transform 240ms ease-out; }
+.home-poster__loop { color: var(--home-lime); transition: transform 200ms var(--home-ease); }
 .home-poster__caption { border-top: 1px solid #ffffff55; padding-top: 16px; margin-top: 24px; font-size: 8px; letter-spacing: 1px; }
 
 .home-hero__foot { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 35px 0 27px; margin-top: 12px; border-bottom: 1px solid var(--home-line); color: var(--home-muted); font-size: 12px; }
@@ -241,19 +248,23 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 .home-neoiq h3 { margin: 9px 0 0; font-size: 24px; line-height: 1.2; letter-spacing: -.6px; font-weight: 500; }
 .home-neoiq > p { color: var(--home-muted); font-size: 14px; line-height: 1.6; margin: 0; }
 .home-neoiq__link { position: relative; display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; overflow: hidden; isolation: isolate; border: 1px solid var(--home-line); border-radius: 50%; text-decoration: none; font-size: 24px; transition: color 200ms ease, border-color 200ms ease; }
-.home-neoiq__link::before { position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--home-blue); content: ''; transform: scale(0); transition: transform 360ms var(--home-ease); }
+.home-neoiq__link::before { position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--home-blue); content: ''; opacity: 0; transform: scale(.94); transition: transform 200ms var(--home-ease), opacity 200ms var(--home-ease); }
 .home-neoiq__link:focus-visible { color: white; border-color: var(--home-blue); }
-.home-neoiq__link:focus-visible::before { transform: scale(1); transition: none; }
-.home-button:focus-visible, .home-button:focus-visible::before, .home-button:focus-visible > svg, .home-text-link:focus-visible > svg, .home-brand:focus-visible svg { transform: none; transition: none; }
+.home-neoiq__link:focus-visible::before { opacity: 1; transform: scale(1); transition: none; }
+.home-button:focus-visible, .home-button:focus-visible::before, .home-button:focus-visible > svg, .home-text-link:focus-visible, .home-text-link:focus-visible > svg, .home-brand:focus-visible svg { transform: none; transition: none; }
+.home-nav__links a:focus-visible::after { transform: scaleX(1); transition: none; }
+.home-text-link:active:not(:focus-visible) { transform: translateY(1px); }
 
 @media (hover: hover) and (pointer: fine) {
   .home-brand:hover:not(:focus-visible) svg { transform: rotate(-8deg); }
-  .home-nav__links a:hover::after { transform: scaleX(1); transform-origin: left; }
-  .home-button:hover::before { transform: translateY(0); }
+  .home-nav__links a:hover:not(:focus-visible)::after { transform: scaleX(1); transform-origin: left; }
+  .home-button:hover:not(:focus-visible)::before { transform: translateY(0); }
   .home-button:hover:not(:focus-visible) > svg { transform: translate(2px, 2px); }
-  .home-poster:hover .home-poster__loop { transform: rotate(180deg); }
-  .home-neoiq__link:hover { color: white; border-color: var(--home-blue); }
-  .home-neoiq__link:hover::before { transform: scale(1); }
+  .home-text-link:hover:not(:focus-visible) > svg { transform: translate(2px, -2px); }
+  .home-hero__cv:hover:not(:focus-visible) > svg { transform: translateY(2px); }
+  .home-poster:hover .home-poster__loop { transform: rotate(90deg); }
+  .home-neoiq__link:hover:not(:focus-visible) { color: white; border-color: var(--home-blue); }
+  .home-neoiq__link:hover:not(:focus-visible)::before { opacity: 1; transform: scale(1); }
 }
 
 @keyframes home-rise { from { transform: translateY(108%); } to { transform: translateY(0); } }
@@ -321,7 +332,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 }
 @media (prefers-reduced-motion: reduce) {
   .home :deep(*), .home :deep(*::before), .home :deep(*::after) { animation: none !important; transition: none !important; }
-  .home-text-link > svg, .home-button > svg, .home-poster__loop, .home-brand svg { transform: none !important; }
+  .home-text-link, .home-button, .home-text-link > svg, .home-button > svg, .home-poster__loop, .home-brand svg { transform: none !important; }
+  .home-neoiq__link::before { transform: none !important; }
 }
 </style>
 
