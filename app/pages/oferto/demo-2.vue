@@ -47,29 +47,30 @@
                 </div>
               </div>
             </article>
-            <div v-if="pending" class="oc-message oc-message-assistant oc-pending"><span class="oc-small-avatar" aria-hidden="true">✳</span><div><span class="oc-thinking"><i /><i /><i /></span><p>{{ hasDraft ? 'Dopracowuję Twoją ofertę…' : 'Układam informacje w ofertę…' }}</p><small>Podgląd zaktualizuje się po odpowiedzi.</small></div></div>
+            <div v-if="pending && !hasStreamingText" class="oc-message oc-message-assistant oc-pending"><span class="oc-small-avatar" aria-hidden="true">✳</span><div><span class="oc-thinking"><i /><i /><i /></span><p>{{ hasDraft ? 'Dopracowuję Twoją ofertę…' : 'Układam informacje w ofertę…' }}</p><small>Podgląd aktualizuje się w trakcie odpowiedzi.</small></div></div>
             <div v-if="error" class="oc-error" role="alert"><p>{{ error }}</p><button v-if="aiPaused" type="button" :disabled="statusPending" @click="refreshStatus()">{{ statusPending ? 'Sprawdzam…' : 'Sprawdź dostępność' }}</button><button v-else-if="failedRequest && failure?.retryable !== false" type="button" :disabled="pending || !canRetry" @click="requestReply()">{{ retrySeconds ? `Ponów za ${retrySeconds} s` : 'Spróbuj ponownie' }} <span aria-hidden="true">↻</span></button></div>
+            <div v-else-if="cancelled" class="oc-error" role="status"><p>Generowanie zatrzymane. Poprzedni szkic jest zachowany.</p><button type="button" :disabled="pending || !canRetry" @click="requestReply()">Spróbuj ponownie <span aria-hidden="true">↻</span></button></div>
           </div>
         </div>
 
         <div class="oc-composer-wrap">
-          <OferteoVoice ref="voice" mode="creator" :available="!aiPaused && status?.mode === 'live'" :checking="statusPending" :unavailable-reason="voiceUnavailableReason" :disabled="pending || retrySeconds > 0" :messages="messages" :update-workspace="updateVoiceWorkspace" @active="voiceActive = $event" @transcript="syncVoiceTranscript" @retry="refreshStatus()" @credits-exhausted="onVoiceCreditsExhausted" @request-failed="error = setFailure($event)" />
+          <OferteoVoice ref="voice" mode="creator" :available="!aiPaused && status?.mode === 'live'" :checking="statusPending" :unavailable-reason="voiceUnavailableReason" :disabled="pending || retrySeconds > 0" :messages="finalMessages" :update-workspace="updateVoiceWorkspace" @active="voiceActive = $event" @transcript="syncVoiceTranscript" @retry="refreshStatus()" @credits-exhausted="onVoiceCreditsExhausted" @request-failed="error = setFailure($event)" />
           <div v-if="suggestions.length && !pending && !error" class="oc-suggestions" aria-label="Pomysły na kolejną wiadomość"><button v-for="suggestion in suggestions" :key="suggestion" type="button" :disabled="aiPaused || retrySeconds > 0" @click="send(suggestion)">{{ suggestion }}</button></div>
           <form id="oc-composer" class="oc-composer" @submit.prevent="send(input)">
             <label class="oc-sr-only" for="oc-prompt">Opisz usługę lub poproś o zmianę oferty</label>
             <textarea id="oc-prompt" ref="composer" v-model="input" :disabled="pending" rows="2" maxlength="1500" :placeholder="hasDraft ? 'Co zmieniamy? Np. skróć opis i wyróżnij zakres…' : 'Np. remontuję łazienki w Warszawie. Chcę opisać swoją usługę…'" @keydown.enter.exact="onEnter" />
-            <div class="oc-composer-bottom"><span>{{ hasDraft ? 'Każdą zmianę możesz opisać w rozmowie' : 'Zacznij od tego, co robisz najlepiej' }}</span><button type="submit" :disabled="pending || aiPaused || retrySeconds > 0 || !input.trim()" :aria-label="aiPaused ? 'Asystent niedostępny — brak środków' : pending ? 'Oczekiwanie na odpowiedź' : 'Wyślij wiadomość'"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6" /></svg></button></div>
+            <div class="oc-composer-bottom"><span>{{ hasDraft ? 'Każdą zmianę możesz opisać w rozmowie' : 'Zacznij od tego, co robisz najlepiej' }}</span><button v-if="pending" class="oc-stop" type="button" aria-label="Zatrzymaj generowanie oferty" @click="stopRequest">Zatrzymaj</button><button v-else type="submit" :disabled="aiPaused || retrySeconds > 0 || !input.trim()" :aria-label="aiPaused ? 'Asystent niedostępny — brak środków' : 'Wyślij wiadomość'"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6" /></svg></button></div>
           </form>
           <p class="oc-private-note"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 9h10v8H5zM7 9V6a3 3 0 0 1 6 0v3" /></svg>{{ mode === 'demo' || (!mode && status?.mode === 'demo') ? 'Tryb przykładowy · odpowiedzi scenariuszowe bez AI.' : 'To szkic. Niczego nie publikujemy ani nie wysyłamy.' }}</p>
         </div>
       </section>
 
       <section id="oc-preview-panel" class="oc-preview" aria-labelledby="oc-preview-title">
-        <div class="oc-preview-toolbar"><div><h2 id="oc-preview-title">Twoja oferta</h2><span v-if="version" class="oc-version">Wersja {{ version }}</span><span v-else class="oc-preview-label">PODGLĄD NA ŻYWO</span></div><div class="oc-export-actions"><button type="button" :disabled="!hasDraft || pending" @click="copyOffer"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" /></svg>{{ exportState === 'copied' ? 'Skopiowano' : 'Kopiuj' }}</button><button class="oc-download" type="button" :disabled="!hasDraft || pending" aria-label="Pobierz ofertę jako plik tekstowy" title="Pobierz jako tekst" @click="downloadOffer"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2v10m-4-4 4 4 4-4M3 13v4h14v-4" /></svg></button></div></div>
+        <div class="oc-preview-toolbar"><div><h2 id="oc-preview-title">Twoja oferta</h2><span v-if="version" class="oc-version">Wersja {{ version }}</span><span v-else class="oc-preview-label">PODGLĄD NA ŻYWO</span></div><div class="oc-export-actions"><button v-if="pending" type="button" aria-label="Zatrzymaj generowanie oferty" @click="stopRequest">Zatrzymaj</button><button type="button" :disabled="!hasDraft || pending" @click="copyOffer"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" /></svg>{{ exportState === 'copied' ? 'Skopiowano' : 'Kopiuj' }}</button><button class="oc-download" type="button" :disabled="!hasDraft || pending" aria-label="Pobierz ofertę jako plik tekstowy" title="Pobierz jako tekst" @click="downloadOffer"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2v10m-4-4 4 4 4-4M3 13v4h14v-4" /></svg></button></div></div>
         <div v-if="exportMessage" class="oc-export-feedback" :class="{ 'is-error': exportState === 'error' }" role="status">{{ exportMessage }}</div>
         <div ref="previewBox" class="oc-preview-canvas" tabindex="0" aria-label="Treść przygotowanej oferty">
           <div v-if="isExample" class="oc-example-notice"><span aria-hidden="true">◇</span> Fikcyjny przykład do demonstracji</div>
-          <OferteoOfferDraft :draft="offerDraft" :ready="ready" :version="version" :pending="pending" />
+          <OferteoOfferDraft :draft="offerDraft" :ready="ready && !pending" :version="version" :pending="pending" />
           <div class="oc-preview-hint"><span aria-hidden="true">✳</span><p>{{ hasDraft ? 'Masz lepszy pomysł na zdanie? Napisz w czacie, co zmienić.' : 'Tutaj pojawi się Twoja oferta. Uzupełnimy ją w trakcie rozmowy.' }}</p></div>
           <p v-if="hasDraft" class="oc-draft-disclaimer">Sprawdź treść i warunki przed użyciem. Oferta pozostaje szkicem w tej sesji.</p>
         </div>
@@ -82,8 +83,10 @@
 <script setup lang="ts">
 import { mergeOferteoVoiceTranscript, voiceRequestMessages, type VoiceMessage } from '~~/shared/oferteo-realtime'
 import type { OferteoMessage, OferteoStatus } from '~~/shared/types/oferteo'
-import type { OfferCreatorResponse, OfferDraft } from '~~/shared/types/oferteo-creator'
+import { emptyOfferDraft, type OfferCreatorResponse, type OfferDraft } from '~~/shared/types/oferteo-creator'
+import type { OfferCreatorPartial } from '~~/shared/types/oferteo-stream'
 import { OFERTEO_CREDITS_MESSAGE, oferteoUiFailure } from '~~/shared/oferteo-errors'
+import { requestOferteoStream } from '~/utils/oferteoStream'
 
 useSeoMeta({ title: 'Kreator oferty — demo 2 AI dla Oferteo | Konrad Straszewski', description: 'Stwórz ofertę swojej usługi w rozmowie z asystentem AI. Opisz zakres, warunki i cenę, a potem dopracuj szkic.', robots: 'noindex, nofollow' })
 useHead({ htmlAttrs: { lang: 'pl', class: 'oc-fullscreen' }, bodyAttrs: { class: 'oc-fullscreen' }, meta: [{ name: 'theme-color', content: '#ffffff' }, { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content' }] })
@@ -95,8 +98,10 @@ const voiceUnavailableReason = computed(() => aiPaused.value ? OFERTEO_CREDITS_M
   : status.value?.mode === 'unavailable' ? 'Obsługa rozmów jest chwilowo niedostępna. Spróbuj ponownie za chwilę.'
     : 'Rozmowa głosowa wymaga aktywnego połączenia z AI.')
 
-type ChatMessage = OferteoMessage & { voiceId?: string; result?: { version: number; title: string; ready: boolean; changes: string[] } }
+type ChatMessage = OferteoMessage & { voiceId?: string; streaming?: number; result?: { version: number; title: string; ready: boolean; changes: string[] } }
 const messages = ref<ChatMessage[]>([])
+const finalMessages = computed(() => messages.value.filter(message => message.streaming === undefined))
+const hasStreamingText = computed(() => messages.value.some(message => message.streaming !== undefined && message.content))
 const voice = ref<{ stop: () => void; sendText: (text: string) => boolean } | null>(null)
 const voiceActive = ref(false)
 const offerDraft = ref<OfferDraft | null>(null)
@@ -104,6 +109,7 @@ const input = ref('')
 const suggestions = ref<string[]>([])
 const pending = ref(false)
 const error = ref('')
+const cancelled = ref(false)
 watch(aiPaused, (paused, wasPaused) => { if (!paused && wasPaused) error.value = failure.value?.message || '' })
 function onVoiceCreditsExhausted() { error.value = setFailure({ statusCode: 402 }) }
 const failedRequest = ref(false)
@@ -124,6 +130,8 @@ const isLive = computed(() => !aiPaused.value && status.value?.mode !== 'unavail
 const connectionLabel = computed(() => aiPaused.value ? 'Brak środków na AI' : pending.value ? 'Pracuję nad ofertą' : isLive.value ? 'Asystent jest gotowy' : statusError.value ? 'Sprawdź połączenie' : status.value?.mode === 'unavailable' ? 'AI chwilowo niedostępne' : status.value ? 'Tryb przykładowy' : 'Łączenie…')
 const hasDraft = computed(() => !!offerDraft.value && !!(offerDraft.value.title || offerDraft.value.description || offerDraft.value.company || offerDraft.value.service || offerDraft.value.location || offerDraft.value.scope.length || offerDraft.value.price || offerDraft.value.timing || offerDraft.value.conditions.length || offerDraft.value.nextStep))
 let controller: AbortController | undefined
+let streamSequence = 0
+let retryMessages: OferteoMessage[] | undefined
 let unmounted = false
 let scrollReplyOnReturn = false
 
@@ -166,6 +174,10 @@ async function scrollMessages(toLatestReply = false) {
   const reply = toLatestReply ? box.querySelector<HTMLElement>(`[data-message-index="${messages.value.length - 1}"]`) : null
   box.scrollTop = reply ? box.scrollTop + reply.getBoundingClientRect().top - box.getBoundingClientRect().top - 18 : box.scrollHeight
 }
+function followsMessages() {
+  const box = messageBox.value
+  return !box || box.scrollHeight - box.scrollTop - box.clientHeight < 100
+}
 function startExample(index: number) {
   if (pending.value || aiPaused.value || retrySeconds.value > 0) return
   isExample.value = true
@@ -181,7 +193,7 @@ async function send(value: string) {
   if (!content || content.length > 1500 || pending.value || aiPaused.value || retrySeconds.value > 0) return
   if (voiceActive.value) { if (voice.value?.sendText(content)) { input.value = ''; suggestions.value = [] }; return }
   clearFailure()
-  const history = failedRequest.value && messages.value.at(-1)?.role === 'user' ? messages.value.slice(0, -1) : messages.value
+  const history = failedRequest.value && finalMessages.value.at(-1)?.role === 'user' ? finalMessages.value.slice(0, -1) : finalMessages.value
   if (history.length >= 16 || history.reduce((total, message) => total + message.content.length, 0) + content.length > 9000) {
     failedRequest.value = false
     error.value = 'Osiągnięto limit długości rozmowy w demie. Skopiuj swoją ofertę i rozpocznij nową przyciskiem ↻ w nagłówku.'
@@ -189,39 +201,93 @@ async function send(value: string) {
     return
   }
   messages.value = [...history, { role: 'user', content }]
+  retryMessages = undefined
   input.value = ''
   suggestions.value = []
   await requestReply()
 }
 async function requestReply() {
-  if (pending.value || !canRetry.value || messages.value.at(-1)?.role !== 'user') return
+  const history = retryMessages || voiceRequestMessages(finalMessages.value)
+  if (pending.value || !canRetry.value || history.at(-1)?.role !== 'user') return
+  try { await requestDraft(history) } catch { /* requestDraft retains the failed turn and its retry state. */ }
+}
+async function requestDraft(history: OferteoMessage[], voiceSignal?: AbortSignal) {
+  const previousDraft = offerDraft.value ? { ...offerDraft.value, scope: [...offerDraft.value.scope], conditions: [...offerDraft.value.conditions] } : null
+  const requestController = new AbortController()
+  controller = requestController
+  const abortFromVoice = () => requestController.abort()
+  if (voiceSignal?.aborted) abortFromVoice()
+  else voiceSignal?.addEventListener('abort', abortFromVoice, { once: true })
+  const streamId = ++streamSequence
+  let followFinalReply = true
+  const current = () => !unmounted && controller === requestController && !requestController.signal.aborted
   pending.value = true
   failedRequest.value = false
   error.value = ''
+  cancelled.value = false
+  suggestions.value = []
   clearFailure()
   exportMessage.value = ''
   exportState.value = 'idle'
-  await scrollMessages()
-  controller = new AbortController()
   try {
-    const result = await $fetch<OfferCreatorResponse>('/api/oferto/offer', { method: 'POST', body: { messages: voiceRequestMessages(messages.value), draft: offerDraft.value }, signal: controller.signal, timeout: 65000, retry: false })
-    if (unmounted) return
-    const changed = JSON.stringify(offerDraft.value) !== JSON.stringify(result.draft)
+    await scrollMessages()
+    requestController.signal.throwIfAborted()
+    const result = await requestOferteoStream<OfferCreatorResponse, OfferCreatorPartial>('/api/oferto/offer', { messages: history, draft: previousDraft }, {
+      signal: requestController.signal,
+      onPartial(partial) {
+        if (!current()) return
+        const following = followsMessages()
+        if (typeof partial.message === 'string') {
+          const reply = messages.value.find(message => message.streaming === streamId)
+          if (reply) reply.content = partial.message
+          else if (partial.message) messages.value.push({ role: 'assistant', content: partial.message, streaming: streamId })
+        }
+        if (partial.draft) {
+          const fields = Object.fromEntries(Object.entries(partial.draft).filter(([, value]) => value !== undefined))
+          offerDraft.value = { ...emptyOfferDraft(), ...offerDraft.value, ...fields }
+        }
+        if (following) {
+          if (!messageBox.value?.getClientRects().length) scrollReplyOnReturn = true
+          else void nextTick(() => { if (messageBox.value) messageBox.value.scrollTop = messageBox.value.scrollHeight })
+        }
+      },
+    })
+    requestController.signal.throwIfAborted()
+    if (!current()) return result
+    followFinalReply = followsMessages()
+    const changed = JSON.stringify(previousDraft) !== JSON.stringify(result.draft)
     offerDraft.value = result.draft
     ready.value = result.ready
     if (changed && hasDraft.value) version.value += 1
-    messages.value.push({ role: 'assistant', content: result.message, result: changed && hasDraft.value ? { version: version.value, title: result.draft.title || result.draft.service || 'Twoja oferta', ready: result.ready, changes: result.changes } : undefined })
+    const reply: ChatMessage = { role: 'assistant', content: result.message, result: changed && hasDraft.value ? { version: version.value, title: result.draft.title || result.draft.service || 'Twoja oferta', ready: result.ready, changes: result.changes } : undefined }
+    const index = messages.value.findIndex(message => message.streaming === streamId)
+    if (index < 0) messages.value.push(reply)
+    else messages.value.splice(index, 1, reply)
     suggestions.value = result.suggestions.slice(0, 3)
     mode.value = result.mode
+    retryMessages = undefined
+    return result
   } catch (cause: unknown) {
-    if (unmounted) return
-    error.value = setFailure(cause)
-    failedRequest.value = true
+    if (!unmounted && controller === requestController) {
+      followFinalReply = followsMessages()
+      messages.value = messages.value.filter(message => message.streaming !== streamId)
+      offerDraft.value = previousDraft
+      suggestions.value = []
+      retryMessages = history
+      failedRequest.value = true
+      if (requestController.signal.aborted) cancelled.value = true
+      else error.value = setFailure(cause)
+    }
+    throw cause
   } finally {
-    if (!unmounted) {
+    voiceSignal?.removeEventListener('abort', abortFromVoice)
+    if (!unmounted && controller === requestController) {
+      controller = undefined
       pending.value = false
-      if (!messageBox.value?.getClientRects().length) scrollReplyOnReturn = true
-      else await scrollMessages(messages.value.at(-1)?.role === 'assistant')
+      if (followFinalReply) {
+        if (!messageBox.value?.getClientRects().length) scrollReplyOnReturn = true
+        else await scrollMessages(messages.value.at(-1)?.role === 'assistant')
+      }
       if (composer.value?.getClientRects().length && (document.activeElement === document.body || document.activeElement === composer.value)) composer.value.focus({ preventScroll: true })
     }
   }
@@ -234,21 +300,11 @@ function syncVoiceTranscript(transcript: VoiceMessage[]) {
 async function updateVoiceWorkspace(signal: AbortSignal) {
   if (aiPaused.value) throw { statusCode: 402 }
   if (pending.value || !canRetry.value) throw new Error('Oczekiwanie na wynik')
-  pending.value = true; error.value = ''; suggestions.value = []; failedRequest.value = false
-  try {
-    const result = await $fetch<OfferCreatorResponse>('/api/oferto/offer', { method: 'POST', body: { messages: voiceRequestMessages(messages.value, true), draft: offerDraft.value }, signal, timeout: 65000, retry: false })
-    if (signal.aborted) throw new Error('Rozmowa zakończona')
-    const changed = JSON.stringify(offerDraft.value) !== JSON.stringify(result.draft)
-    offerDraft.value = result.draft; ready.value = result.ready; mode.value = result.mode
-    if (changed && hasDraft.value) version.value += 1
-    messages.value.push({ role: 'assistant', content: result.message, result: changed && hasDraft.value ? { version: version.value, title: result.draft.title || result.draft.service || 'Twoja oferta', ready: result.ready, changes: result.changes } : undefined })
-    if (!messageBox.value?.getClientRects().length) scrollReplyOnReturn = true
-    else await scrollMessages(true)
-    return result
-  } catch (cause) {
-    if (!signal.aborted) error.value = setFailure(cause)
-    throw cause
-  } finally { pending.value = false }
+  return requestDraft(voiceRequestMessages(finalMessages.value, true), signal)
+}
+function stopRequest() {
+  controller?.abort()
+  if (voiceActive.value) voice.value?.stop()
 }
 function resetConversation() {
   if (pending.value) return
@@ -259,7 +315,9 @@ function resetConversation() {
   input.value = ''
   suggestions.value = []
   error.value = ''
+  cancelled.value = false
   failedRequest.value = false
+  retryMessages = undefined
   mode.value = null
   ready.value = false
   version.value = 0
@@ -315,3 +373,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped src="~/assets/css/oferteo-creator.css"></style>
+<style scoped>
+.oc-composer-bottom > .oc-stop { width: auto; min-width: 84px; padding-inline: 12px; font-size: 11px; font-weight: 700; }
+</style>

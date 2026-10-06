@@ -146,13 +146,13 @@ interface VoiceHarness {
   error: { value: string }
   events: Array<[string, ...unknown[]]>
 }
-function voiceHarness(t: TestContext): VoiceHarness {
+function voiceHarness(t: TestContext, updateWorkspace: (signal: AbortSignal) => Promise<unknown> = async () => ({})): VoiceHarness {
   const events: VoiceHarness['events'] = []
   const noLifecycle = () => {}
   const bindings = {
     ref, computed, onMounted: noLifecycle, onBeforeUnmount: noLifecycle,
     onBeforeRouteLeave: noLifecycle, watch: noLifecycle, defineExpose: noLifecycle,
-    defineProps: () => ({ mode: 'search', available: true, disabled: false, messages: [], updateWorkspace: async () => ({}) }),
+    defineProps: () => ({ mode: 'search', available: true, disabled: false, messages: [], updateWorkspace }),
     defineEmits: () => (name: string, ...args: unknown[]) => events.push([name, ...args]),
     OFERTEO_REALTIME_MODEL, OFERTEO_VOICE_SECONDS, voiceInstructions, oferteoUiFailure,
     OferteoVoiceStartupError, waitForOferteoVoiceStep,
@@ -173,7 +173,7 @@ class FakeWebSocket {
   onclose: ((event: unknown) => void) | null = null
   onerror: (() => void) | null = null
   onmessage: ((event: { data: string }) => void) | null = null
-  sent: Array<{ type: string }> = []
+  sent: Array<{ type: string; item?: { type: string; callId?: string; output?: string } }> = []
   constructor() { FakeWebSocket.instances.push(this) }
   open() { this.readyState = FakeWebSocket.OPEN; this.onopen?.() }
   send(data: string) { this.sent.push(JSON.parse(data)) }
@@ -380,4 +380,155 @@ test('the real SDK startup deadline settles the UI and releases resources when p
   socket.emit({ type: 'session-updated', sessionId: 'late-timeout-session' })
   await flushEvents()
   assert.equal(component.connected.value, false)
+})
+
+async function connectedVoice(t: TestContext, updateWorkspace: (signal: AbortSignal) => Promise<unknown>) {
+  browserFixture(t, async () => fakeStream().stream)
+  const component = voiceHarness(t, updateWorkspace)
+  const startup = component.start()
+  await flushEvents()
+  const socket = FakeWebSocket.instances[0]!
+  socket.open()
+  socket.emit({ type: 'session-updated', sessionId: 'workspace-test' })
+  await startup
+  return { component, socket }
+}
+async function workspaceCall(socket: FakeWebSocket, callId: string) {
+  socket.emit({ type: 'function-call-arguments-done', callId, name: 'update_workspace', arguments: '{}' })
+  await flushEvents()
+}
+function workspaceOutput(socket: FakeWebSocket, callId: string): Record<string, unknown> | undefined {
+  const output = socket.sent.find(event => event.type === 'conversation-item-create' && event.item?.callId === callId)?.item?.output
+  return output ? JSON.parse(output) : undefined
+}
+
+test('a tool call before a new audio transcription cannot return a cached result from the previous utterance', async t => {
+  let updates = 0
+  const { component, socket } = await connectedVoice(t, async () => ({ result: ++updates }))
+  socket.emit({ type: 'input-transcription-completed', itemId: 'warsaw', transcript: 'Remont łazienki w Warszawie' })
+  await workspaceCall(socket, 'first')
+  assert.deepEqual(workspaceOutput(socket, 'first'), { result: 1 })
+  await workspaceCall(socket, 'same-utterance')
+  assert.deepEqual(workspaceOutput(socket, 'same-utterance'), { result: 1 })
+  assert.equal(updates, 1, 'repeated calls within the same utterance should still use the cache')
+
+  socket.emit({ type: 'speech-started', itemId: 'krakow' })
+  await workspaceCall(socket, 'before-transcript')
+  assert.match(String(workspaceOutput(socket, 'before-transcript')?.error), /Transkrypcja nowej wypowiedzi/)
+  assert.equal(updates, 1)
+  socket.emit({ type: 'speech-stopped', itemId: 'krakow' })
+  socket.emit({ type: 'audio-committed', itemId: 'krakow' })
+  await workspaceCall(socket, 'still-before-transcript')
+  assert.ok(workspaceOutput(socket, 'still-before-transcript')?.error)
+  assert.equal(updates, 1)
+
+  socket.emit({ type: 'input-transcription-completed', itemId: 'krakow', transcript: 'Jednak w Krakowie' })
+  await workspaceCall(socket, 'new-utterance')
+  assert.deepEqual(workspaceOutput(socket, 'new-utterance'), { result: 2 })
+  assert.equal(updates, 2)
+  const lastTranscript = component.events.findLast(([name]) => name === 'transcript')?.[1] as Array<{ content: string }>
+  assert.equal(lastTranscript.at(-1)?.content, 'Jednak w Krakowie')
+})
+
+test('a late transcription of an older audio item cannot unlock workspace results for a newer pending utterance', async t => {
+  let updates = 0
+  const { socket } = await connectedVoice(t, async () => ({ result: ++updates }))
+  socket.emit({ type: 'input-transcription-completed', itemId: 'initial', transcript: 'Remont w Warszawie' })
+  await workspaceCall(socket, 'initial-result')
+  socket.emit({ type: 'speech-started', itemId: 'older' })
+  socket.emit({ type: 'speech-stopped', itemId: 'older' })
+  socket.emit({ type: 'speech-started', itemId: 'newer' })
+  socket.emit({ type: 'input-transcription-completed', itemId: 'older', transcript: 'Zmień miasto na Kraków' })
+  await workspaceCall(socket, 'newer-still-pending')
+  assert.ok(workspaceOutput(socket, 'newer-still-pending')?.error)
+  assert.equal(updates, 1)
+  socket.emit({ type: 'input-transcription-completed', itemId: 'newer', transcript: 'I tylko z terminem w piątek' })
+  await workspaceCall(socket, 'all-inputs-ready')
+  assert.deepEqual(workspaceOutput(socket, 'all-inputs-ready'), { result: 2 })
+})
+
+test('an update completing after the user starts another utterance cannot become a successful or cached tool result', async t => {
+  const firstUpdate = deferred<unknown>()
+  let updates = 0
+  let firstSignal: AbortSignal | undefined
+  const { component, socket } = await connectedVoice(t, async signal => {
+    if (++updates === 1) { firstSignal = signal; return firstUpdate.promise }
+    return { result: updates }
+  })
+  socket.emit({ type: 'input-transcription-completed', itemId: 'initial', transcript: 'Remont w Warszawie' })
+  await workspaceCall(socket, 'delayed-result')
+  assert.equal(updates, 1)
+  assert.equal(firstSignal?.aborted, false)
+  assert.equal(workspaceOutput(socket, 'delayed-result'), undefined)
+  socket.emit({ type: 'speech-started', itemId: 'changed' })
+  await flushEvents()
+  assert.equal(firstSignal?.aborted, true, 'new input must cancel the page request before it can commit old results')
+  firstUpdate.resolve({ result: 'old-requirements' })
+  await flushEvents()
+  assert.match(String(workspaceOutput(socket, 'delayed-result')?.error), /Wymagania zmieniły się/)
+  assert.equal(component.error.value, '', 'expected cancellation should not display a voice failure')
+  socket.emit({ type: 'input-transcription-completed', itemId: 'changed', transcript: 'Jednak w Krakowie' })
+  await workspaceCall(socket, 'updated-result')
+  assert.deepEqual(workspaceOutput(socket, 'updated-result'), { result: 2 })
+  assert.equal(updates, 2)
+})
+
+test('new speech, a late audio commit, or a late transcription cancels workspace I/O without displaying a voice error', async t => {
+  for (const type of ['speech-started', 'audio-committed', 'input-transcription-completed']) {
+    await t.test(type, async subtest => {
+      const pending = deferred<unknown>()
+      let requestSignal: AbortSignal | undefined
+      const { component, socket } = await connectedVoice(subtest, async signal => {
+        requestSignal = signal
+        signal.addEventListener('abort', () => pending.reject(new DOMException('Cancelled', 'AbortError')), { once: true })
+        return pending.promise
+      })
+      socket.emit({ type: 'input-transcription-completed', itemId: 'initial', transcript: 'Remont w Warszawie' })
+      await workspaceCall(socket, 'cancelled-request')
+      assert.equal(requestSignal?.aborted, false)
+      socket.emit({ type, itemId: 'changed', transcript: 'Jednak w Krakowie' })
+      await flushEvents()
+      assert.equal(requestSignal?.aborted, true)
+      assert.match(String(workspaceOutput(socket, 'cancelled-request')?.error), /Wymagania zmieniły się/)
+      assert.equal(component.error.value, '')
+      assert.equal(component.connected.value, true)
+    })
+  }
+})
+
+test('speech without an item ID waits for its committed audio item, and an empty transcription cannot reuse old requirements', async t => {
+  let updates = 0
+  const { socket } = await connectedVoice(t, async () => ({ result: ++updates }))
+  socket.emit({ type: 'input-transcription-completed', itemId: 'initial', transcript: 'Remont w Warszawie' })
+  await workspaceCall(socket, 'initial-result')
+  socket.emit({ type: 'speech-started' })
+  await workspaceCall(socket, 'unknown-input')
+  assert.ok(workspaceOutput(socket, 'unknown-input')?.error)
+  socket.emit({ type: 'audio-committed', itemId: 'empty' })
+  socket.emit({ type: 'input-transcription-completed', itemId: 'empty', transcript: '' })
+  await workspaceCall(socket, 'empty-input')
+  assert.ok(workspaceOutput(socket, 'empty-input')?.error)
+  assert.equal(updates, 1)
+  socket.emit({ type: 'speech-started', itemId: 'retry' })
+  socket.emit({ type: 'input-transcription-completed', itemId: 'retry', transcript: 'Jednak w Krakowie' })
+  await workspaceCall(socket, 'retry-input')
+  assert.deepEqual(workspaceOutput(socket, 'retry-input'), { result: 2 })
+})
+
+test('an older audio commit cannot identify a newer utterance that started without an item ID', async t => {
+  let updates = 0
+  const { socket } = await connectedVoice(t, async () => ({ result: ++updates }))
+  socket.emit({ type: 'input-transcription-completed', itemId: 'initial', transcript: 'Remont w Warszawie' })
+  await workspaceCall(socket, 'initial-result')
+  socket.emit({ type: 'speech-started', itemId: 'older' })
+  socket.emit({ type: 'speech-started' })
+  socket.emit({ type: 'audio-committed', itemId: 'older' })
+  socket.emit({ type: 'input-transcription-completed', itemId: 'older', transcript: 'Zmień miasto na Kraków' })
+  await workspaceCall(socket, 'newer-unidentified')
+  assert.ok(workspaceOutput(socket, 'newer-unidentified')?.error)
+  assert.equal(updates, 1)
+  socket.emit({ type: 'audio-committed', itemId: 'newer' })
+  socket.emit({ type: 'input-transcription-completed', itemId: 'newer', transcript: 'Tylko z terminem w piątek' })
+  await workspaceCall(socket, 'all-transcripts-ready')
+  assert.deepEqual(workspaceOutput(socket, 'all-transcripts-ready'), { result: 2 })
 })

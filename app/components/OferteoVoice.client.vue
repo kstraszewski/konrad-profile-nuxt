@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import type { UIMessage } from 'ai'
+import type { Experimental_RealtimeState, UIMessage } from 'ai'
 import { onBeforeRouteLeave } from 'vue-router'
 import type { OferteoMessage } from '~~/shared/types/oferteo'
 import { OFERTEO_REALTIME_MODEL, OFERTEO_VOICE_SECONDS, voiceInstructions, type OferteoVoiceMode, type VoiceMessage } from '~~/shared/oferteo-realtime'
@@ -126,6 +126,16 @@ async function start() {
   const signal = controller.signal
   const current = () => attempt === generation && !signal.aborted
   localMessages = []; cachedKey = ''; cachedResult = undefined; muted.value = false
+  const pendingInputIds = new Set<string>()
+  const completedInputIds = new Set<string>()
+  let unidentifiedInputs = 0
+  let invalidTranscript = false
+  let inputVersion = 0
+  let workspaceController: AbortController | undefined
+  const newInput = () => { inputVersion++; workspaceController?.abort() }
+  const transcriptPending = () => pendingInputIds.size > 0 || unidentifiedInputs > 0 || invalidTranscript
+  const userMessageKey = () => JSON.stringify(localMessages.filter(message => message.role === 'user'))
+  const staleWorkspaceResult = () => ({ error: 'Wymagania zmieniły się w trakcie aktualizacji. Ponów po otrzymaniu nowej transkrypcji. Nie przedstawiaj poprzednich wyników jako aktualnych.' })
   try {
     const acquired = await waitForOferteoVoiceStep(navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }, video: false }), {
       phase: 'microphone', signal, timeoutMs: 20_000,
@@ -156,17 +166,23 @@ async function start() {
       },
       onToolCall: async ({ toolCall }) => {
         if (!current() || toolCall.toolName !== 'update_workspace') return { error: 'Niedostępne narzędzie.' }
-        const key = JSON.stringify(localMessages.filter(message => message.role === 'user'))
-        if (key === '[]') return { error: 'Transkrypcja jeszcze nie dotarła. Ponów po otrzymaniu wypowiedzi użytkownika.' }
+        const key = userMessageKey()
+        if (key === '[]' || transcriptPending()) return { error: 'Transkrypcja nowej wypowiedzi jeszcze nie dotarła. Ponów po jej otrzymaniu. Nie przedstawiaj poprzednich wyników jako aktualnych.' }
         if (key === cachedKey) return cachedResult
         if (busy) return { error: 'Poprzednie wyszukiwanie jeszcze trwa. Poczekaj na wynik.' }
+        const version = inputVersion
+        const request = new AbortController()
+        workspaceController = request
         busy = true; working.value = true
         try {
-          const result = await props.updateWorkspace(signal)
+          const result = await props.updateWorkspace(AbortSignal.any([signal, request.signal]))
           if (!current()) return { error: 'Rozmowa zakończona.' }
+          if (request.signal.aborted || version !== inputVersion || transcriptPending() || key !== userMessageKey()) return staleWorkspaceResult()
           cachedKey = key; cachedResult = result
           return result
         } catch (cause) {
+          if (!current()) return { error: 'Rozmowa zakończona.' }
+          if (request.signal.aborted || version !== inputVersion || key !== userMessageKey()) return staleWorkspaceResult()
           const failure = oferteoUiFailure(cause)
           if (current() && failure.creditsExhausted) {
             creditsFailure = true
@@ -179,7 +195,7 @@ async function start() {
           }
           return { error: 'Aktualizacja nie powiodła się. Poprzednie wyniki są nieaktualne dla nowych wymagań. Nie przedstawiaj ich jako nowych.' }
         } finally {
-          if (current()) { busy = false; working.value = false }
+          if (current() && workspaceController === request) { workspaceController = undefined; busy = false; working.value = false }
         }
       },
       onError: cause => { if (current()) fail(cause) },
@@ -202,11 +218,35 @@ async function start() {
         // Teardown here would retire the attempt and suppress that callback.
       }
       if (key === 'isPlaying') playing.value = Boolean(value)
+      if (key === 'events') {
+        // The SDK publishes events before running onToolCall effects. Its
+        // onEvent callback runs afterwards, too late to guard a tool call.
+        const event = (value as Experimental_RealtimeState['events']).at(-1)
+        if (event?.type === 'speech-started') {
+          newInput()
+          invalidTranscript = false
+          if (event.itemId) pendingInputIds.add(event.itemId)
+          else unidentifiedInputs++
+        } else if ((event?.type === 'speech-stopped' || event?.type === 'audio-committed') && event.itemId && !completedInputIds.has(event.itemId)) {
+          if (!pendingInputIds.has(event.itemId)) {
+            newInput()
+            if (unidentifiedInputs > 0) unidentifiedInputs--
+          }
+          pendingInputIds.add(event.itemId)
+        } else if (event?.type === 'input-transcription-completed') {
+          if (!pendingInputIds.has(event.itemId) && !completedInputIds.has(event.itemId)) newInput()
+          pendingInputIds.delete(event.itemId)
+          completedInputIds.add(event.itemId)
+          if (!event.transcript.trim()) invalidTranscript = true
+        }
+      }
       if (key === 'messages') {
+        const previousUserMessages = userMessageKey()
         localMessages = (value as UIMessage[]).filter(message => message.role !== 'system').map(message => ({
           voiceId: `${attempt}:${message.id}`, role: message.role as 'user' | 'assistant',
           content: message.parts.filter(part => part.type === 'text').map(part => part.text).join(''),
         })).filter(message => message.content.trim())
+        if (previousUserMessages !== userMessageKey()) workspaceController?.abort()
         emit('transcript', localMessages)
         if (props.messages.reduce((sum, message) => sum + message.content.length, 0) > 9000 || props.messages.length >= 16) stop('Osiągnięto limit rozmowy w demie. Rozpocznij nową rozmowę.')
       }

@@ -438,6 +438,7 @@ class PdfDoc {
 
   polygon(points: Array<[number, number]>, color: Color) {
     const [first, ...rest] = points
+    if (!first) return
     this.ops.push(
       `${rgb(color, 'rg')} ${num(first[0])} ${num(PAGE.height - first[1])} m ${rest
         .map(([x, y]) => `${num(x)} ${num(PAGE.height - y)} l`)

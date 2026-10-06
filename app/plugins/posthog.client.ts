@@ -1,7 +1,7 @@
 import posthog from 'posthog-js'
-import type { ConfigDefaults } from 'posthog-js'
+import type { ConfigDefaults, PostHog } from 'posthog-js'
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin<{ posthog: PostHog | null }>((nuxtApp) => {
   const runtimeConfig = useRuntimeConfig()
   const posthogPublicKey = runtimeConfig.public.posthogPublicKey
   const posthogHost = runtimeConfig.public.posthogHost

@@ -35,8 +35,9 @@
                   <button v-if="message.result?.offers.length && message.result === latestResult" class="od-result-link" type="button" aria-controls="od-project-plan" @click="viewResults"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5"/><path d="m12 12 4 4"/></svg>Zobacz wykonawców <span>{{ message.result.offers.length }}</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></button>
                 </div>
               </div>
-              <div v-if="pending" class="od-message od-message-assistant"><span class="od-mini-avatar" aria-hidden="true">✳</span><div class="od-pending-result"><div class="od-thinking"><span><i /><i /><i /></span> Szukam dopasowania…</div></div></div>
-              <div v-if="error" class="od-error" role="alert"><p>{{ error }}</p><button v-if="aiPaused" type="button" :disabled="statusPending" @click="refreshStatus()">{{ statusPending ? 'Sprawdzam…' : 'Sprawdź dostępność' }}</button><button v-else-if="messages.at(-1)?.role === 'user' && failure?.retryable !== false" type="button" :disabled="pending || !canRetry" @click="requestReply">{{ retrySeconds ? `Ponów za ${retrySeconds} s` : 'Spróbuj ponownie' }} <span aria-hidden="true">↻</span></button></div>
+              <div v-if="pending && !streamingMessage" class="od-message od-message-assistant"><span class="od-mini-avatar" aria-hidden="true">✳</span><div class="od-pending-result"><div class="od-thinking"><span><i /><i /><i /></span> Szukam dopasowania…</div></div></div>
+              <p v-if="streamNotice" class="od-connection-notice" role="status">{{ streamNotice }} <button v-if="retryMessages || messages.at(-1)?.role === 'user'" type="button" :disabled="pending || !canRetry" @click="requestReply">Spróbuj ponownie</button></p>
+              <div v-if="error" class="od-error" role="alert"><p>{{ error }}</p><button v-if="aiPaused" type="button" :disabled="statusPending" @click="refreshStatus()">{{ statusPending ? 'Sprawdzam…' : 'Sprawdź dostępność' }}</button><button v-else-if="(retryMessages || messages.at(-1)?.role === 'user') && failure?.retryable !== false" type="button" :disabled="pending || !canRetry" @click="requestReply">{{ retrySeconds ? `Ponów za ${retrySeconds} s` : 'Spróbuj ponownie' }} <span aria-hidden="true">↻</span></button></div>
             </div>
           </div>
 
@@ -65,8 +66,9 @@
                 <label class="od-sr-only" for="od-prompt">Opisz, jakiego wykonawcy szukasz</label>
                 <textarea id="od-prompt" ref="composer" v-model="draft" :disabled="pending" maxlength="1500" rows="1" placeholder="Np. chcę wyremontować łazienkę w Warszawie…" @keydown.enter.exact="onEnter" />
                 <div class="od-composer-bottom">
-                  <OferteoVoice ref="voice" compact mode="search" :available="!aiPaused && status?.mode === 'live'" :checking="statusPending" :unavailable-reason="voiceUnavailableReason" :disabled="pending || retrySeconds > 0" :messages="messages" :update-workspace="updateVoiceWorkspace" @active="voiceActive = $event" @transcript="syncVoiceTranscript" @credits-exhausted="onVoiceCreditsExhausted" @request-failed="error = setFailure($event)" />
-                  <button class="od-send" type="submit" :disabled="pending || aiPaused || retrySeconds > 0 || !draft.trim()" :aria-label="aiPaused ? 'Asystent niedostępny — brak środków' : pending ? 'Oczekiwanie na odpowiedź' : 'Wyślij wiadomość'"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6" /></svg></button>
+                  <OferteoVoice ref="voice" compact mode="search" :available="!aiPaused && status?.mode === 'live'" :checking="statusPending" :unavailable-reason="voiceUnavailableReason" :disabled="pending || retrySeconds > 0" :messages="finalMessages" :update-workspace="updateVoiceWorkspace" @active="voiceActive = $event" @transcript="syncVoiceTranscript" @credits-exhausted="onVoiceCreditsExhausted" @request-failed="error = setFailure($event)" />
+                  <button v-if="pending" class="od-send" type="button" aria-label="Zatrzymaj odpowiedź" title="Zatrzymaj" @click="stopReply"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2" /></svg></button>
+                  <button v-else class="od-send" type="submit" :disabled="aiPaused || retrySeconds > 0 || !draft.trim()" :aria-label="aiPaused ? 'Asystent niedostępny — brak środków' : 'Wyślij wiadomość'"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6" /></svg></button>
                 </div>
               </form>
             </div>
@@ -108,6 +110,8 @@
 import type { OferteoBrief as Brief, OferteoMessage as Message, OferteoChatResponse as ChatResponse, OferteoStatus as Status } from '~~/shared/types/oferteo'
 import { mergeOferteoVoiceTranscript, voiceRequestMessages, type VoiceMessage } from '~~/shared/oferteo-realtime'
 import { OFERTEO_CREDITS_MESSAGE, oferteoUiFailure } from '~~/shared/oferteo-errors'
+import type { OferteoChatPartial } from '~~/shared/types/oferteo-stream'
+import { requestOferteoStream } from '~/utils/oferteoStream'
 definePageMeta({ alias: ['/oferto/demo-1'] })
 useSeoMeta({ title: 'Demo 1: szukanie wykonawcy — Oferteo | Konrad Straszewski', description: 'Wypróbuj asystenta, który pomaga opisać remont i dopasowuje wykonawców z publicznych profili Oferteo.', robots: 'noindex, nofollow' })
 useHead({
@@ -126,8 +130,11 @@ const connectionNotice = computed(() => aiPaused.value ? OFERTEO_CREDITS_MESSAGE
   : status.value?.mode === 'unavailable' ? 'Asystent jest chwilowo niedostępny.' : '')
 const isLive = computed(() => !aiPaused.value && status.value?.mode !== 'unavailable' && (mode.value === 'live' || (mode.value !== 'demo' && status.value?.aiConfigured === true)))
 const emptyBrief = (): Brief => ({ service: null, city: null, scope: null, area: null, budget: null, timing: null })
-type ChatMessage = Message & { voiceId?: string; result?: Pick<ChatResponse, 'offers' | 'brief'> }
+type ChatMessage = Message & { voiceId?: string; result?: Pick<ChatResponse, 'offers' | 'brief'>; streaming?: boolean }
 const messages = ref<ChatMessage[]>([])
+const finalMessages = computed(() => messages.value.filter(message => !message.streaming))
+const streamingMessage = computed(() => messages.value.find(message => message.streaming))
+const streamNotice = ref('')
 const voice = ref<{ stop: () => void; sendText: (text: string) => boolean } | null>(null)
 const voiceActive = ref(false)
 const brief = ref<Brief>(emptyBrief())
@@ -164,6 +171,9 @@ onMounted(() => {
 const messageBox = ref<HTMLElement | null>(null)
 const composer = ref<HTMLTextAreaElement | null>(null)
 let controller: AbortController | undefined
+let unmounted = false
+const retryMessages = ref<Message[]>()
+let followingStream = true
 const briefFields: { key: keyof Brief; label: string }[] = [{ key: 'city', label: 'Lokalizacja' }, { key: 'scope', label: 'Zakres prac' }, { key: 'area', label: 'Powierzchnia' }, { key: 'budget', label: 'Budżet' }, { key: 'timing', label: 'Termin' }]
 const filledFields = computed(() => Object.values(brief.value).filter(Boolean).length)
 const knownBriefFields = computed(() => briefFields.filter(field => brief.value[field.key]))
@@ -195,44 +205,25 @@ async function send(value: string) {
   if (!content || pending.value || aiPaused.value || retrySeconds.value > 0 || content.length > 1500) return
   if (voiceActive.value) { if (voice.value?.sendText(content)) { draft.value = ''; suggestions.value = [] }; return }
   clearFailure()
-  if (messages.value.at(-1)?.role === 'user' && error.value) messages.value.pop()
+  if (messages.value.at(-1)?.role === 'user' && (error.value || streamNotice.value)) messages.value.pop()
   if (messages.value.length >= 16 || messages.value.reduce((total, message) => total + message.content.length, 0) + content.length > 9000) {
     error.value = 'Ta rozmowa osiągnęła limit demo. Rozpocznij nową rozmowę przyciskiem ↻ w nagłówku.'
     return
   }
   messages.value.push({ role: 'user', content })
+  retryMessages.value = undefined
   draft.value = ''
   suggestions.value = []
   await requestReply()
 }
 async function requestReply() {
-  if (pending.value || !canRetry.value || messages.value.at(-1)?.role !== 'user') return
-  pending.value = true
-  error.value = ''
-  clearFailure()
-  await scrollMessages()
+  const history = retryMessages.value || voiceRequestMessages(finalMessages.value)
+  if (pending.value || !canRetry.value || history.at(-1)?.role !== 'user') return
   controller = new AbortController()
   try {
-    const result = await $fetch<ChatResponse>('/api/oferto/chat', { method: 'POST', body: { messages: voiceRequestMessages(messages.value) }, signal: controller.signal, timeout: 65000, retry: false })
-    messages.value.push({
-      role: 'assistant',
-      content: result.message,
-      result: { offers: result.offers, brief: { ...result.brief } },
-    })
-    brief.value = result.brief
-    suggestions.value = result.suggestions
-    mode.value = result.mode
-    if (statusError.value) await refreshStatus()
-  } catch (cause: unknown) {
-    error.value = setFailure(cause)
-  } finally {
-    pending.value = false
-    if (showPlan.value) scrollReplyOnReturn = true
-    else await scrollMessages(messages.value.at(-1)?.role === 'assistant')
-    if (document.activeElement === document.body || document.activeElement === composer.value) {
-      composer.value?.focus({ preventScroll: true })
-    }
-  }
+    await streamReply(controller.signal, history)
+    if (statusError.value && !unmounted) void refreshStatus()
+  } catch { /* streamReply has already mapped the error or intentional stop. */ }
 }
 function syncVoiceTranscript(transcript: VoiceMessage[]) {
   mergeOferteoVoiceTranscript(messages.value, transcript)
@@ -241,20 +232,67 @@ function syncVoiceTranscript(transcript: VoiceMessage[]) {
 async function updateVoiceWorkspace(signal: AbortSignal) {
   if (aiPaused.value) throw { statusCode: 402 }
   if (pending.value || !canRetry.value) throw new Error('Oczekiwanie na wynik')
-  pending.value = true; error.value = ''; suggestions.value = []
+  controller = new AbortController()
+  return streamReply(AbortSignal.any([signal, controller.signal]), voiceRequestMessages(finalMessages.value, true))
+}
+function stopReply() {
+  controller?.abort()
+  if (voiceActive.value) voice.value?.stop()
+}
+async function streamReply(signal: AbortSignal, history: Message[]) {
+  const previousBrief = { ...brief.value }
+  pending.value = true; error.value = ''; streamNotice.value = ''; suggestions.value = []
+  clearFailure()
+  await scrollMessages()
+  followingStream = true
   try {
-    const result = await $fetch<ChatResponse>('/api/oferto/chat', { method: 'POST', body: { messages: voiceRequestMessages(messages.value, true) }, signal, timeout: 65000, retry: false })
-    if (signal.aborted) throw new Error('Rozmowa zakończona')
+    const result = await requestOferteoStream<ChatResponse, OferteoChatPartial>('/api/oferto/chat', { messages: history }, {
+      signal,
+      onPartial: partial => {
+        if (signal.aborted || unmounted) return
+        const box = messageBox.value
+        const following = !box || box.scrollHeight - box.scrollTop - box.clientHeight < 100
+        followingStream = following
+        if (partial.message !== undefined) {
+          if (streamingMessage.value) streamingMessage.value.content = partial.message
+          else if (partial.message) messages.value.push({ role: 'assistant', content: partial.message, streaming: true })
+          if (!partial.message) messages.value = finalMessages.value
+        }
+        if (partial.brief) brief.value = { ...previousBrief, ...partial.brief }
+        if (following) void nextTick(() => { if (messageBox.value) messageBox.value.scrollTop = messageBox.value.scrollHeight })
+      },
+    })
+    signal.throwIfAborted()
+    if (unmounted) return result
+    const box = messageBox.value
+    followingStream = !box || box.scrollHeight - box.scrollTop - box.clientHeight < 100
+    messages.value = finalMessages.value
+    retryMessages.value = undefined
     brief.value = result.brief
     mode.value = result.mode
+    suggestions.value = result.suggestions
     messages.value.push({ role: 'assistant', content: result.message, result: { offers: result.offers, brief: { ...result.brief } } })
-    if (showPlan.value) scrollReplyOnReturn = true
-    else await scrollMessages(true)
     return result
   } catch (cause) {
-    if (!signal.aborted) error.value = setFailure(cause)
+    if (!unmounted) {
+      messages.value = finalMessages.value
+      brief.value = previousBrief
+      retryMessages.value = history
+      if (signal.aborted) streamNotice.value = 'Odpowiedź zatrzymana. Możesz ponowić pytanie lub napisać nową wiadomość.'
+      else error.value = setFailure(cause)
+    }
     throw cause
-  } finally { pending.value = false }
+  } finally {
+    if (!unmounted) {
+      const box = messageBox.value
+      // A reader may scroll away after the last chunk or while waiting.
+      followingStream = followingStream && (!box || box.scrollHeight - box.scrollTop - box.clientHeight < 100)
+      pending.value = false
+      if (followingStream && showPlan.value) scrollReplyOnReturn = true
+      else if (followingStream) await scrollMessages(messages.value.at(-1)?.role === 'assistant')
+      if (document.activeElement === document.body || document.activeElement === composer.value) composer.value?.focus({ preventScroll: true })
+    }
+  }
 }
 function resetConversation() {
   if (pending.value) return
@@ -262,10 +300,12 @@ function resetConversation() {
   voice.value?.stop()
   showPlan.value = false
   scrollReplyOnReturn = false
-  messages.value = []; brief.value = emptyBrief(); suggestions.value = []; draft.value = ''; error.value = ''; mode.value = null
+  retryMessages.value = undefined
+  messages.value = []; brief.value = emptyBrief(); suggestions.value = []; draft.value = ''; error.value = ''; streamNotice.value = ''; mode.value = null
   nextTick(() => composer.value?.focus({ preventScroll: true }))
 }
 onBeforeUnmount(() => {
+  unmounted = true
   controller?.abort()
   window.visualViewport?.removeEventListener('resize', syncViewport)
   window.visualViewport?.removeEventListener('scroll', syncViewport)

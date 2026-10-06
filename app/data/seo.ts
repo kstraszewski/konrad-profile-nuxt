@@ -8,7 +8,7 @@ export type SeoPage = {
   image?: string
   imageWidth?: number
   imageHeight?: number
-  imageType?: string
+  imageType?: 'image/png' | 'image/gif' | 'image/webp' | 'image/jpeg' | 'image/avif'
   imageAlt?: string
   index?: boolean
   sitemap?: boolean
