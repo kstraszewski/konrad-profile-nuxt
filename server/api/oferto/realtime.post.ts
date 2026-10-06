@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { OFERTEO_REALTIME_MODEL } from '../../../shared/oferteo-realtime'
 import { assertOferteoAiAvailable, handleOferteoAiFailure, hasOferteoAiCredentials, oferteoGateway } from '../../utils/oferteoAi'
 import { withOferteoAiRetryAfter } from '../../utils/oferteoAiAvailability'
+import { logOferteoAiFailure } from '../../utils/oferteoAiDiagnostics'
 import { assertOferteoOrigin, enforceOferteoRateLimit, readOferteoJson } from '../../utils/oferteoGuard'
 
 export default defineEventHandler(async (event) => {
@@ -30,6 +31,7 @@ export default defineEventHandler(async (event) => {
       return { ...token, tools }
     } catch (error) {
       // Never log token bodies, credentials, provider payloads or conversation text.
+      logOferteoAiFailure('realtime-token', error, OFERTEO_REALTIME_MODEL, apiKey || process.env.AI_GATEWAY_API_KEY ? 'api-key' : 'oidc')
       throw handleOferteoAiFailure(apiKey, error, 'Nie udało się uruchomić rozmowy głosowej. Spróbuj ponownie lub napisz wiadomość.')
     }
   })

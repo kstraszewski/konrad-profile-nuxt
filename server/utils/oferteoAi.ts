@@ -4,6 +4,7 @@ import { z } from 'zod'
 import type { OferteoContractor, OferteoMessage } from '../../shared/types/oferteo.ts'
 import { analysisSchema, OFERTEO_MODEL } from './oferteoCore.ts'
 import { createOferteoAiFailureError, createOferteoAiHealth } from './oferteoAiAvailability.ts'
+import { logOferteoAiFailure } from './oferteoAiDiagnostics.ts'
 
 export type OferteoMatchingPartial = DeepPartial<z.infer<typeof analysisSchema>>
 export type OferteoAiStreamOptions<T> = {
@@ -67,7 +68,14 @@ function aiHealthKey(apiKey: string) {
 
 export function checkOferteoAiAvailability(apiKey: string) {
   // Authenticated, read-only check. Neither credentials nor amounts leave the server.
-  return aiHealth.check(aiHealthKey(apiKey), hasOferteoAiCredentials(apiKey), () => oferteoGateway(apiKey).getCredits())
+  return aiHealth.check(aiHealthKey(apiKey), hasOferteoAiCredentials(apiKey), () => readOferteoCredits(apiKey))
+}
+
+async function readOferteoCredits(apiKey: string) {
+  try { return await oferteoGateway(apiKey).getCredits() } catch (error) {
+    logOferteoAiFailure('credits', error, undefined, apiKey || process.env.AI_GATEWAY_API_KEY ? 'api-key' : 'oidc')
+    throw error
+  }
 }
 
 export async function checkOferteoAiConfiguration(apiKey: string) {
@@ -75,7 +83,7 @@ export async function checkOferteoAiConfiguration(apiKey: string) {
 }
 
 export function assertOferteoAiAvailable(apiKey: string) {
-  return aiHealth.assertReady(aiHealthKey(apiKey), hasOferteoAiCredentials(apiKey), () => oferteoGateway(apiKey).getCredits())
+  return aiHealth.assertReady(aiHealthKey(apiKey), hasOferteoAiCredentials(apiKey), () => readOferteoCredits(apiKey))
 }
 
 export function handleOferteoAiFailure(apiKey: string, error: unknown, fallbackMessage?: string) {
