@@ -13,7 +13,7 @@
 
     <div class="oc-mobile-switch" aria-label="Widok kreatora">
       <button ref="chatTab" type="button" :aria-pressed="activePane === 'chat'" aria-controls="oc-chat-panel" @click="activePane = 'chat'">Rozmowa</button>
-      <button ref="previewTab" type="button" :aria-pressed="activePane === 'preview'" aria-controls="oc-preview-panel" @click="openPreview()">Podgląd oferty <span v-if="version">{{ version }}</span></button>
+      <button ref="previewTab" type="button" :aria-pressed="activePane === 'preview'" :aria-label="pending ? 'Podgląd oferty — aktualizuję szkic' : 'Podgląd oferty'" aria-controls="oc-preview-panel" @click="openPreview()">Podgląd oferty <span v-if="pending" class="oc-generating" aria-hidden="true">✳</span><span v-else-if="version">{{ version }}</span></button>
     </div>
 
     <div class="oc-workspace ph-no-capture" :class="{ 'oc-preview-active': activePane === 'preview' }">
@@ -24,16 +24,15 @@
         </div>
 
         <div ref="messageBox" class="oc-messages" role="log" tabindex="0" aria-label="Rozmowa z kreatorem oferty" aria-live="polite" :aria-busy="pending">
-          <div class="oc-transcript">
-            <div class="oc-welcome">
+          <div class="oc-transcript" :class="{ 'oc-transcript-empty': !messages.length }">
+            <div v-if="!messages.length" class="oc-welcome">
               <span class="oc-eyebrow">TWOJA WIEDZA. DOBRA OFERTA.</span>
               <h2>Ty znasz się na pracy.<br>Ja pomogę ją opisać.</h2>
               <p>Powiedz, co robisz, dla kogo i na jakich warunkach. Wspólnie stworzymy ofertę, którą klient łatwo zrozumie.</p>
-              <div class="oc-welcome-flow"><span>Opowiedz</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 10h14m-5-5 5 5-5 5" /></svg><span>Dopracuj</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 10h14m-5-5 5 5-5 5" /></svg><span>Skopiuj ofertę</span></div>
             </div>
             <div v-if="!messages.length" class="oc-examples">
               <p>Sprawdź na fikcyjnym przykładzie</p>
-              <button v-for="(example, index) in examples" :key="example.title" type="button" :disabled="pending || aiPaused || retrySeconds > 0" @click="startExample(index)"><span class="oc-example-icon" aria-hidden="true">{{ example.icon }}</span><span><strong>{{ example.title }}</strong><small>{{ example.subtitle }}</small></span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5" /></svg></button>
+              <button v-for="(example, index) in examples" :key="example.title" type="button" :title="example.subtitle" :disabled="pending || aiPaused || retrySeconds > 0" @click="startExample(index)"><span class="oc-example-icon" aria-hidden="true">{{ example.icon }}</span>{{ example.title }}</button>
             </div>
 
             <article v-for="(message, index) in messages" :key="index" class="oc-message" :class="`oc-message-${message.role}`" :data-message-index="index">
@@ -49,32 +48,43 @@
             </article>
             <div v-if="pending && !hasStreamingText" class="oc-message oc-message-assistant oc-pending"><span class="oc-small-avatar" aria-hidden="true">✳</span><div><span class="oc-thinking"><i /><i /><i /></span><p>{{ hasDraft ? 'Dopracowuję Twoją ofertę…' : 'Układam informacje w ofertę…' }}</p><small>Podgląd aktualizuje się w trakcie odpowiedzi.</small></div></div>
             <div v-if="error" class="oc-error" role="alert"><p>{{ error }}</p><button v-if="aiPaused" type="button" :disabled="statusPending" @click="refreshStatus()">{{ statusPending ? 'Sprawdzam…' : 'Sprawdź dostępność' }}</button><button v-else-if="failedRequest && failure?.retryable !== false" type="button" :disabled="pending || !canRetry" @click="requestReply()">{{ retrySeconds ? `Ponów za ${retrySeconds} s` : 'Spróbuj ponownie' }} <span aria-hidden="true">↻</span></button></div>
-            <div v-else-if="cancelled" class="oc-error" role="status"><p>Generowanie zatrzymane. Poprzedni szkic jest zachowany.</p><button type="button" :disabled="pending || !canRetry" @click="requestReply()">Spróbuj ponownie <span aria-hidden="true">↻</span></button></div>
+            <div v-else-if="cancelled" class="oc-error oc-cancelled" role="status"><p>{{ hasDraft ? 'Generowanie zatrzymane. Poprzedni szkic jest zachowany.' : 'Generowanie zatrzymane. Możesz spróbować ponownie.' }}</p><button type="button" :disabled="pending || !canRetry" @click="requestReply()">Spróbuj ponownie <span aria-hidden="true">↻</span></button></div>
           </div>
         </div>
 
         <div class="oc-composer-wrap">
-          <OferteoVoice ref="voice" mode="creator" :available="!aiPaused && status?.mode === 'live'" :checking="statusPending" :unavailable-reason="voiceUnavailableReason" :disabled="pending || retrySeconds > 0" :messages="finalMessages" :update-workspace="updateVoiceWorkspace" @active="voiceActive = $event" @transcript="syncVoiceTranscript" @retry="refreshStatus()" @credits-exhausted="onVoiceCreditsExhausted" @request-failed="error = setFailure($event)" />
+          <div class="oc-composer-content">
           <div v-if="suggestions.length && !pending && !error" class="oc-suggestions" aria-label="Pomysły na kolejną wiadomość"><button v-for="suggestion in suggestions" :key="suggestion" type="button" :disabled="aiPaused || retrySeconds > 0" @click="send(suggestion)">{{ suggestion }}</button></div>
           <form id="oc-composer" class="oc-composer" @submit.prevent="send(input)">
             <label class="oc-sr-only" for="oc-prompt">Opisz usługę lub poproś o zmianę oferty</label>
-            <textarea id="oc-prompt" ref="composer" v-model="input" :disabled="pending" rows="2" maxlength="1500" :placeholder="hasDraft ? 'Co zmieniamy? Np. skróć opis i wyróżnij zakres…' : 'Np. remontuję łazienki w Warszawie. Chcę opisać swoją usługę…'" @keydown.enter.exact="onEnter" />
-            <div class="oc-composer-bottom"><span>{{ hasDraft ? 'Każdą zmianę możesz opisać w rozmowie' : 'Zacznij od tego, co robisz najlepiej' }}</span><button v-if="pending" class="oc-stop" type="button" aria-label="Zatrzymaj generowanie oferty" @click="stopRequest">Zatrzymaj</button><button v-else type="submit" :disabled="aiPaused || retrySeconds > 0 || !input.trim()" :aria-label="aiPaused ? 'Asystent niedostępny — brak środków' : 'Wyślij wiadomość'"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6" /></svg></button></div>
+            <textarea id="oc-prompt" ref="composer" v-model="input" :disabled="pending" rows="1" maxlength="1500" :placeholder="hasDraft ? 'Co zmieniamy w ofercie?' : 'Opisz swoją usługę…'" @keydown.enter.exact="onEnter" />
+            <div class="oc-composer-bottom">
+              <OferteoVoice ref="voice" mode="creator" compact :available="!aiPaused && status?.mode === 'live'" :checking="statusPending" :unavailable-reason="voiceUnavailableReason" :disabled="pending || retrySeconds > 0" :messages="finalMessages" :update-workspace="updateVoiceWorkspace" @active="voiceActive = $event" @transcript="syncVoiceTranscript" @retry="refreshStatus()" @credits-exhausted="onVoiceCreditsExhausted" @request-failed="error = setFailure($event)" />
+              <button v-if="pending" class="oc-stop" type="button" aria-label="Zatrzymaj generowanie oferty" title="Zatrzymaj generowanie" @click="stopRequest"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1" fill="currentColor" stroke="none" /></svg></button>
+              <button v-else type="submit" :disabled="aiPaused || retrySeconds > 0 || !input.trim()" :aria-label="aiPaused ? 'Asystent niedostępny — brak środków' : 'Wyślij wiadomość'"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6" /></svg></button>
+            </div>
           </form>
           <p class="oc-private-note"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 9h10v8H5zM7 9V6a3 3 0 0 1 6 0v3" /></svg>{{ mode === 'demo' || (!mode && status?.mode === 'demo') ? 'Tryb przykładowy · odpowiedzi scenariuszowe bez AI.' : 'To szkic. Niczego nie publikujemy ani nie wysyłamy.' }}</p>
+          </div>
         </div>
       </section>
 
       <section id="oc-preview-panel" class="oc-preview" aria-labelledby="oc-preview-title">
         <div class="oc-preview-toolbar"><div><h2 id="oc-preview-title">Twoja oferta</h2><span v-if="version" class="oc-version">Wersja {{ version }}</span><span v-else class="oc-preview-label">PODGLĄD NA ŻYWO</span></div><div class="oc-export-actions"><button v-if="pending" type="button" aria-label="Zatrzymaj generowanie oferty" @click="stopRequest">Zatrzymaj</button><button type="button" :disabled="!hasDraft || pending" @click="copyOffer"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M13 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" /></svg>{{ exportState === 'copied' ? 'Skopiowano' : 'Kopiuj' }}</button><button class="oc-download" type="button" :disabled="!hasDraft || pending" aria-label="Pobierz ofertę jako plik tekstowy" title="Pobierz jako tekst" @click="downloadOffer"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2v10m-4-4 4 4 4-4M3 13v4h14v-4" /></svg></button></div></div>
         <div v-if="exportMessage" class="oc-export-feedback" :class="{ 'is-error': exportState === 'error' }" role="status">{{ exportMessage }}</div>
+        <div v-if="activePane === 'preview' && (error || cancelled)" class="oc-preview-feedback" :class="{ 'is-error': error }" :role="error ? 'alert' : 'status'">
+          <p>{{ error || (hasDraft ? 'Generowanie zatrzymane. Poprzedni szkic jest zachowany.' : 'Generowanie zatrzymane. Możesz spróbować ponownie.') }}</p>
+          <button v-if="aiPaused" type="button" :disabled="statusPending" @click="refreshStatus()">{{ statusPending ? 'Sprawdzam…' : 'Sprawdź dostępność' }}</button>
+          <button v-else-if="failedRequest && failure?.retryable !== false" type="button" :disabled="pending || !canRetry" @click="requestReply()">{{ retrySeconds ? `Ponów za ${retrySeconds} s` : 'Spróbuj ponownie' }} <span aria-hidden="true">↻</span></button>
+          <button v-else type="button" @click="returnToChat()">Wróć do rozmowy <span aria-hidden="true">↗</span></button>
+        </div>
         <div ref="previewBox" class="oc-preview-canvas" tabindex="0" aria-label="Treść przygotowanej oferty">
           <div v-if="isExample" class="oc-example-notice"><span aria-hidden="true">◇</span> Fikcyjny przykład do demonstracji</div>
           <OferteoOfferDraft :draft="offerDraft" :ready="ready && !pending" :version="version" :pending="pending" />
           <div class="oc-preview-hint"><span aria-hidden="true">✳</span><p>{{ hasDraft ? 'Masz lepszy pomysł na zdanie? Napisz w czacie, co zmienić.' : 'Tutaj pojawi się Twoja oferta. Uzupełnimy ją w trakcie rozmowy.' }}</p></div>
           <p v-if="hasDraft" class="oc-draft-disclaimer">Sprawdź treść i warunki przed użyciem. Oferta pozostaje szkicem w tej sesji.</p>
         </div>
-        <div class="oc-preview-footer"><span><span :class="{ 'is-ready': ready }" />{{ pending ? 'Przygotowuję zmiany…' : hasDraft ? ready ? 'Szkic do sprawdzenia' : 'Szkic w przygotowaniu' : 'Czekam na Twój pomysł' }}</span><button type="button" @click="returnToChat()">{{ hasDraft ? 'Dopracuj w rozmowie' : 'Zacznij rozmowę' }} <span aria-hidden="true">↗</span></button></div>
+        <div class="oc-preview-footer"><span><span :class="{ 'is-ready': ready && !pending }" />{{ pending ? 'Przygotowuję zmiany…' : hasDraft ? ready ? 'Szkic do sprawdzenia' : 'Szkic w przygotowaniu' : 'Czekam na Twój pomysł' }}</span><button type="button" @click="returnToChat()">{{ hasDraft ? 'Dopracuj w rozmowie' : 'Zacznij rozmowę' }} <span aria-hidden="true">↗</span></button></div>
       </section>
     </div>
   </main>
@@ -134,6 +144,7 @@ let streamSequence = 0
 let retryMessages: OferteoMessage[] | undefined
 let unmounted = false
 let scrollReplyOnReturn = false
+let followingChat = true
 
 const examples = [
   { title: 'Remonty łazienek', subtitle: 'Zakres prac, cena i warunki', icon: '⌂', prompt: 'To fikcyjny przykład do demo. Firma: Łazienka od Nowa. Usługa: kompleksowy remont łazienki. Lokalizacja: Warszawa. Zakres: demontaż starego wyposażenia, hydroizolacja, układanie płytek, montaż prysznica i armatury. Cena: od 18 000 zł brutto za robociznę. Termin: rozpoczęcie do uzgodnienia, realizacja około 3 tygodni. Warunki: materiały kupuje klient, ostateczna wycena po oględzinach. Przygotuj ofertę.' },
@@ -153,10 +164,11 @@ onMounted(() => {
 watch(activePane, pane => {
   if (pane === 'chat' && scrollReplyOnReturn) {
     scrollReplyOnReturn = false
-    void scrollMessages(true)
+    void scrollMessages(!pending.value)
   }
 })
 async function openPreview() {
+  if (!followsMessages()) scrollReplyOnReturn = false
   activePane.value = 'preview'
   await nextTick()
   previewBox.value?.focus({ preventScroll: true })
@@ -176,7 +188,9 @@ async function scrollMessages(toLatestReply = false) {
 }
 function followsMessages() {
   const box = messageBox.value
-  return !box || box.scrollHeight - box.scrollTop - box.clientHeight < 100
+  // A hidden mobile panel reports zero dimensions; retain its last visible state.
+  if (box?.getClientRects().length) followingChat = box.scrollHeight - box.scrollTop - box.clientHeight < 100
+  return followingChat
 }
 function startExample(index: number) {
   if (pending.value || aiPaused.value || retrySeconds.value > 0) return
@@ -288,14 +302,22 @@ async function requestDraft(history: OferteoMessage[], voiceSignal?: AbortSignal
         if (!messageBox.value?.getClientRects().length) scrollReplyOnReturn = true
         else await scrollMessages(messages.value.at(-1)?.role === 'assistant')
       }
-      if (composer.value?.getClientRects().length && (document.activeElement === document.body || document.activeElement === composer.value)) composer.value.focus({ preventScroll: true })
+      // Let Vue remove the stop button before checking where browser focus moved.
+      await nextTick()
+      if (document.activeElement === document.body || document.activeElement === composer.value) {
+        const target = activePane.value === 'preview' ? previewBox.value : composer.value
+        if (target?.getClientRects().length) target.focus({ preventScroll: true })
+      }
     }
   }
 }
 function syncVoiceTranscript(transcript: VoiceMessage[]) {
+  const following = followsMessages()
   mergeOferteoVoiceTranscript(messages.value, transcript)
-  if (!messageBox.value?.getClientRects().length) scrollReplyOnReturn = true
-  else void scrollMessages()
+  if (following) {
+    if (!messageBox.value?.getClientRects().length) scrollReplyOnReturn = true
+    else void scrollMessages()
+  }
 }
 async function updateVoiceWorkspace(signal: AbortSignal) {
   if (aiPaused.value) throw { statusCode: 402 }
@@ -325,6 +347,7 @@ function resetConversation() {
   exportState.value = 'idle'
   exportMessage.value = ''
   scrollReplyOnReturn = false
+  followingChat = true
   activePane.value = 'chat'
   nextTick(() => { if (messageBox.value) messageBox.value.scrollTop = 0; if (previewBox.value) previewBox.value.scrollTop = 0; composer.value?.focus({ preventScroll: true }) })
 }
@@ -373,6 +396,3 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped src="~/assets/css/oferteo-creator.css"></style>
-<style scoped>
-.oc-composer-bottom > .oc-stop { width: auto; min-width: 84px; padding-inline: 12px; font-size: 11px; font-weight: 700; }
-</style>

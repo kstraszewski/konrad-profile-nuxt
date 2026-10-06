@@ -1,6 +1,6 @@
 <template>
   <article class="offer-paper" :class="{ 'offer-paper-empty': !hasContent, 'offer-paper-updating': pending }" aria-label="Szkic oferty" :aria-busy="pending">
-    <div class="offer-paper-top"><span class="offer-paper-brand"><span aria-hidden="true">o</span> OFERTA USŁUGI</span><span class="offer-paper-status">{{ version ? `SZKIC ${String(version).padStart(2, '0')}` : 'TWÓJ SZKIC' }}</span></div>
+    <div class="offer-paper-top"><span class="offer-paper-brand"><span aria-hidden="true">o</span> OFERTA USŁUGI</span><span class="offer-paper-status">{{ pending ? version ? 'AKTUALIZUJĘ SZKIC' : 'POWSTAJE SZKIC' : version ? `SZKIC ${String(version).padStart(2, '0')}` : 'TWÓJ SZKIC' }}</span></div>
     <template v-if="hasContent && draft">
       <div class="offer-paper-intro"><p class="offer-paper-company">{{ draft.company || 'Nazwa firmy do uzupełnienia' }}</p><h3>{{ draft.title || draft.service || 'Twoja oferta' }}</h3><p v-if="draft.location" class="offer-paper-location"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M15 8c0 4-5 8-5 8S5 12 5 8a5 5 0 1 1 10 0Z"/><circle cx="10" cy="8" r="1.6"/></svg>{{ draft.location }}</p><p v-else class="offer-paper-missing">Obszar działania do ustalenia</p></div>
       <p v-if="draft.description" class="offer-paper-description">{{ draft.description }}</p>
@@ -14,7 +14,7 @@
       <div class="offer-paper-empty-intro"><span class="offer-paper-empty-mark" aria-hidden="true"><svg viewBox="0 0 44 44" fill="none"><path d="M26 6H10v32h24V14l-8-8Zm0 0v8h8M16 21h12m-12 6h8" /><path d="m30 30 7-7 3 3-7 7-4 1 1-4Z" /></svg></span><p>MIEJSCE NA TWOJĄ OFERTĘ</p><h3>Każda dobra oferta<br>zaczyna się od rozmowy.</h3><span>Dodaj pierwszy szczegół.<br>Resztę ułożymy krok po kroku.</span></div>
       <div class="offer-paper-outline"><div><span>01</span><div><strong>Twoja usługa</strong><p>Co robisz i komu pomagasz</p></div><span aria-hidden="true">—</span></div><div><span>02</span><div><strong>Zakres i warunki</strong><p>Co zawiera cena i na czym polega współpraca</p></div><span aria-hidden="true">—</span></div><div><span>03</span><div><strong>Cena i termin</strong><p>Konkrety, które pomagają podjąć decyzję</p></div><span aria-hidden="true">—</span></div></div>
     </template>
-    <footer class="offer-paper-footer"><span>{{ hasContent ? ready ? 'Przygotowano wspólnie z asystentem' : 'Uzupełnimy brakujące informacje w rozmowie' : 'Twoje słowa. Uporządkowane w ofertę.' }}</span><span aria-hidden="true">✳</span></footer>
+    <footer class="offer-paper-footer"><span>{{ pending ? 'Aktualizuję treść oferty…' : hasContent ? ready ? 'Przygotowano wspólnie z asystentem' : 'Uzupełnimy brakujące informacje w rozmowie' : 'Twoje słowa. Uporządkowane w ofertę.' }}</span><span aria-hidden="true">✳</span></footer>
   </article>
 </template>
 

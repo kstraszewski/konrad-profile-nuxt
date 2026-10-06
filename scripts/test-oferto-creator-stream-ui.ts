@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test, type TestContext } from 'node:test'
 import { parse } from '@vue/compiler-sfc'
-import { computed, ref, type Ref } from 'vue'
+import { computed, nextTick, ref, watch, type Ref } from 'vue'
 import ts from 'typescript'
 import { requestOferteoStream } from '../app/utils/oferteoStream.ts'
 import { mergeOferteoVoiceTranscript, voiceRequestMessages } from '../shared/oferteo-realtime.ts'
@@ -28,6 +28,8 @@ interface CreatorHarness {
   send: (text: string) => Promise<void>
   requestReply: () => Promise<void>
   stopRequest: () => void
+  openPreview: () => Promise<void>
+  returnToChat: () => Promise<void>
   messages: Ref<CreatorMessage[]>
   finalMessages: Ref<CreatorMessage[]>
   offerDraft: Ref<OfferDraft | null>
@@ -37,6 +39,9 @@ interface CreatorHarness {
   cancelled: Ref<boolean>
   error: Ref<string>
   messageBox: Ref<HTMLElement | null>
+  previewBox: Ref<HTMLElement | null>
+  composer: Ref<HTMLTextAreaElement | null>
+  activePane: Ref<'chat' | 'preview'>
 }
 
 async function creatorHarness(t: TestContext): Promise<CreatorHarness> {
@@ -48,15 +53,14 @@ async function creatorHarness(t: TestContext): Promise<CreatorHarness> {
   })
   const noop = () => {}
   const bindings = {
-    ref, computed, watch: noop, onMounted: noop, onBeforeUnmount: noop, useSeoMeta: noop, useHead: noop,
-    nextTick: async (callback?: () => void) => { await Promise.resolve(); callback?.() },
+    ref, computed, watch, nextTick, onMounted: noop, onBeforeUnmount: noop, useSeoMeta: noop, useHead: noop,
     useFetch: async () => ({ data: ref({ mode: 'live', aiConfigured: true }), error: ref(null), pending: ref(false), refresh: noop }),
     useOferteoAvailability: () => ({ failure: ref(null), aiPaused: ref(false), canRetry: ref(true), retrySeconds: ref(0),
       setFailure: (cause: unknown) => oferteoUiFailure(cause).message, clearFailure: noop }),
     mergeOferteoVoiceTranscript, voiceRequestMessages, OFERTEO_CREDITS_MESSAGE, oferteoUiFailure, emptyOfferDraft, requestOferteoStream,
   }
   const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor
-  const component = await new AsyncFunction(...Object.keys(bindings), `${executable}\nreturn { send, requestReply, stopRequest, messages, finalMessages, offerDraft, version, ready, pending, cancelled, error, messageBox }`)(...Object.values(bindings)) as CreatorHarness
+  const component = await new AsyncFunction(...Object.keys(bindings), `${executable}\nreturn { send, requestReply, stopRequest, openPreview, returnToChat, messages, finalMessages, offerDraft, version, ready, pending, cancelled, error, messageBox, previewBox, composer, activePane }`)(...Object.values(bindings)) as CreatorHarness
   t.after(() => component.stopRequest())
   return component
 }
@@ -90,6 +94,24 @@ async function seedDraft(page: CreatorHarness, streams: ReturnType<typeof mockSt
   await flush()
   streams.send({ type: 'result', data: result })
   await sending
+}
+
+function mobileMessageBox(page: CreatorHarness) {
+  let position = 0
+  let height = 1_000
+  const visible = () => page.activePane.value === 'chat'
+  const box = {
+    get scrollHeight() { return visible() ? height : 0 },
+    get clientHeight() { return visible() ? 100 : 0 },
+    get scrollTop() { return visible() ? position : 0 },
+    set scrollTop(value: number) { if (visible()) position = Math.max(0, Math.min(value, height - 100)) },
+    getClientRects: () => visible() ? [1] : [],
+    querySelector: () => ({ getBoundingClientRect: () => ({ top: 500 }) }),
+    getBoundingClientRect: () => ({ top: 0 }),
+    focus() {},
+  }
+  page.messageBox.value = box as unknown as HTMLElement
+  return { box, grow() { height += 200 } }
 }
 
 test('creator streams text and draft before committing the final message and version', { timeout: 2_000 }, async t => {
@@ -206,4 +228,97 @@ test('creator preserves manual scroll through partials, final commit and intenti
   await changing
   assert.equal(box.scrollTop, 200, 'stopping generation must also preserve the reader\'s position')
   assert.deepEqual(page.offerDraft.value, result.draft)
+})
+
+test('switching to preview during streaming preserves an earlier chat position on return', { timeout: 2_000 }, async t => {
+  const streams = mockStreams(t)
+  const page = await creatorHarness(t)
+  const { box } = mobileMessageBox(page)
+  const sending = page.send(firstPrompt)
+  await flush()
+  box.scrollTop = 200
+  await page.openPreview()
+  assert.equal(box.scrollHeight, 0, 'the hidden panel has the zero dimensions of display:none')
+  streams.send({ type: 'partial', data: { message: 'Szkic', draft: { title: 'Remont' } } })
+  await flush()
+  await page.returnToChat()
+  await nextTick()
+  assert.equal(box.scrollTop, 200, 'hidden stream updates must preserve the reader\'s earlier position')
+  streams.send({ type: 'result', data: result })
+  await sending
+  assert.equal(box.scrollTop, 200)
+})
+
+test('a stream completed in preview preserves an earlier chat position on return', { timeout: 2_000 }, async t => {
+  const streams = mockStreams(t)
+  const page = await creatorHarness(t)
+  const { box } = mobileMessageBox(page)
+  const sending = page.send(firstPrompt)
+  await flush()
+  box.scrollTop = 200
+  await page.openPreview()
+  streams.send({ type: 'partial', data: { message: 'Szkic', draft: { title: 'Remont' } } })
+  await flush()
+  streams.send({ type: 'result', data: result })
+  await sending
+  assert.equal(page.pending.value, false)
+  await page.returnToChat()
+  await nextTick()
+  assert.equal(box.scrollTop, 200, 'completion while chat is hidden must not change its earlier reading position')
+})
+
+test('a chat following the bottom resumes following after streaming in the preview pane', { timeout: 2_000 }, async t => {
+  const streams = mockStreams(t)
+  const page = await creatorHarness(t)
+  const { box, grow } = mobileMessageBox(page)
+  const sending = page.send(firstPrompt)
+  await flush()
+  box.scrollTop = 900
+  await page.openPreview()
+  grow()
+  streams.send({ type: 'partial', data: { message: 'Szkic', draft: { title: 'Remont' } } })
+  await flush()
+  await page.returnToChat()
+  await nextTick()
+  assert.equal(box.scrollTop, box.scrollHeight - box.clientHeight)
+  assert.equal(box.scrollTop, 1_100)
+  streams.send({ type: 'result', data: result })
+  await sending
+})
+
+test('stopping from preview restores keyboard focus when its stop button disappears', { timeout: 2_000 }, async t => {
+  const streams = mockStreams(t)
+  const page = await creatorHarness(t)
+  mobileMessageBox(page)
+  let previewFocus = 0
+  page.previewBox.value = { getClientRects: () => [1], focus() { previewFocus++ } } as unknown as HTMLElement
+  page.composer.value = { getClientRects: () => [], focus() { assert.fail('the hidden composer must not receive focus') } } as unknown as HTMLTextAreaElement
+  const sending = page.send(firstPrompt)
+  await flush()
+  await page.openPreview()
+  previewFocus = 0
+  streams.send({ type: 'partial', data: { message: 'Szkic' } })
+  await flush()
+  const stopButton = {}
+  Object.assign(document, { activeElement: stopButton })
+  // Native focus moves only when Vue flushes the stop button's removal.
+  const stopWatching = watch(page.pending, pending => {
+    if (!pending && document.activeElement === stopButton) Object.assign(document, { activeElement: document.body })
+  }, { flush: 'post' })
+  t.after(stopWatching)
+  page.stopRequest()
+  await sending
+  assert.equal(page.cancelled.value, true)
+  assert.equal(previewFocus, 1)
+
+  const retry = page.requestReply()
+  await flush()
+  previewFocus = 0
+  Object.assign(document, { activeElement: stopButton })
+  page.stopRequest()
+  const otherButton = {}
+  Object.assign(document, { activeElement: otherButton })
+  await retry
+  assert.equal(document.activeElement, otherButton, 'an intentional focus change during cleanup must be preserved')
+  assert.equal(previewFocus, 0)
 })
