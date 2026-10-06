@@ -97,6 +97,7 @@ import { emptyOfferDraft, type OfferCreatorResponse, type OfferDraft } from '~~/
 import type { OfferCreatorPartial } from '~~/shared/types/oferteo-stream'
 import { OFERTEO_CREDITS_MESSAGE, oferteoUiFailure } from '~~/shared/oferteo-errors'
 import { requestOferteoStream } from '~/utils/oferteoStream'
+import { observeOferteoViewport, type OferteoViewportStyle } from '~/utils/oferteoViewport'
 
 useSeoMeta({ title: 'Kreator oferty — demo 2 AI dla Oferteo | Konrad Straszewski', description: 'Stwórz ofertę swojej usługi w rozmowie z asystentem AI. Opisz zakres, warunki i cenę, a potem dopracuj szkic.', robots: 'noindex, nofollow' })
 useHead({ htmlAttrs: { lang: 'pl', class: 'oc-fullscreen' }, bodyAttrs: { class: 'oc-fullscreen' }, meta: [{ name: 'theme-color', content: '#ffffff' }, { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content' }] })
@@ -133,7 +134,8 @@ const previewBox = ref<HTMLElement | null>(null)
 const composer = ref<HTMLTextAreaElement | null>(null)
 const chatTab = ref<HTMLButtonElement | null>(null)
 const previewTab = ref<HTMLButtonElement | null>(null)
-const viewportStyle = ref<{ height: string; top: string }>()
+const viewportStyle = ref<OferteoViewportStyle>()
+let disposeViewport: (() => void) | undefined
 const exportState = ref<'idle' | 'copied' | 'downloaded' | 'error'>('idle')
 const exportMessage = ref('')
 const isLive = computed(() => !aiPaused.value && status.value?.mode !== 'unavailable' && (mode.value === 'live' || (mode.value !== 'demo' && status.value?.aiConfigured === true)))
@@ -152,14 +154,8 @@ const examples = [
   { title: 'Projektowanie ogrodów', subtitle: 'Pomysł zamieniony w konkrety', icon: '♧', prompt: 'To fikcyjny przykład do demo. Firma: Zielony Plan. Usługa: projektowanie ogrodów. Lokalizacja: Kraków i zdalnie. Zakres: konsultacja, koncepcja ogrodu, plan nasadzeń, lista roślin. Cena: od 2 500 zł brutto za projekt. Termin: około 4 tygodni od konsultacji. Warunki: oferta nie obejmuje wykonania ogrodu, jedna runda poprawek w cenie. Przygotuj ofertę.' },
 ]
 
-function syncViewport() {
-  const viewport = window.visualViewport
-  if (viewport && viewport.scale === 1) viewportStyle.value = { height: `${viewport.height}px`, top: `${viewport.offsetTop}px` }
-}
 onMounted(() => {
-  syncViewport()
-  window.visualViewport?.addEventListener('resize', syncViewport)
-  window.visualViewport?.addEventListener('scroll', syncViewport)
+  disposeViewport = observeOferteoViewport(window, style => { viewportStyle.value = style })
 })
 watch(activePane, pane => {
   if (pane === 'chat' && scrollReplyOnReturn) {
@@ -205,7 +201,11 @@ function onEnter(event: KeyboardEvent) {
 async function send(value: string) {
   const content = value.trim()
   if (!content || content.length > 1500 || pending.value || aiPaused.value || retrySeconds.value > 0) return
-  if (voiceActive.value) { if (voice.value?.sendText(content)) { input.value = ''; suggestions.value = [] }; return }
+  if (voiceActive.value) {
+    if (voice.value?.sendText(content)) { input.value = ''; suggestions.value = []; return }
+    voice.value?.stop()
+    voiceActive.value = false
+  }
   clearFailure()
   const history = failedRequest.value && finalMessages.value.at(-1)?.role === 'user' ? finalMessages.value.slice(0, -1) : finalMessages.value
   if (history.length >= 16 || history.reduce((total, message) => total + message.content.length, 0) + content.length > 9000) {
@@ -390,8 +390,7 @@ function downloadOffer() {
 onBeforeUnmount(() => {
   unmounted = true
   controller?.abort()
-  window.visualViewport?.removeEventListener('resize', syncViewport)
-  window.visualViewport?.removeEventListener('scroll', syncViewport)
+  disposeViewport?.()
 })
 </script>
 

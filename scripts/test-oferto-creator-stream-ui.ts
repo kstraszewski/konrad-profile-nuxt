@@ -42,6 +42,8 @@ interface CreatorHarness {
   previewBox: Ref<HTMLElement | null>
   composer: Ref<HTMLTextAreaElement | null>
   activePane: Ref<'chat' | 'preview'>
+  voiceActive: Ref<boolean>
+  voice: Ref<{ stop: () => void; sendText: (text: string) => boolean } | null>
 }
 
 async function creatorHarness(t: TestContext): Promise<CreatorHarness> {
@@ -60,7 +62,7 @@ async function creatorHarness(t: TestContext): Promise<CreatorHarness> {
     mergeOferteoVoiceTranscript, voiceRequestMessages, OFERTEO_CREDITS_MESSAGE, oferteoUiFailure, emptyOfferDraft, requestOferteoStream,
   }
   const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor
-  const component = await new AsyncFunction(...Object.keys(bindings), `${executable}\nreturn { send, requestReply, stopRequest, openPreview, returnToChat, messages, finalMessages, offerDraft, version, ready, pending, cancelled, error, messageBox, previewBox, composer, activePane }`)(...Object.values(bindings)) as CreatorHarness
+  const component = await new AsyncFunction(...Object.keys(bindings), `${executable}\nreturn { send, requestReply, stopRequest, openPreview, returnToChat, messages, finalMessages, offerDraft, version, ready, pending, cancelled, error, messageBox, previewBox, composer, activePane, voiceActive, voice }`)(...Object.values(bindings)) as CreatorHarness
   t.after(() => component.stopRequest())
   return component
 }
@@ -321,4 +323,21 @@ test('stopping from preview restores keyboard focus when its stop button disappe
   await retry
   assert.equal(document.activeElement, otherButton, 'an intentional focus change during cleanup must be preserved')
   assert.equal(previewFocus, 0)
+})
+
+test('creator text entry cancels pending microphone startup and continues over the text stream', { timeout: 2_000 }, async t => {
+  const streams = mockStreams(t)
+  const page = await creatorHarness(t)
+  let stopped = 0
+  page.voiceActive.value = true
+  page.voice.value = { sendText: () => false, stop() { stopped++ } }
+  const sending = page.send(firstPrompt)
+  await flush()
+  assert.equal(stopped, 1)
+  assert.equal(page.voiceActive.value, false)
+  assert.equal(streams.requests.length, 1)
+  assert.deepEqual(streams.requests[0]?.history, [{ role: 'user', content: firstPrompt }])
+  streams.send({ type: 'result', data: result })
+  await sending
+  assert.equal(page.messages.value.at(-1)?.content, result.message)
 })

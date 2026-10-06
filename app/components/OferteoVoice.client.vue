@@ -16,10 +16,15 @@
     </div>
     <p v-if="error" class="ov-error" role="alert">{{ error }}</p>
     <p v-else-if="notice" class="ov-note" role="status">{{ notice }}</p>
-    <p v-else-if="active && startupPhase === 'microphone'" class="ov-note" role="status">Zezwól tej stronie na mikrofon w przeglądarce. Jeśli pojawi się prośba systemu, zatwierdź ją również.</p>
+    <p v-else-if="active && startupPhase === 'microphone'" class="ov-note" role="status">{{ microphoneHint }}</p>
+    <p v-else-if="connected && !capturing && !muted" class="ov-note" role="status">Mikrofon nie przesyła dźwięku. Sprawdź wybrane urządzenie i dostęp w ustawieniach systemu.</p>
     <p v-else-if="!compact" class="ov-note" role="status">{{ available ? 'Rozmowa z AI · mikrofon włączasz przyciskiem · do 3 minut' : availabilityLabel }}</p>
     <button v-if="!compact && !available && !active" class="ov-audio" type="button" :disabled="checking || disabled" @click="emit('retry')">{{ checking ? 'Sprawdzanie…' : 'Sprawdź połączenie ponownie' }}</button>
     <button v-if="connected" class="ov-audio" type="button" @click="resumePlayback">Nie słyszysz? Włącz dźwięk</button>
+    <details v-if="(active && startupPhase === 'microphone') || microphoneIssue" class="ov-microphone-help" :open="microphoneDelayed || microphoneIssue">
+      <summary>Mikrofon nie pyta o zgodę?</summary>
+      <div class="ov-microphone-help-content"><p>Kliknij ikonę ustawień obok adresu strony i ustaw <strong>Mikrofon → Zezwalaj</strong>.</p><p>Na Macu: <strong>Ustawienia systemowe → Prywatność i ochrona → Mikrofon</strong>. Włącz dostęp dla swojej przeglądarki, uruchom ją ponownie i kliknij „Porozmawiaj”.</p><p>Możesz też wysłać wiadomość tekstową — oczekiwanie na mikrofon zostanie anulowane.</p></div>
+    </details>
     <span class="ov-sr-only" role="status">{{ compact && !active ? !available ? availabilityLabel : 'Rozmowa głosowa dostępna, do 3 minut.' : label }}</span>
   </div>
 </template>
@@ -31,7 +36,7 @@ import type { OferteoMessage } from '~~/shared/types/oferteo'
 import { OFERTEO_REALTIME_MODEL, OFERTEO_VOICE_SECONDS, voiceInstructions, type OferteoVoiceMode, type VoiceMessage } from '~~/shared/oferteo-realtime'
 import type { OferteoRealtimeSession } from '~/utils/oferteoRealtimeSession'
 import { oferteoUiFailure } from '~~/shared/oferteo-errors'
-import { OferteoVoiceStartupError, waitForOferteoVoiceStep, type OferteoVoiceStartupPhase } from '~/utils/oferteoVoiceStartup'
+import { microphonePermissionState, OferteoVoiceStartupError, waitForOferteoVoiceStep, type OferteoVoiceStartupPhase } from '~/utils/oferteoVoiceStartup'
 
 const props = defineProps<{
   mode: OferteoVoiceMode
@@ -47,18 +52,27 @@ const emit = defineEmits<{ active: [value: boolean]; transcript: [messages: Voic
 const active = ref(false)
 const connected = ref(false)
 const playing = ref(false)
+const capturing = ref(false)
 const muted = ref(false)
 const working = ref(false)
 const error = ref('')
 const notice = ref('')
 const remaining = ref(OFERTEO_VOICE_SECONDS)
 const startupPhase = ref<OferteoVoiceStartupPhase>('microphone')
+const microphonePermission = ref<PermissionState | 'unknown'>('unknown')
+const microphoneDelayed = ref(false)
+const microphoneIssue = ref(false)
+const microphoneHint = computed(() => microphonePermission.value === 'granted'
+  ? 'Zgoda przeglądarki jest przyznana. Czekam na uruchomienie urządzenia — sprawdź także dostęp w systemie.'
+  : microphoneDelayed.value ? 'Przeglądarka nie udostępniła jeszcze mikrofonu. Jeśli nie widzisz pytania o zgodę, sprawdź ustawienia poniżej.'
+    : 'Zezwól tej stronie na mikrofon. Jeśli pojawi się prośba systemu, zatwierdź ją również.')
 const remainingLabel = computed(() => `${Math.floor(remaining.value / 60)}:${String(remaining.value % 60).padStart(2, '0')}`)
 const availabilityLabel = computed(() => props.checking ? 'Sprawdzam dostępność rozmowy…' : props.unavailableReason || 'Rozmowa głosowa wymaga aktywnego połączenia z AI.')
-const label = computed(() => !active.value ? 'Wolisz porozmawiać?' : !connected.value ? startupPhase.value === 'microphone' ? 'Czekam na mikrofon…' : startupPhase.value === 'loading' ? 'Przygotowuję rozmowę…' : 'Łączę rozmowę…' : working.value ? (props.mode === 'search' ? 'Szukam propozycji…' : 'Aktualizuję ofertę…') : playing.value ? 'Asystent mówi' : muted.value ? 'Mikrofon wyciszony' : 'Słucham Cię')
+const label = computed(() => !active.value ? 'Wolisz porozmawiać?' : !connected.value ? startupPhase.value === 'microphone' ? 'Czekam na mikrofon…' : startupPhase.value === 'loading' ? 'Przygotowuję rozmowę…' : 'Łączę rozmowę…' : working.value ? (props.mode === 'search' ? 'Szukam propozycji…' : 'Aktualizuję ofertę…') : playing.value ? 'Asystent mówi' : muted.value ? 'Mikrofon wyciszony' : !capturing.value ? 'Sprawdź mikrofon' : 'Słucham Cię')
 let session: OferteoRealtimeSession | undefined
 let stream: MediaStream | undefined
 let timer: ReturnType<typeof setInterval> | undefined
+let microphoneHelpTimer: ReturnType<typeof setTimeout> | undefined
 let controller: AbortController | undefined
 let generation = 0
 let busy = false
@@ -71,7 +85,9 @@ function stop(message = '') {
   generation++
   controller?.abort()
   if (timer) clearInterval(timer)
+  if (microphoneHelpTimer) clearTimeout(microphoneHelpTimer)
   timer = undefined
+  microphoneHelpTimer = undefined
   const previous = session
   session = undefined
   previous?.disconnect()
@@ -80,12 +96,14 @@ function stop(message = '') {
   active.value = false
   connected.value = false
   playing.value = false
+  capturing.value = false
   working.value = false
   busy = false
   emit('active', false)
   if (message) notice.value = message
 }
 function fail(cause: Error) {
+  microphoneIssue.value = startupPhase.value === 'microphone' || ['NotAllowedError', 'NotReadableError', 'NotFoundError', 'SecurityError'].includes(cause.name)
   const failure = oferteoUiFailure(cause)
   if (failure.creditsExhausted) {
     creditsFailure = true
@@ -96,11 +114,11 @@ function fail(cause: Error) {
   }
   const status = cause.message.match(/setup: (\d+)/)?.[1]
   if (failure.retryAt) emit('request-failed', cause)
-  error.value = cause.name === 'NotAllowedError' ? 'Zezwól na mikrofon w ustawieniach przeglądarki i spróbuj ponownie. Możesz też napisać wiadomość.'
+  error.value = cause.name === 'NotAllowedError' || cause.name === 'SecurityError' ? 'Dostęp do mikrofonu jest zablokowany w przeglądarce lub systemie. Włącz go według instrukcji poniżej i spróbuj ponownie.'
     : cause.name === 'NotFoundError' ? 'Nie znaleziono mikrofonu. Podłącz go lub kontynuuj tekstem.'
       : cause.name === 'NotReadableError' ? 'Nie udało się uruchomić mikrofonu. Sprawdź dostęp w ustawieniach systemu i czy inna aplikacja go nie blokuje. Możesz kontynuować tekstem.'
         : cause instanceof OferteoVoiceStartupError || cause.message === 'Realtime session startup timed out' ? cause instanceof OferteoVoiceStartupError && cause.phase === 'microphone'
-          ? 'Przeglądarka nie udostępniła mikrofonu w ciągu 20 sekund. Sprawdź zgodę na mikrofon w przeglądarce i systemie, a potem spróbuj ponownie. Możesz też pisać.'
+          ? 'Przeglądarka nie udostępniła mikrofonu w ciągu 20 sekund. Jeśli nie pojawiło się pytanie o zgodę, sprawdź ustawienia poniżej. Możesz kontynuować tekstem.'
           : 'Uruchomienie rozmowy trwa zbyt długo. Spróbuj ponownie lub kontynuuj tekstem — dotychczasowa rozmowa jest zachowana.'
           : status ? failure.message
             : 'Nie udało się utrzymać rozmowy głosowej. Spróbuj ponownie lub kontynuuj tekstem — dotychczasowa rozmowa jest zachowana.'
@@ -109,6 +127,7 @@ function fail(cause: Error) {
 async function start() {
   if (active.value || props.disabled || !props.available) return
   error.value = ''; notice.value = ''; creditsFailure = false
+  microphonePermission.value = 'unknown'; microphoneDelayed.value = false; microphoneIssue.value = false
   if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia || !window.AudioContext) {
     error.value = 'Ta przeglądarka nie obsługuje rozmowy głosowej. Otwórz stronę przez HTTPS w aktualnej przeglądarce lub kontynuuj tekstem.'
     return
@@ -137,10 +156,21 @@ async function start() {
   const userMessageKey = () => JSON.stringify(localMessages.filter(message => message.role === 'user'))
   const staleWorkspaceResult = () => ({ error: 'Wymagania zmieniły się w trakcie aktualizacji. Ponów po otrzymaniu nowej transkrypcji. Nie przedstawiaj poprzednich wyników jako aktualnych.' })
   try {
-    const acquired = await waitForOferteoVoiceStep(navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }, video: false }), {
+    const microphone = waitForOferteoVoiceStep(navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }, video: false }), {
       phase: 'microphone', signal, timeoutMs: 20_000,
       onLateValue: lateStream => lateStream.getTracks().forEach(track => track.stop()),
     })
+    microphoneHelpTimer = setTimeout(() => {
+      if (current() && startupPhase.value === 'microphone') microphoneDelayed.value = true
+    }, 5_000)
+    void microphonePermissionState().then(permission => {
+      if (!current() || startupPhase.value !== 'microphone') return
+      microphonePermission.value = permission
+      if (permission === 'denied') fail(new DOMException('Microphone access denied', 'NotAllowedError'))
+    })
+    const acquired = await microphone
+    if (microphoneHelpTimer) clearTimeout(microphoneHelpTimer)
+    microphoneHelpTimer = undefined
     if (!current()) { acquired.getTracks().forEach(track => track.stop()); return }
     stream = acquired
     acquired.getAudioTracks().forEach(track => track.addEventListener('ended', () => { if (current()) fail(new Error('Microphone disconnected')) }, { once: true }))
@@ -218,6 +248,7 @@ async function start() {
         // Teardown here would retire the attempt and suppress that callback.
       }
       if (key === 'isPlaying') playing.value = Boolean(value)
+      if (key === 'isCapturing') capturing.value = Boolean(value)
       if (key === 'events') {
         // The SDK publishes events before running onToolCall effects. Its
         // onEvent callback runs afterwards, too late to guard a tool call.
@@ -312,6 +343,11 @@ watch(() => props.available, available => {
 .ov-mute svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; }
 .ov-note, .ov-error { margin: 8px 0 0; font-size: 10px; line-height: 1.5; color: #677587; }
 .ov-error { color: #a43927; }
+.ov-microphone-help { margin-top: 8px; font-size: 11px; line-height: 1.6; color: #526b86; }
+.ov-microphone-help summary { width: fit-content; padding-block: 4px; cursor: pointer; font-weight: 600; }
+.ov-microphone-help summary:focus-visible { outline: 3px solid #226cb5; outline-offset: 3px; }
+.ov-microphone-help-content { max-height: min(150px,25dvh); overflow-y: auto; overscroll-behavior: contain; }
+.ov-microphone-help-content p { margin: 6px 0; }
 .ov-active { border-color: #edc997; }
 .ov-voice .ov-audio { padding: 3px 0; min-height: 28px; background: transparent; color: #526b86; font-size: 10px; text-decoration: underline; }
 .ov-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }

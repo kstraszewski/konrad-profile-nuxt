@@ -30,6 +30,8 @@ interface ChatHarness {
   syncVoiceTranscript: (messages: VoiceMessage[]) => void
   updateVoiceWorkspace: (signal: AbortSignal) => Promise<unknown>
   messageBox: Ref<HTMLElement | null>
+  voiceActive: Ref<boolean>
+  voice: Ref<{ stop: () => void; sendText: (text: string) => boolean } | null>
   messages: Ref<ChatMessage[]>
   finalMessages: Ref<ChatMessage[]>
   brief: Ref<OferteoBrief>
@@ -55,7 +57,7 @@ async function chatHarness(t: TestContext): Promise<ChatHarness> {
     mergeOferteoVoiceTranscript, voiceRequestMessages, OFERTEO_CREDITS_MESSAGE, oferteoUiFailure, requestOferteoStream,
   }
   const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor
-  const component = await new AsyncFunction(...Object.keys(bindings), `${executable}\nreturn { send, requestReply, stopReply, syncVoiceTranscript, updateVoiceWorkspace, messageBox, messages, finalMessages, brief, pending, error, streamNotice }`)(...Object.values(bindings)) as ChatHarness
+  const component = await new AsyncFunction(...Object.keys(bindings), `${executable}\nreturn { send, requestReply, stopReply, syncVoiceTranscript, updateVoiceWorkspace, messageBox, voiceActive, voice, messages, finalMessages, brief, pending, error, streamNotice }`)(...Object.values(bindings)) as ChatHarness
   t.after(() => component.stopReply())
   return component
 }
@@ -187,4 +189,21 @@ test('manual scroll away from the latest reply survives partials and stream comp
   streams.send({ type: 'result', data: result })
   await sending
   assert.equal(box.scrollTop, 200, 'finishing the stream must preserve the position of a reader who scrolled away')
+})
+
+test('typing while microphone startup is pending cancels voice and sends the text request', { timeout: 2_000 }, async t => {
+  const streams = mockStreams(t)
+  const page = await chatHarness(t)
+  let stopped = 0
+  page.voiceActive.value = true
+  page.voice.value = { sendText: () => false, stop() { stopped++ } }
+  const sending = page.send('Remont w Warszawie')
+  await flush()
+  assert.equal(stopped, 1)
+  assert.equal(page.voiceActive.value, false)
+  assert.equal(streams.requests.length, 1)
+  assert.deepEqual(streams.requests[0]?.history, [{ role: 'user', content: 'Remont w Warszawie' }])
+  streams.send({ type: 'result', data: result })
+  await sending
+  assert.equal(page.messages.value.at(-1)?.content, result.message)
 })

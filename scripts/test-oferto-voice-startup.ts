@@ -6,7 +6,7 @@ import { parse } from '@vue/compiler-sfc'
 import { computed, ref } from 'vue'
 import { gateway } from 'ai'
 import { OferteoRealtimeSession } from '../app/utils/oferteoRealtimeSession.ts'
-import { OferteoVoiceStartupError, waitForOferteoVoiceStep } from '../app/utils/oferteoVoiceStartup.ts'
+import { microphonePermissionState, OferteoVoiceStartupError, waitForOferteoVoiceStep } from '../app/utils/oferteoVoiceStartup.ts'
 import { OFERTEO_REALTIME_MODEL, OFERTEO_VOICE_SECONDS, voiceInstructions } from '../shared/oferteo-realtime.ts'
 import { OFERTEO_CREDITS_MESSAGE, oferteoUiFailure } from '../shared/oferteo-errors.ts'
 
@@ -142,6 +142,11 @@ interface VoiceHarness {
   resumePlayback: () => Promise<void>
   active: { value: boolean }
   connected: { value: boolean }
+  capturing: { value: boolean }
+  microphonePermission: { value: PermissionState | 'unknown' }
+  microphoneHint: { value: string }
+  microphoneDelayed: { value: boolean }
+  microphoneIssue: { value: boolean }
   label: { value: string }
   error: { value: string }
   events: Array<[string, ...unknown[]]>
@@ -155,10 +160,10 @@ function voiceHarness(t: TestContext, updateWorkspace: (signal: AbortSignal) => 
     defineProps: () => ({ mode: 'search', available: true, disabled: false, messages: [], updateWorkspace }),
     defineEmits: () => (name: string, ...args: unknown[]) => events.push([name, ...args]),
     OFERTEO_REALTIME_MODEL, OFERTEO_VOICE_SECONDS, voiceInstructions, oferteoUiFailure,
-    OferteoVoiceStartupError, waitForOferteoVoiceStep,
+    microphonePermissionState, OferteoVoiceStartupError, waitForOferteoVoiceStep,
     __loadSession: async () => ({ OferteoRealtimeSession }), __loadAi: async () => ({ gateway }),
   }
-  const component = new Function(...Object.keys(bindings), `${executable}\nreturn { start, stop, resumePlayback, active, connected, label, error }`)(...Object.values(bindings)) as VoiceHarness
+  const component = new Function(...Object.keys(bindings), `${executable}\nreturn { start, stop, resumePlayback, active, connected, capturing, microphonePermission, microphoneHint, microphoneDelayed, microphoneIssue, label, error }`)(...Object.values(bindings)) as VoiceHarness
   component.events = events
   t.after(() => component.stop())
   return component
@@ -192,14 +197,17 @@ class FakeAudioContext {
   createMediaStreamSource() { return { connect() {}, disconnect() {} } }
   createScriptProcessor() { return { connect() {}, disconnect() {}, onaudioprocess: null } }
 }
-function browserFixture(t: TestContext, getMicrophone: () => Promise<MediaStream>, setupStatus = 200) {
+function browserFixture(t: TestContext, getMicrophone: () => Promise<MediaStream>, setupStatus = 200, queryPermission?: (descriptor: PermissionDescriptor) => Promise<{ state: PermissionState }>) {
   let setupRequests = 0
   let microphoneRequests = 0
   FakeWebSocket.instances = []
   FakeAudioContext.instances = []
   const globals = {
     window: { isSecureContext: true, AudioContext: FakeAudioContext },
-    navigator: { mediaDevices: { getUserMedia: () => { microphoneRequests++; return getMicrophone() } } },
+    navigator: {
+      mediaDevices: { getUserMedia: () => { microphoneRequests++; return getMicrophone() } },
+      ...(queryPermission ? { permissions: { query: queryPermission } } : {}),
+    },
     WebSocket: FakeWebSocket, AudioContext: FakeAudioContext,
     fetch: async (input: unknown, options?: RequestInit) => {
       assert.equal(input, '/api/oferto/realtime?mode=search')
@@ -274,12 +282,184 @@ test('production microphone timeout leaves a retryable UI and cannot leak a late
   await startup
   assert.equal(component.active.value, false)
   assert.match(component.error.value, /mikrofonu w ciągu 20 sekund/)
+  assert.equal(component.microphoneIssue.value, true, 'timeout keeps the microphone recovery instructions available')
   assert.equal(browser.setupRequests(), 0)
   const late = fakeStream()
   microphone.resolve(late.stream)
   await flushEvents()
   assert.deepEqual(late.tracks.map(track => track.stops), [1, 1])
   assert.equal(browser.setupRequests(), 0)
+})
+
+test('permission denial settles a pending microphone immediately without starting the SDK and cleans up a late stream', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] })
+  const microphone = deferred<MediaStream>()
+  const order: string[] = []
+  const browser = browserFixture(t, () => { order.push('microphone'); return microphone.promise }, 200, async descriptor => {
+    assert.equal(descriptor.name, 'microphone')
+    order.push('permission-query')
+    return { state: 'denied' }
+  })
+  const component = voiceHarness(t)
+  await component.start()
+  assert.deepEqual(order, ['microphone', 'permission-query'], 'getUserMedia must run first in the original click handler')
+  assert.equal(component.active.value, false)
+  assert.equal(component.connected.value, false)
+  assert.equal(component.microphonePermission.value, 'denied')
+  assert.equal(component.microphoneIssue.value, true)
+  assert.match(component.error.value, /Dostęp do mikrofonu jest zablokowany/)
+  assert.equal(browser.setupRequests(), 0)
+  assert.equal(FakeWebSocket.instances.length, 0)
+  const finalEvents = component.events.length
+  t.mock.timers.tick(20_000)
+  await flushEvents()
+  assert.equal(component.events.length, finalEvents, 'retired timers must not fail the stopped attempt again')
+  const late = fakeStream()
+  microphone.resolve(late.stream)
+  await flushEvents()
+  assert.deepEqual(late.tracks.map(track => track.stops), [1, 1])
+})
+
+test('unsupported, rejected, or pending permission diagnostics cannot delay microphone acquisition or SDK startup', async t => {
+  for (const mode of ['unsupported', 'rejected', 'pending']) {
+    await t.test(mode, async subtest => {
+      const microphone = fakeStream()
+      const pendingPermission = deferred<{ state: PermissionState }>()
+      const query = mode === 'unsupported' ? undefined : mode === 'rejected'
+        ? async () => { throw new TypeError('Unsupported permission name') }
+        : () => pendingPermission.promise
+      const browser = browserFixture(subtest, async () => microphone.stream, 200, query)
+      const component = voiceHarness(subtest)
+      const startup = component.start()
+      await flushEvents()
+      assert.equal(browser.microphoneRequests(), 1)
+      assert.equal(browser.setupRequests(), 1)
+      const socket = FakeWebSocket.instances[0]!
+      assert.ok(socket)
+      socket.open()
+      socket.emit({ type: 'session-updated', sessionId: 'permission-fallback' })
+      await startup
+      assert.equal(component.connected.value, true)
+      assert.equal(component.microphonePermission.value, 'unknown')
+      assert.equal(component.error.value, '')
+      assert.equal(component.microphoneIssue.value, false)
+      pendingPermission.resolve({ state: 'denied' })
+      await flushEvents()
+      assert.equal(component.connected.value, true, 'a diagnostic received after microphone startup cannot stop the session')
+      assert.equal(component.error.value, '')
+    })
+  }
+})
+
+test('a granted browser permission explains a stalled device and delayed help appears at five seconds', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] })
+  const microphone = deferred<MediaStream>()
+  const browser = browserFixture(t, () => microphone.promise, 200, async () => ({ state: 'granted' }))
+  const component = voiceHarness(t)
+  const startup = component.start()
+  await flushEvents()
+  assert.equal(component.microphonePermission.value, 'granted')
+  assert.match(component.microphoneHint.value, /Zgoda przeglądarki jest przyznana/)
+  assert.equal(component.label.value, 'Czekam na mikrofon…')
+  assert.equal(component.microphoneDelayed.value, false)
+  t.mock.timers.tick(4_999)
+  await flushEvents()
+  assert.equal(component.microphoneDelayed.value, false)
+  t.mock.timers.tick(1)
+  await flushEvents()
+  assert.equal(component.microphoneDelayed.value, true)
+  assert.equal(component.active.value, true)
+  assert.equal(browser.setupRequests(), 0)
+  component.stop()
+  await startup
+  const late = fakeStream()
+  microphone.resolve(late.stream)
+  await flushEvents()
+  assert.deepEqual(late.tracks.map(track => track.stops), [1, 1])
+})
+
+test('an unknown permission switches to recovery guidance at five seconds and cancel clears the help timer', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] })
+  const microphone = deferred<MediaStream>()
+  browserFixture(t, () => microphone.promise)
+  const component = voiceHarness(t)
+  const startup = component.start()
+  await flushEvents()
+  assert.match(component.microphoneHint.value, /Zezwól tej stronie/)
+  t.mock.timers.tick(5_000)
+  await flushEvents()
+  assert.equal(component.microphoneDelayed.value, true)
+  assert.match(component.microphoneHint.value, /Jeśli nie widzisz pytania o zgodę/)
+  component.stop()
+  await startup
+  t.mock.timers.tick(20_000)
+  await flushEvents()
+  assert.equal(component.active.value, false)
+  assert.equal(component.microphoneIssue.value, false)
+  assert.equal(component.error.value, '')
+})
+
+test('a late permission reply from a cancelled attempt cannot stop or change a newer microphone startup', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] })
+  const firstMicrophone = deferred<MediaStream>()
+  const secondMicrophone = deferred<MediaStream>()
+  const oldPermission = deferred<{ state: PermissionState }>()
+  let microphoneRequests = 0
+  let permissionRequests = 0
+  const browser = browserFixture(t, () => ++microphoneRequests === 1 ? firstMicrophone.promise : secondMicrophone.promise, 200,
+    () => ++permissionRequests === 1 ? oldPermission.promise : Promise.resolve({ state: 'granted' }))
+  const component = voiceHarness(t)
+  const firstStartup = component.start()
+  await flushEvents()
+  component.stop()
+  await firstStartup
+  const secondStartup = component.start()
+  await flushEvents()
+  assert.equal(component.microphonePermission.value, 'granted')
+  const eventsBeforeOldReply = component.events.length
+  oldPermission.resolve({ state: 'denied' })
+  await flushEvents()
+  assert.equal(component.active.value, true)
+  assert.equal(component.microphonePermission.value, 'granted')
+  assert.equal(component.microphoneIssue.value, false)
+  assert.equal(component.error.value, '')
+  assert.equal(component.events.length, eventsBeforeOldReply)
+  assert.equal(browser.setupRequests(), 0)
+  assert.equal(browser.microphoneRequests(), 2)
+  t.mock.timers.tick(5_000)
+  await flushEvents()
+  assert.equal(component.microphoneDelayed.value, true, 'the new attempt must retain its own recovery timer')
+  component.stop()
+  await secondStartup
+  const firstLate = fakeStream()
+  const secondLate = fakeStream()
+  firstMicrophone.resolve(firstLate.stream)
+  secondMicrophone.resolve(secondLate.stream)
+  await flushEvents()
+  assert.deepEqual(firstLate.tracks.map(track => track.stops), [1, 1])
+  assert.deepEqual(secondLate.tracks.map(track => track.stops), [1, 1])
+})
+
+test('the listening label follows real SDK audio track capture state', async t => {
+  const microphone = fakeStream()
+  browserFixture(t, async () => microphone.stream)
+  const component = voiceHarness(t)
+  const startup = component.start()
+  await flushEvents()
+  const socket = FakeWebSocket.instances[0]!
+  socket.open()
+  socket.emit({ type: 'session-updated', sessionId: 'capture-state' })
+  await startup
+  assert.equal(component.capturing.value, true)
+  assert.equal(component.label.value, 'Słucham Cię')
+  for (const track of microphone.tracks) { track.muted = true; track.dispatchEvent(new Event('mute')) }
+  assert.equal(component.connected.value, true)
+  assert.equal(component.capturing.value, false)
+  assert.equal(component.label.value, 'Sprawdź mikrofon')
+  microphone.tracks[0]!.muted = false
+  microphone.tracks[0]!.dispatchEvent(new Event('unmute'))
+  assert.equal(component.capturing.value, true)
+  assert.equal(component.label.value, 'Słucham Cię')
 })
 
 test('production cancellation settles a waiting start and ignores a later microphone grant', { timeout: 1_000 }, async t => {

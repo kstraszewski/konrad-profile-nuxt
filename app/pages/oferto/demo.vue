@@ -112,6 +112,7 @@ import { mergeOferteoVoiceTranscript, voiceRequestMessages, type VoiceMessage } 
 import { OFERTEO_CREDITS_MESSAGE, oferteoUiFailure } from '~~/shared/oferteo-errors'
 import type { OferteoChatPartial } from '~~/shared/types/oferteo-stream'
 import { requestOferteoStream } from '~/utils/oferteoStream'
+import { observeOferteoViewport, type OferteoViewportStyle } from '~/utils/oferteoViewport'
 definePageMeta({ alias: ['/oferto/demo-1'] })
 useSeoMeta({ title: 'Demo 1: szukanie wykonawcy — Oferteo | Konrad Straszewski', description: 'Wypróbuj asystenta, który pomaga opisać remont i dopasowuje wykonawców z publicznych profili Oferteo.', robots: 'noindex, nofollow' })
 useHead({
@@ -150,7 +151,8 @@ const showPlan = ref(false)
 let scrollReplyOnReturn = false
 const planToggle = ref<HTMLButtonElement | null>(null)
 const infoDialog = ref<HTMLDialogElement | null>(null)
-const viewportStyle = ref<{ height: string; top: string }>()
+const viewportStyle = ref<OferteoViewportStyle>()
+let disposeViewport: (() => void) | undefined
 function closePlan() { showPlan.value = false; nextTick(() => (planToggle.value || composer.value)?.focus({ preventScroll: true })) }
 watch(showPlan, open => {
   if (!open && scrollReplyOnReturn) {
@@ -158,15 +160,8 @@ watch(showPlan, open => {
     void scrollMessages(messages.value.at(-1)?.role === 'assistant')
   }
 })
-function syncViewport() {
-  const viewport = window.visualViewport
-  // Let pinch zoom work normally; follow only keyboard/browser-chrome resizing.
-  if (viewport && viewport.scale === 1) viewportStyle.value = { height: `${viewport.height}px`, top: `${viewport.offsetTop}px` }
-}
 onMounted(() => {
-  syncViewport()
-  window.visualViewport?.addEventListener('resize', syncViewport)
-  window.visualViewport?.addEventListener('scroll', syncViewport)
+  disposeViewport = observeOferteoViewport(window, style => { viewportStyle.value = style })
 })
 const messageBox = ref<HTMLElement | null>(null)
 const composer = ref<HTMLTextAreaElement | null>(null)
@@ -203,7 +198,11 @@ function onEnter(event: KeyboardEvent) { if (event.isComposing) return; event.pr
 async function send(value: string) {
   const content = value.trim()
   if (!content || pending.value || aiPaused.value || retrySeconds.value > 0 || content.length > 1500) return
-  if (voiceActive.value) { if (voice.value?.sendText(content)) { draft.value = ''; suggestions.value = [] }; return }
+  if (voiceActive.value) {
+    if (voice.value?.sendText(content)) { draft.value = ''; suggestions.value = []; return }
+    voice.value?.stop()
+    voiceActive.value = false
+  }
   clearFailure()
   if (messages.value.at(-1)?.role === 'user' && (error.value || streamNotice.value)) messages.value.pop()
   if (messages.value.length >= 16 || messages.value.reduce((total, message) => total + message.content.length, 0) + content.length > 9000) {
@@ -307,8 +306,7 @@ function resetConversation() {
 onBeforeUnmount(() => {
   unmounted = true
   controller?.abort()
-  window.visualViewport?.removeEventListener('resize', syncViewport)
-  window.visualViewport?.removeEventListener('scroll', syncViewport)
+  disposeViewport?.()
 })
 </script>
 

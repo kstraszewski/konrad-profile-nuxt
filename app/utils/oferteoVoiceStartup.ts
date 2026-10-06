@@ -1,5 +1,15 @@
 export type OferteoVoiceStartupPhase = 'microphone' | 'loading' | 'connecting'
 
+// Querying permission does not prompt, and is optional (not supported by every
+// browser). Never let this diagnostic delay the click's getUserMedia request.
+export async function microphonePermissionState(): Promise<PermissionState | 'unknown'> {
+  try {
+    if (!navigator.permissions?.query) return 'unknown'
+    const permission = await navigator.permissions.query({ name: 'microphone' as PermissionName })
+    return permission.state
+  } catch { return 'unknown' }
+}
+
 export class OferteoVoiceStartupError extends Error {
   readonly phase: OferteoVoiceStartupPhase
   constructor(phase: OferteoVoiceStartupPhase) {
