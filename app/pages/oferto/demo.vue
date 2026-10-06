@@ -8,23 +8,31 @@
       </div>
       <div class="od-app-actions">
         <NuxtLink to="/oferto/demo-2" class="od-other-demo" aria-label="Demo 2 — kreator oferty"><span class="od-desktop-label">Kreator oferty</span><span class="od-mobile-label">Kreator</span></NuxtLink>
-        <button v-if="filledFields" ref="planToggle" class="od-plan-toggle" type="button" :aria-label="showPlan ? 'Wróć do rozmowy' : 'Twój plan'" :aria-expanded="showPlan" aria-controls="od-project-plan" @click="showPlan = !showPlan"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5H5v16h14V5h-3M8 3h8v4H8zM8 11h8m-8 4h5" /></svg><span>{{ showPlan ? 'Rozmowa' : 'Plan' }}</span></button>
         <button v-if="messages.length" class="od-reset" type="button" :disabled="pending" aria-label="Rozpocznij nową rozmowę" title="Nowa rozmowa" @click="resetConversation"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 10a8 8 0 1 1 1 7M4 4v6h6" /></svg></button>
         <button class="od-about-button" type="button" aria-label="O demie" title="O demie" @click="infoDialog?.showModal()"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.5"/></svg></button>
       </div>
     </header>
 
-    <section id="assistant" class="od-workspace ph-no-capture" :class="{ 'od-plan-open': showPlan, 'od-has-plan': filledFields > 0 }" aria-label="Asystent Oferteo">
+    <section id="assistant" class="od-workspace ph-no-capture" :class="{ 'od-plan-open': showPlan }" aria-label="Asystent Oferteo">
+      <div v-if="messages.length" class="od-mobile-tabs" aria-label="Widok asystenta">
+        <button ref="planToggle" type="button" :class="{ 'od-tab-active': !showPlan }" :aria-pressed="!showPlan" aria-controls="od-chat-panel" @click="closePlan">Rozmowa</button>
+        <button type="button" :class="{ 'od-tab-active': showPlan }" :aria-pressed="showPlan" aria-controls="od-project-plan" @click="showPlan = true">Wykonawcy <span v-if="latestResult?.offers.length">{{ latestResult.offers.length }}</span></button>
+      </div>
       <div class="od-app-grid">
-        <div class="od-chat" :class="{ 'od-chat-empty': !messages.length }">
+        <div id="od-chat-panel" class="od-chat" :class="{ 'od-chat-empty': !messages.length }">
+          <div class="od-chat-toolbar">
+            <span class="od-toolbar-avatar" aria-hidden="true">✳</span>
+            <div><h2>Asystent Oferteo</h2><p>Od pomysłu do odpowiedniego wykonawcy</p></div>
+            <span class="od-toolbar-label">Rozmowa</span>
+          </div>
           <div v-show="messages.length" ref="messageBox" class="od-messages" role="log" tabindex="0" aria-label="Rozmowa z asystentem" aria-live="polite" :aria-busy="pending">
             <div class="od-transcript">
-              <div v-for="(message, index) in messages" :key="index" class="od-message" :class="[`od-message-${message.role}`, { 'od-message-with-results': message.result }]" :data-message-index="index">
+              <div v-for="(message, index) in messages" :key="index" class="od-message" :class="`od-message-${message.role}`" :data-message-index="index">
                 <span v-if="message.role === 'assistant'" class="od-mini-avatar" aria-hidden="true">✳</span>
                 <div class="od-message-body">
                   <span class="od-message-name">{{ message.role === 'user' ? 'Ty' : 'Asystent Oferteo' }}</span>
                   <p>{{ message.content }}</p>
-                  <OferteoToolResult v-if="message.result" :offers="message.result.offers" :brief="message.result.brief" />
+                  <button v-if="message.result?.offers.length && message.result === latestResult" class="od-result-link" type="button" aria-controls="od-project-plan" @click="viewResults"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5"/><path d="m12 12 4 4"/></svg>Zobacz wykonawców <span>{{ message.result.offers.length }}</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></button>
                 </div>
               </div>
               <div v-if="pending" class="od-message od-message-assistant"><span class="od-mini-avatar" aria-hidden="true">✳</span><div class="od-pending-result"><div class="od-thinking"><span><i /><i /><i /></span> Szukam dopasowania…</div></div></div>
@@ -32,41 +40,57 @@
             </div>
           </div>
 
-          <div class="od-composer-wrap">
-            <div class="od-composer-content">
-              <div v-if="!messages.length" class="od-intro">
+          <div v-if="!messages.length" class="od-welcome">
+            <div class="od-welcome-content">
+              <div class="od-intro">
                 <p class="od-intro-label">Asystent Oferteo</p>
                 <h2>Co chcesz zmienić w swoim domu?</h2>
                 <p>Opisz prace, a pomogę Ci znaleźć wykonawcę.</p>
               </div>
+              <div class="od-start-options" aria-label="Przykładowe opisy prac">
+                <span>Wypróbuj przykład</span>
+                <button v-for="(scenario, index) in scenarios" :key="scenario.label" type="button" :disabled="pending" :aria-label="`Wstaw przykład: ${scenario.label}`" @click="selectExample(index)">{{ scenario.label }}</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="od-composer-wrap">
+            <div class="od-composer-content">
               <div v-if="suggestions.length && !pending && !error" class="od-suggestions" aria-label="Sugerowane odpowiedzi"><button v-for="suggestion in suggestions" :key="suggestion" type="button" :disabled="aiPaused || retrySeconds > 0" @click="send(suggestion)">{{ suggestion }}</button></div>
+              <div v-if="connectionNotice && (!error || !messages.length)" class="od-connection-notice" role="status">
+                <span v-if="!error || messages.length">{{ connectionNotice }}</span>
+                <button type="button" :disabled="statusPending || pending" @click="refreshStatus()">{{ statusPending ? 'Sprawdzam…' : aiPaused ? 'Sprawdź dostępność' : 'Ponów' }}</button>
+              </div>
               <form class="od-composer" @submit.prevent="send(draft)">
                 <label class="od-sr-only" for="od-prompt">Opisz, jakiego wykonawcy szukasz</label>
-                <textarea id="od-prompt" ref="composer" v-model="draft" :disabled="pending" maxlength="1500" rows="2" placeholder="Np. chcę wyremontować łazienkę w Warszawie…" @keydown.enter.exact="onEnter" />
+                <textarea id="od-prompt" ref="composer" v-model="draft" :disabled="pending" maxlength="1500" rows="1" placeholder="Np. chcę wyremontować łazienkę w Warszawie…" @keydown.enter.exact="onEnter" />
                 <div class="od-composer-bottom">
                   <OferteoVoice ref="voice" compact mode="search" :available="!aiPaused && status?.mode === 'live'" :checking="statusPending" :unavailable-reason="voiceUnavailableReason" :disabled="pending || retrySeconds > 0" :messages="messages" :update-workspace="updateVoiceWorkspace" @active="voiceActive = $event" @transcript="syncVoiceTranscript" @credits-exhausted="onVoiceCreditsExhausted" @request-failed="error = setFailure($event)" />
                   <button class="od-send" type="submit" :disabled="pending || aiPaused || retrySeconds > 0 || !draft.trim()" :aria-label="aiPaused ? 'Asystent niedostępny — brak środków' : pending ? 'Oczekiwanie na odpowiedź' : 'Wyślij wiadomość'"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6" /></svg></button>
                 </div>
               </form>
-              <div v-if="!messages.length" class="od-start-options" aria-label="Przykładowe opisy prac">
-                <span>Wypróbuj przykład</span>
-                <button v-for="(scenario, index) in scenarios" :key="scenario.label" type="button" :disabled="pending" :aria-label="`Wstaw przykład: ${scenario.label}`" @click="selectExample(index)">{{ scenario.label }}</button>
-              </div>
-              <div v-if="connectionNotice && (!error || !messages.length)" class="od-connection-notice" role="status">
-                <span v-if="!error || messages.length">{{ connectionNotice }}</span>
-                <button type="button" :disabled="statusPending || pending" @click="refreshStatus()">{{ statusPending ? 'Sprawdzam…' : aiPaused ? 'Sprawdź dostępność' : 'Ponów' }}</button>
-              </div>
-              <p class="od-chat-footnote">{{ mode === 'demo' || status?.mode === 'demo' ? 'Tryb przykładowy · bez połączenia z AI.' : 'Demo AI · rozmowa nie wysyła zapytań do firm.' }}</p>
             </div>
           </div>
         </div>
 
-        <aside v-if="filledFields" id="od-project-plan" class="od-sidebar" aria-label="Podsumowanie Twojego zlecenia">
+        <aside id="od-project-plan" ref="resultsPanel" class="od-sidebar" aria-label="Wykonawcy i Twoje zlecenie" tabindex="-1">
+          <div class="od-results-toolbar"><div><p class="od-eyebrow">TWOJE DOPASOWANIA</p><h2>Wykonawcy dla Ciebie</h2></div><span class="od-results-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m9 12 2 2 4-4"/><rect x="4" y="4" width="16" height="16" rx="5"/></svg></span></div>
           <button class="od-plan-back" type="button" @click="closePlan"><span aria-hidden="true">←</span> Wróć do rozmowy</button>
-          <div class="od-brief">
-            <div class="od-brief-heading"><div><p>TWOJE ZLECENIE</p><h3>{{ brief.service || 'Ustalenia z rozmowy' }}</h3></div></div>
-            <dl><div v-for="field in knownBriefFields" :key="field.key"><dt>{{ field.label }}</dt><dd>{{ brief[field.key] }}</dd></div></dl>
-            <p class="od-brief-intro">Możesz zmienić te ustalenia w rozmowie.</p>
+          <div class="od-sidebar-content">
+            <div v-if="filledFields" class="od-brief">
+              <div class="od-brief-heading"><span class="od-brief-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m3 10 9-7 9 7M5 9v11h14V9M9 20v-7h6v7"/></svg></span><div><p>TWOJE ZLECENIE</p><h3>{{ brief.service || 'Ustalenia z rozmowy' }}</h3></div></div>
+              <div v-if="brief.city || brief.area" class="od-brief-location"><span v-if="brief.city"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M15.5 8c0 4-5.5 8.5-5.5 8.5S4.5 12 4.5 8a5.5 5.5 0 0 1 11 0Z"/><circle cx="10" cy="8" r="1.75"/></svg>{{ brief.city }}</span><span v-if="brief.area">{{ brief.area }}</span></div>
+              <details v-if="knownBriefFields.length" class="od-brief-details"><summary>Szczegóły zlecenia<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg></summary><dl><div v-for="field in knownBriefFields" :key="field.key"><dt>{{ field.label }}</dt><dd>{{ brief[field.key] }}</dd></div></dl><p class="od-brief-intro">Zmień ustalenia, pisząc w rozmowie.</p></details>
+            </div>
+            <div v-if="pending" class="od-results-updating" role="status"><span class="od-status-dot"/>{{ latestResult ? 'Aktualizuję dopasowania…' : 'Szukam wykonawców do Twojego zlecenia…' }}</div>
+            <OferteoToolResult v-if="latestResult" :offers="latestResult.offers" :brief="latestResult.brief" />
+            <div v-else class="od-results-empty">
+              <div class="od-empty-illustration" aria-hidden="true"><div class="od-empty-card"><span/><div><i/><i/></div><svg viewBox="0 0 20 20" fill="none"><path d="m5 10 3 3 7-7"/></svg></div><span class="od-empty-search"><svg viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/></svg></span></div>
+              <h3>Tu znajdziesz swoich wykonawców</h3>
+              <p>Opisz, czego potrzebujesz. Dopasowane profile pojawią się tutaj — obok rozmowy.</p>
+              <div class="od-empty-steps"><span><i>1</i> Opisz prace</span><span><i>2</i> Doprecyzuj szczegóły</span><span><i>3</i> Poznaj wykonawców</span></div>
+            </div>
+            <p v-if="latestResult?.offers.length" class="od-results-hint"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 4h12v9H9l-4 3v-3H4z"/></svg>Doprecyzuj potrzeby w rozmowie, aby zawęzić wybór.</p>
           </div>
         </aside>
       </div>
@@ -143,7 +167,13 @@ let controller: AbortController | undefined
 const briefFields: { key: keyof Brief; label: string }[] = [{ key: 'city', label: 'Lokalizacja' }, { key: 'scope', label: 'Zakres prac' }, { key: 'area', label: 'Powierzchnia' }, { key: 'budget', label: 'Budżet' }, { key: 'timing', label: 'Termin' }]
 const filledFields = computed(() => Object.values(brief.value).filter(Boolean).length)
 const knownBriefFields = computed(() => briefFields.filter(field => brief.value[field.key]))
-watch(filledFields, count => { if (!count && showPlan.value) closePlan() })
+const latestResult = computed(() => [...messages.value].reverse().find(message => message.result)?.result)
+const resultsPanel = ref<HTMLElement | null>(null)
+async function viewResults() {
+  if (window.matchMedia('(max-width: 760px)').matches) showPlan.value = true
+  await nextTick()
+  resultsPanel.value?.focus({ preventScroll: true })
+}
 const scenarios = [
   { label: 'Remont łazienki', short: 'Cała łazienka do remontu', icon: '⌂', prompt: 'Chcę kompleksowo wyremontować łazienkę 6 m² w Warszawie. Trzeba wymienić płytki, prysznic i instalację wodną. Budżet do 30 tys. zł, najlepiej w ciągu 2 miesięcy. Kogo polecasz?' },
   { label: 'Wymiana płytek', short: 'Czas na nowe płytki', icon: '▦', prompt: 'Szukam glazurnika w Warszawie. Chcę wymienić płytki na ścianach i podłodze w łazience 5 m², bez zmian instalacji. Termin jest elastyczny, budżet jeszcze do ustalenia.' },
@@ -187,7 +217,7 @@ async function requestReply() {
     messages.value.push({
       role: 'assistant',
       content: result.message,
-      result: result.offers.length ? { offers: result.offers, brief: { ...result.brief } } : undefined,
+      result: { offers: result.offers, brief: { ...result.brief } },
     })
     brief.value = result.brief
     suggestions.value = result.suggestions

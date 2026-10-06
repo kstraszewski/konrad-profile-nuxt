@@ -161,7 +161,7 @@ export function buildChatResponse(catalog: OferteoContractor[], analysis: Oferte
   } else {
     message = intent === 'compare'
       ? 'Na kartach porównasz deklarowane usługi i liczbę opinii. Zapytaj wybrane firmy o realizacje podobne do Twojego remontu oraz szczegółowy zakres wyceny.'
-      : `Wybrałem ${offers.length} profile z Warszawy pasujące zakresem usług do remontu łazienki. Zerknij na propozycje poniżej.`
+      : `Wybrałem ${offers.length} profile z Warszawy pasujące zakresem usług do remontu łazienki. Zerknij na dopasowanych wykonawców.`
     suggestions = !brief.area ? ['Łazienka ma 6 m²', 'Porównaj wykonawców', 'Jak sprawdzić dostępność?']
       : !brief.budget ? ['Mam budżet do 30 tys. zł', 'Porównaj wykonawców', 'Jak sprawdzić dostępność?']
         : ['Porównaj wykonawców', 'Jak sprawdzić dostępność?', 'Co powinno znaleźć się w wycenie?']
@@ -171,7 +171,7 @@ export function buildChatResponse(catalog: OferteoContractor[], analysis: Oferte
   const supported = brief.service && /lazien|bathroom|glazur|plytk|prysznic|wanna/.test(normalizePolish(brief.service))
     && (!brief.city || /^warszawa(?:\s|,|$)/.test(normalizePolish(brief.city)))
   if (guidance && supported) {
-    // Cards and their source caveats are rendered inside this chat message.
+    // Cards and their source caveats are rendered in the contractor panel.
     // Keep the conversational reply intact instead of appending the same notice.
     message = guidance
   }
