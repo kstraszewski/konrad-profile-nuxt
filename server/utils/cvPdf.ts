@@ -806,7 +806,7 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
   })
 
   profile.track.experience.slice(0, 5).forEach((item, index) => {
-    const y = 190 + index * 94
+    const y = 176 + index * 84
     doc.text(item.year, PAGE.margin, y, 7.2, 'F2', theme.muted)
     doc.text(`${item.role} / ${item.org}`, 142, y, 9, 'F2', theme.text)
     if (item.org === 'NeoIQ' && item.website) {
@@ -814,6 +814,13 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
     }
     compactTextBlock(doc, item.description, 142, y + 14, 375, 7.4, 9.2, 6, { color: theme.muted })
     doc.line(PAGE.margin, y + 74, PAGE.width - PAGE.margin, y + 74, theme.line, 0.65)
+  })
+
+  doc.panel(PAGE.margin, 602, 499, 60, theme.panel, theme.line)
+  doc.text('AI ENABLEMENT', 64, 618, 8, 'F2', theme.accent)
+  let achievementY = 633
+  profile.cv.aiEnablementHighlights.forEach((highlight) => {
+    achievementY = doc.textBlock(highlight, 64, achievementY, 467, 8, 10, { color: theme.text })
   })
 
   doc.panel(PAGE.margin, 674, 499, 44, theme.panel, theme.line)

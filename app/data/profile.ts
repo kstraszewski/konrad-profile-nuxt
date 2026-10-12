@@ -2,6 +2,11 @@ import { oferteo } from './oferteo'
 import { neoiqCv } from './neoiq-cv'
 import { plane } from './plane'
 
+const aiEnablementHighlights = [
+  'Organized an agentic engineering hackathon for 25–30 participants, half with no technical background, resulting in 8 working products.',
+  'Led 6 workshops exclusively for non-technical participants, in groups of 3–4 people.'
+] as const
+
 export const profile = {
   plane,
   oferteo,
@@ -489,10 +494,12 @@ export const profile = {
       'A focused product-engineering CV: product ownership, AI-native building, PostgreSQL, Redis, PostHog practice, jasne.ai, and the stack I use to ship.',
     summary:
       'Product Engineer and AI-native builder working in product engineering since 2017. Frontend Developer at Finpack (2017–2020), Frontend Lead at Lendi (2020–2023), AI Builder at NeoIQ (2023–2024), and AI Manager at Lendi since 2024. My work is practical: own the product surface, build the tool, shape PostgreSQL/Redis-backed data flows, instrument the loop, write the context, and keep iterating with users and teams.',
+    aiEnablementHighlights,
     highlights: [
       "Helped scale Lendi from a startup into Poland's #1 broker and the fastest-growing broker in Europe.",
       'Progressed from Frontend Developer at Finpack to Frontend Lead at Lendi, AI Builder at NeoIQ, and AI Manager at Lendi while staying close to product surfaces, UX, tooling, and shipping.',
       'Lead practical AI adoption at Lendi: strategy, tooling, training, KPIs, production workflows, and the product-builder operating model.',
+      ...aiEnablementHighlights,
       'Implemented PostHog in two organizations, used PostHog MCP heavily, and advocated for evidence-first product loops.',
       'Strong with PostgreSQL and Redis: product data modeling, queryable workflows, caching, queues, and runtime state around real product surfaces.',
       'Built jasne.ai as a 0->1 vertical AI product across product, UX, code, infra, AI integration, and distribution.',
