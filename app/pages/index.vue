@@ -74,6 +74,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
               <HomeIcon name="download" />
             </a>
           </div>
+          <HomeGithubContributions />
         </div>
 
         <aside class="home-poster" aria-label="My approach: think, build, ship, learn, repeat." data-stack-focus>
