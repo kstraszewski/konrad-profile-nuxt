@@ -10,7 +10,7 @@
             to 2023, and worked as an AI Builder at <a :href="profile.links.neoiq.href" target="_blank" rel="noopener noreferrer">NeoIQ</a> in 2023–2024. Since 2024,
             I’ve been Lendi’s AI Manager.
           </p>
-          <NuxtLink to="/cv" class="text-link">Read my CV <HomeIcon name="arrow-up-right" /></NuxtLink>
+          <a href="/api/cv/general.pdf" class="text-link" download="Konrad Straszewski CV.pdf">Download CV <HomeIcon name="download" /></a>
         </div>
 
         <div class="history-list">
@@ -105,7 +105,7 @@
           >
             {{ item.label === 'Phone' ? item.value : item.label }} <HomeIcon name="arrow-up-right" :size="18" />
           </a>
-          <NuxtLink to="/cv">CV <HomeIcon name="arrow-up-right" :size="18" /></NuxtLink>
+          <a href="/api/cv/general.pdf" download="Konrad Straszewski CV.pdf">CV <HomeIcon name="download" :size="18" /></a>
         </div>
 
         <div class="site-signoff">

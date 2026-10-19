@@ -10,6 +10,8 @@ const localDownloads = process.argv.includes('--local-downloads')
 const client = new Client({ name: 'konrad-profile-smoke-test', version: '1.0.0' })
 const transport = new StreamableHTTPClientTransport(endpoint)
 const failures = []
+const publicFocuses = ['full', 'overview', 'cv', 'experience', 'ai', 'projects', 'contact']
+const hiddenDocumentIds = ['posthog-context', 'linear-context', 'medusa-context', 'n8n-context', 'plain-context', 'plane', 'polar-context', 'lago-context']
 let passed = 0
 
 async function check(name, run) {
@@ -70,7 +72,7 @@ try {
       assert.equal(tool.annotations?.readOnlyHint, true, `${name} is not declared read-only`)
     }
     const focus = tools.find(item => item.name === 'get_profile_context').inputSchema.properties?.focus
-    assert.ok(focus?.enum?.includes('plane'), 'Plane focus is absent from the input schema')
+    assert.deepEqual(focus?.enum, publicFocuses, 'Only public profile focuses should be advertised')
     return tools.map(item => item.name).join(', ')
   })
 
@@ -82,33 +84,38 @@ try {
     assert.equal(full?.query?.focus, 'full')
     assert.equal(full?.person?.name, 'Konrad Straszewski')
     assert.ok(full.sections.experience.roles.length > 0)
-    assert.ok(full.sections.cv.downloads.length > 0)
+    assert.deepEqual(Object.keys(full.sections).sort(), ['overview', 'cv', 'experience', 'projects', 'ai', 'stack', 'contact'].sort())
+    assert.deepEqual(full.sections.cv.downloads.map(item => new URL(item.url).pathname), ['/api/cv/general.pdf'])
     assert.deepEqual(textJson(result), full, 'Text and structured context must agree')
   })
 
-  await check('get_profile_context plane preserves question and company context', async () => {
-    const question = 'How does Konrad fit Plane?'
-    const result = await call('get_profile_context', { focus: 'plane', question })
+  await check('get_profile_context AI preserves the question without application contexts', async () => {
+    const question = 'How has Konrad used AI at work?'
+    const result = await call('get_profile_context', { focus: 'ai', question })
     assert.ok(!result.isError, JSON.stringify(result.content))
     const context = result.structuredContent
     assert.equal(context?.query?.question, question)
-    assert.equal(context?.query?.focus, 'plane')
-    assert.equal(context?.sections?.plane?.company?.id, 'plane')
-    assert.ok(context.sections.cv.downloads.some(item => new URL(item.url).pathname === '/api/cv/plane.pdf'))
+    assert.equal(context?.query?.focus, 'ai')
+    assert.deepEqual(Object.keys(context.sections).sort(), ['ai', 'projects', 'stack'].sort())
+    assert.ok(context.sections.projects.neoiq, 'Actual NeoIQ work history should remain public')
+    assert.ok(context.sections.ai.lendiPillars.length > 0, 'Actual Lendi work history should remain public')
+    assert.equal(context.sections.ai.aiResearchFit, undefined, 'Application-specific proof should remain hidden')
   })
 
-  await check('search and fetch return the full Plane document', async () => {
-    const search = await call('search', { query: 'Plane' })
+  await check('search and fetch keep company application materials hidden', async () => {
+    const search = await call('search', { query: 'Plane PostHog Linear Medusa n8n Plain Polar Lago' })
     assert.ok(!search.isError)
-    const plane = textJson(search).results.find(item => item.id === 'plane')
-    assert.ok(plane, 'Plane search result is missing')
-    const result = await call('fetch', { id: plane.id })
-    assert.ok(!result.isError)
-    const document = textJson(result)
-    assert.equal(document.id, plane.id)
-    assert.equal(document.url, plane.url)
-    assert.ok(document.text.length >= plane.text.length)
-    assert.equal(new URL(document.url).pathname, '/plane')
+    for (const item of textJson(search).results) {
+      assert.ok(!hiddenDocumentIds.includes(item.id), `Application document ${item.id} is discoverable`)
+      assert.ok(!/^\/(posthog|linear|medusa|n8n|plain|plane|polar|lago)\/?$/.test(new URL(item.url).pathname))
+    }
+    for (const id of hiddenDocumentIds) {
+      const result = await call('fetch', { id })
+      assert.equal(result.isError, true, `Application document ${id} is fetchable`)
+      assert.match(textJson(result).error, /not found.*search/i)
+    }
+    const context = await call('get_profile_context', { focus: 'plane' })
+    assert.equal(context.isError, true, 'Company application focuses should not be accepted')
   })
 
   await check('search results are fetchable and cite absolute URLs', async () => {
@@ -142,6 +149,7 @@ try {
     const result = await call('konrad-cv')
     assert.ok(!result.isError, JSON.stringify(result.content))
     assert.equal(result.structuredContent?.person?.name, 'Konrad Straszewski')
+    assert.deepEqual(result.structuredContent.sections.cv.downloads.map(item => new URL(item.url).pathname), ['/api/cv/general.pdf'])
     const resource = result.content.find(item => item.type === 'resource')?.resource
     assert.equal(resource?.mimeType, 'text/html;profile=mcp-app')
     assert.equal(resource?.uri, result._meta?.ui?.resourceUri)
@@ -171,10 +179,6 @@ try {
       const bytes = Buffer.from(await response.arrayBuffer())
       assert.equal(bytes.subarray(0, 5).toString(), '%PDF-', 'Response is not a PDF file')
       assert.ok(bytes.length > 1_000, 'PDF is unexpectedly small')
-      if (advertised.pathname === '/api/cv/plane.pdf') {
-        // The project's PDF generator writes uncompressed text operations.
-        assert.match(bytes.toString('latin1'), /\bPlane\b/i, 'Plane CV content is missing')
-      }
       return `${bytes.length} bytes, ${url}`
     })
   }

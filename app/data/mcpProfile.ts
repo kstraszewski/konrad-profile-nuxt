@@ -1,3 +1,4 @@
+import { publicCvDownloads } from './cvDownloads'
 import { profile } from './profile'
 import { seoSite } from './seo'
 
@@ -8,7 +9,7 @@ export const mcpServer = {
   name: 'Konrad Profile MCP',
   endpoint: absoluteUrl('/mcp/server'),
   appTool: 'konrad-cv',
-  updated: '2026-10-03'
+  updated: '2026-10-19'
 } as const
 
 export const profileFocusOptions = [
@@ -18,14 +19,6 @@ export const profileFocusOptions = [
   'experience',
   'ai',
   'projects',
-  'posthog',
-  'linear',
-  'medusa',
-  'n8n',
-  'plain',
-  'plane',
-  'polar',
-  'lago',
   'contact'
 ] as const
 
@@ -42,7 +35,7 @@ type ProfileDocument = {
 const compactList = (items: readonly string[]) => items.join('; ')
 const lines = (items: readonly string[]) => items.filter(Boolean).join('\n')
 
-export const cvDownloads = profile.cv.downloads.map((download) => ({
+export const cvDownloads = publicCvDownloads.map((download) => ({
   ...download,
   url: absoluteUrl(download.href)
 }))
@@ -52,91 +45,6 @@ const contactLinks = [profile.links.email, profile.links.phone, profile.links.gi
   value: link.value,
   href: link.href
 }))
-
-const posthogRoleContexts = [
-  {
-    id: 'posthog-product-engineer',
-    title: profile.posthog.title,
-    summary: profile.posthog.description,
-    proof: profile.posthog.proof.rows,
-    ideas: profile.posthog.ideas.items
-  },
-  {
-    id: 'posthog-product-manager',
-    title: profile.posthogPm.title,
-    summary: profile.posthogPm.description,
-    proof: profile.posthogPm.proof.rows,
-    ideas: profile.posthogPm.ideas.items
-  },
-  {
-    id: 'posthog-ai-research',
-    title: profile.posthogAiResearch.title,
-    summary: profile.posthogAiResearch.description,
-    proof: profile.posthogAiResearch.proof.rows,
-    ideas: profile.posthogAiResearch.ideas.items
-  }
-]
-
-const targetedRoleContexts = [
-  ...posthogRoleContexts,
-  {
-    id: 'linear-fullstack-engineer',
-    title: profile.linear.title,
-    summary: profile.linear.description,
-    proof: profile.linear.proof.rows,
-    ideas: profile.linear.ideas.items
-  },
-  {
-    id: 'medusa-product-engineer',
-    title: profile.medusa.title,
-    summary: profile.medusa.description,
-    proof: profile.medusa.proof.rows,
-    ideas: profile.medusa.ideas.items
-  },
-  {
-    id: 'n8n-ai-engineer',
-    title: profile.n8n.cv.aiEngineer.title,
-    summary: profile.n8n.cv.aiEngineer.description,
-    proof: profile.n8n.cv.aiEngineer.proof.rows,
-    ideas: profile.n8n.cv.aiEngineer.ideas.items
-  },
-  {
-    id: 'n8n-product-engineer',
-    title: profile.n8n.cv.productEngineer.title,
-    summary: profile.n8n.cv.productEngineer.description,
-    proof: profile.n8n.cv.productEngineer.proof.rows,
-    ideas: profile.n8n.cv.productEngineer.ideas.items
-  },
-  {
-    id: 'plain-ai-product-engineer',
-    title: profile.plain.title,
-    summary: profile.plain.description,
-    proof: profile.plain.proof.rows,
-    ideas: profile.plain.ideas.items
-  },
-  {
-    id: 'polar-senior-product-engineer',
-    title: profile.polar.title,
-    summary: profile.polar.description,
-    proof: profile.polar.proof.rows,
-    ideas: profile.polar.ideas.items
-  },
-  {
-    id: 'lago-product-engineer-growth',
-    title: profile.lago.title,
-    summary: profile.lago.description,
-    proof: profile.lago.proof.rows,
-    ideas: profile.lago.ideas.items
-  }
-]
-
-const planeCompanyContext = {
-  id: 'plane',
-  title: 'Plane company context',
-  summary: profile.plane.description,
-  proof: profile.plane.proof.rows,
-  ideas: profile.plane.ideas.items
-}
 
 const allSections = {
   overview: {
@@ -165,8 +73,7 @@ const allSections = {
     title: 'AI work',
     now: profile.now.items,
     lendiPillars: profile.lendi.pillars,
-    currentInterests: profile.interests.items,
-    aiResearchFit: profile.posthogAiResearch.proof.rows
+    currentInterests: profile.interests.items
   },
   projects: {
     title: 'Projects',
@@ -187,48 +94,6 @@ const allSections = {
     heading: profile.stack.heading,
     technologies: profile.stack.technologies
   },
-  posthog: {
-    title: 'PostHog-tailored contexts',
-    relationship: 'Konrad has implemented and used PostHog as a product analytics tool. He has never been employed by PostHog; these are application materials.',
-    roles: posthogRoleContexts
-  },
-  linear: {
-    title: 'Linear-tailored context',
-    role: targetedRoleContexts.find((role) => role.id === 'linear-fullstack-engineer')
-  },
-  medusa: {
-    title: 'Medusa-tailored context',
-    role: targetedRoleContexts.find((role) => role.id === 'medusa-product-engineer')
-  },
-  n8n: {
-    title: 'n8n-tailored contexts',
-    page: {
-      title: profile.n8n.title,
-      summary: profile.n8n.description,
-      proof: profile.n8n.proof.rows,
-      ideas: profile.n8n.ideas.items
-    },
-    roles: [
-      targetedRoleContexts.find((role) => role.id === 'n8n-ai-engineer'),
-      targetedRoleContexts.find((role) => role.id === 'n8n-product-engineer')
-    ]
-  },
-  plain: {
-    title: 'Plain-tailored context',
-    role: targetedRoleContexts.find((role) => role.id === 'plain-ai-product-engineer')
-  },
-  plane: {
-    title: 'Plane company context',
-    company: planeCompanyContext
-  },
-  polar: {
-    title: 'Polar-tailored context',
-    role: targetedRoleContexts.find((role) => role.id === 'polar-senior-product-engineer')
-  },
-  lago: {
-    title: 'Lago-tailored context',
-    role: targetedRoleContexts.find((role) => role.id === 'lago-product-engineer-growth')
-  },
   contact: {
     title: 'Contact',
     availability: profile.person.availability,
@@ -239,20 +104,12 @@ const allSections = {
 } as const
 
 const sectionIdsByFocus: Record<ProfileFocus, (keyof typeof allSections)[]> = {
-  full: ['overview', 'cv', 'experience', 'projects', 'ai', 'stack', 'posthog', 'n8n', 'plain', 'plane', 'polar', 'lago', 'contact'],
+  full: ['overview', 'cv', 'experience', 'projects', 'ai', 'stack', 'contact'],
   overview: ['overview', 'experience', 'projects', 'stack', 'contact'],
   cv: ['cv', 'experience', 'stack', 'contact'],
   experience: ['experience', 'projects', 'ai'],
-  ai: ['ai', 'projects', 'stack', 'posthog', 'linear', 'medusa', 'n8n', 'plain', 'plane', 'polar', 'lago'],
+  ai: ['ai', 'projects', 'stack'],
   projects: ['projects', 'experience', 'stack'],
-  posthog: ['posthog', 'experience', 'ai', 'cv', 'contact'],
-  linear: ['linear', 'experience', 'ai', 'cv', 'contact'],
-  medusa: ['medusa', 'experience', 'ai', 'cv', 'contact'],
-  n8n: ['n8n', 'experience', 'ai', 'cv', 'contact'],
-  plain: ['plain', 'experience', 'ai', 'cv', 'contact'],
-  plane: ['plane', 'experience', 'ai', 'cv', 'contact'],
-  polar: ['polar', 'experience', 'ai', 'cv', 'contact'],
-  lago: ['lago', 'experience', 'ai', 'cv', 'contact'],
   contact: ['contact', 'cv']
 }
 
@@ -366,112 +223,6 @@ export const profileDocuments: ProfileDocument[] = [
     url: absoluteUrl('/#technologies'),
     text: lines([profile.stack.heading, compactList(profile.stack.technologies)]),
     metadata: { section: 'stack' }
-  },
-  {
-    id: 'posthog-context',
-    title: 'PostHog-tailored role contexts',
-    url: absoluteUrl('/posthog'),
-    text: lines([
-      allSections.posthog.relationship,
-      ...posthogRoleContexts.map((role) =>
-        lines([
-          role.title,
-          role.summary,
-          ...role.proof.map((row) => `${row.label}: ${row.heading} ${row.description}`),
-          ...role.ideas.map((idea) => `${idea.label}: ${idea.description}`)
-        ])
-      )
-    ]),
-    metadata: { section: 'posthog' }
-  },
-  {
-    id: 'linear-context',
-    title: 'Linear-tailored role context',
-    url: absoluteUrl('/linear'),
-    text: lines([
-      profile.linear.title,
-      profile.linear.description,
-      ...profile.linear.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`),
-      ...profile.linear.ideas.items.map((idea) => `${idea.label}: ${idea.description}`)
-    ]),
-    metadata: { section: 'linear' }
-  },
-  {
-    id: 'medusa-context',
-    title: 'Medusa-tailored role context',
-    url: absoluteUrl('/medusa'),
-    text: lines([
-      profile.medusa.title,
-      profile.medusa.description,
-      ...profile.medusa.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`),
-      ...profile.medusa.ideas.items.map((idea) => `${idea.label}: ${idea.description}`)
-    ]),
-    metadata: { section: 'medusa' }
-  },
-  {
-    id: 'n8n-context',
-    title: 'n8n-tailored role contexts',
-    url: absoluteUrl('/n8n'),
-    text: lines([
-      profile.n8n.title,
-      profile.n8n.description,
-      ...profile.n8n.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`),
-      profile.n8n.cv.aiEngineer.title,
-      profile.n8n.cv.aiEngineer.description,
-      ...profile.n8n.cv.aiEngineer.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`),
-      profile.n8n.cv.productEngineer.title,
-      profile.n8n.cv.productEngineer.description,
-      ...profile.n8n.cv.productEngineer.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`)
-    ]),
-    metadata: { section: 'n8n' }
-  },
-  {
-    id: 'plain-context',
-    title: 'Plain-tailored role context',
-    url: absoluteUrl('/plain'),
-    text: lines([
-      profile.plain.title,
-      profile.plain.description,
-      ...profile.plain.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`),
-      ...profile.plain.ideas.items.map((idea) => `${idea.label}: ${idea.description}`)
-    ]),
-    metadata: { section: 'plain' }
-  },
-  {
-    id: 'plane',
-    title: 'Plane company context',
-    url: absoluteUrl('/plane'),
-    text: lines([
-      profile.plane.title,
-      planeCompanyContext.summary,
-      ...planeCompanyContext.proof.map((row) => `${row.label}: ${row.heading} ${row.description}`),
-      ...planeCompanyContext.ideas.map((idea) => `${idea.label}: ${idea.description}`)
-    ]),
-    metadata: { section: 'plane', scope: 'company' }
-  },
-  {
-    id: 'polar-context',
-    title: 'Polar-tailored role context',
-    url: absoluteUrl('/polar'),
-    text: lines([
-      profile.polar.title,
-      profile.polar.description,
-      ...profile.polar.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`),
-      ...profile.polar.ideas.items.map((idea) => `${idea.label}: ${idea.description}`)
-    ]),
-    metadata: { section: 'polar' }
-  },
-  {
-    id: 'lago-context',
-    title: 'Lago-tailored role context',
-    url: absoluteUrl('/lago'),
-    text: lines([
-      profile.lago.title,
-      profile.lago.description,
-      ...profile.lago.proof.rows.map((row) => `${row.label}: ${row.heading} ${row.description}`),
-      ...profile.lago.ideas.items.map((idea) => `${idea.label}: ${idea.description}`)
-    ]),
-    metadata: { section: 'lago' }
   },
   {
     id: 'contact',

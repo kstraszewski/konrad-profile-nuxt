@@ -16,7 +16,6 @@
         <NuxtLink to="/#work" @click="menuOpen = false">Selected work</NuxtLink>
         <NuxtLink to="/#track" @click="menuOpen = false">About</NuxtLink>
         <NuxtLink to="/#contact" @click="menuOpen = false">Get in touch <HomeIcon name="arrow-up-right" :size="18" /></NuxtLink>
-        <NuxtLink class="mcp-nav__cv" to="/cv">CV <HomeIcon name="arrow-up-right" :size="18" /></NuxtLink>
       </nav>
     </header>
 
@@ -324,8 +323,6 @@ useHead({ meta: [{ name: 'theme-color', content: '#f4f5f6' }] })
 .mcp-nav__links a { position: relative; display: inline-flex; align-items: center; gap: 12px; min-height: 44px; text-decoration: none; }
 .mcp-nav__links a::after { position: absolute; left: 0; right: 0; bottom: 10px; height: 1px; background: currentColor; content: ''; transform: scaleX(0); transform-origin: right; transition: transform 200ms var(--mcp-ease); }
 .mcp-nav__links a:hover { color: var(--mcp-blue); }
-.mcp-nav__cv { border-left: 1px solid var(--mcp-line); padding-left: 28px; }
-.mcp-nav__links .mcp-nav__cv::after { left: 28px; }
 .mcp-menu { display: none; }
 .mcp-kicker { margin: 0; font-size: 11px; font-weight: 500; line-height: 1.7; letter-spacing: 1.1px; text-transform: uppercase; }
 .mcp-kicker > span { margin-inline: 6px; color: var(--mcp-muted); }
@@ -449,7 +446,6 @@ useHead({ meta: [{ name: 'theme-color', content: '#f4f5f6' }] })
   .mcp-nav__links.is-open { display: grid; grid-template-columns: 1fr 1fr; }
   .mcp-nav__links a { min-height: 48px; }
   .mcp-nav__links a::after { display: none; }
-  .mcp-nav__cv { border: 0; padding: 0; }
   .mcp-hero { grid-template-columns: 1fr; padding-top: 39px; gap: 0; }
   .mcp-hero h1 { font-size: clamp(63px, 12vw, 90px); margin-left: -3px; }
   .mcp-hero__intro { font-size: 17px; }

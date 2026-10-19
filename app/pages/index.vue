@@ -48,7 +48,6 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
         <a href="#work" @click="menuOpen = false">Selected work</a>
         <a href="#track" @click="menuOpen = false">About</a>
         <a href="#contact" @click="menuOpen = false">Get in touch <HomeIcon name="arrow-up-right" :size="18" /></a>
-        <NuxtLink class="home-nav__cv" to="/cv">CV <HomeIcon name="arrow-up-right" :size="18" /></NuxtLink>
       </nav>
     </header>
 
@@ -74,7 +73,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
               <HomeIcon name="download" />
             </a>
           </div>
-          <HomeGithubContributions />
+          <ProfileActivityStats />
         </div>
 
         <aside class="home-poster" aria-label="My approach: think, build, ship, learn, repeat." data-stack-focus>
@@ -164,8 +163,6 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 .home-nav__links a { position: relative; display: inline-flex; align-items: center; gap: 12px; min-height: 44px; text-decoration: none; }
 .home-nav__links a::after { position: absolute; left: 0; right: 0; bottom: 10px; height: 1px; background: currentColor; content: ''; transform: scaleX(0); transform-origin: right; transition: transform 200ms var(--home-ease); }
 .home-nav__links a:hover { color: var(--home-blue); }
-.home-nav__cv { border-left: 1px solid var(--home-line); padding-left: 28px; }
-.home-nav__links .home-nav__cv::after { left: 28px; }
 .home-menu { display: none; }
 .home-kicker { margin: 0; font-size: 11px; font-weight: 500; line-height: 1.7; letter-spacing: 1.1px; text-transform: uppercase; }
 .home-kicker > span { margin-inline: 6px; color: var(--home-muted); }
@@ -292,7 +289,6 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
   .home-nav__links.is-open { display: grid; grid-template-columns: 1fr 1fr; }
   .home-nav__links a { min-height: 48px; }
   .home-nav__links a::after { display: none; }
-  .home-nav__cv { border: 0; padding: 0; }
   .home-hero { grid-template-columns: 1fr; padding-top: 39px; gap: 0; }
   .home-hero .home-kicker { font-size: 9px; }
   .home-hero h1 { font-size: clamp(63px, 12vw, 90px); margin-top: 24px; margin-left: -3px; }

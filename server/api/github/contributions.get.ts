@@ -1,16 +1,10 @@
-import { createError } from 'h3'
-import { defineCachedEventHandler } from 'nitropack/runtime'
-import { fetchGitHubContributions } from '../../utils/githubContributions'
+import { createError, defineEventHandler } from 'h3'
+import { getGitHubContributions } from '../../utils/cachedGithubContributions'
 
-export default defineCachedEventHandler(async () => {
+export default defineEventHandler(async (event) => {
   try {
-    return await fetchGitHubContributions()
+    return await getGitHubContributions(event)
   } catch {
     throw createError({ statusCode: 503, statusMessage: 'GitHub contributions unavailable' })
   }
-}, {
-  name: 'github-contributions',
-  getKey: () => 'kstraszewski',
-  maxAge: 60 * 60 * 6,
-  swr: true,
 })

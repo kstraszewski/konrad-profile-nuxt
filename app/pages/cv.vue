@@ -6,17 +6,19 @@
         <span>{{ profile.person.name }}</span>
       </NuxtLink>
 
-      <span class="cv-top__meta">{{ profile.cv.downloads.length }} PDF files</span>
+      <span class="cv-top__meta">{{ publicCvDownloads.length }} PDF</span>
     </header>
 
     <section class="cv-previews" aria-labelledby="cv-previews-title">
       <div class="cv-previews__intro">
         <p class="cv-eyebrow">Download CV</p>
-        <h1 id="cv-previews-title">Pick the version you want to download.</h1>
+        <h1 id="cv-previews-title">Download my CV.</h1>
       </div>
 
+      <ProfileActivityStats class="cv-activity" />
+
       <div class="cv-preview-grid">
-        <article v-for="option in profile.cv.downloads" :key="option.href" class="cv-preview">
+        <article v-for="option in publicCvDownloads" :key="option.href" class="cv-preview">
           <div class="cv-preview__header">
             <div>
               <p class="cv-preview__label">PDF</p>
@@ -75,6 +77,7 @@
 
 <script setup>
 import { profile } from '~/data/profile'
+import { publicCvDownloads } from '~/data/cvDownloads'
 
 const posthog = usePostHog()
 
@@ -323,9 +326,16 @@ useRouteSeo('/cv')
 
 .cv-preview-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 860px);
   gap: 20px;
   min-width: 0;
+}
+
+.cv-activity {
+  margin: 0 0 38px;
+  padding: 24px 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
 }
 
 .cv-preview {
@@ -922,7 +932,7 @@ useRouteSeo('/cv')
 
 @media (max-width: 1280px) {
   .cv-preview-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
 }
 

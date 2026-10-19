@@ -1,7 +1,8 @@
 import { profile } from '../../../app/data/profile'
 import { buildCvPdf } from '../../utils/cvPdf'
+import { getGitHubContributions } from '../../utils/cachedGithubContributions'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   const requestPath = event.node.req.url ?? ''
   const rawVariant = `${event.context.params?.variant ?? ''} ${requestPath}`.toLowerCase()
   let variant: Parameters<typeof buildCvPdf>[1] = 'general'
@@ -38,6 +39,8 @@ export default defineEventHandler((event) => {
   setHeader(event, 'Content-Type', 'application/pdf')
   setHeader(event, 'Content-Disposition', `${disposition}; filename="${filename}"`)
   setHeader(event, 'Cache-Control', 'no-store')
+  setHeader(event, 'X-Robots-Tag', 'noindex, nofollow')
 
-  return buildCvPdf(profile, variant)
+  const githubContributions = await getGitHubContributions(event).catch(() => undefined)
+  return buildCvPdf(profile, variant, githubContributions)
 })

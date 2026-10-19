@@ -1,3 +1,6 @@
+import { codexUsage, formatCodexTokens } from '#shared/data/activity'
+import type { GitHubContributions } from './githubContributions'
+
 type Profile = typeof import('../../app/data/profile').profile
 type CvVariant =
   | 'general'
@@ -543,9 +546,65 @@ const sectionTitle = (doc: PdfDoc, label: string) => {
   doc.y += 30
 }
 
-const drawGeneralCv = (profile: Profile) => {
+const formatActivityDate = (date: string) =>
+  new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC'
+  }).format(new Date(date))
+
+const drawActivityStats = (
+  doc: PdfDoc,
+  githubContributions: GitHubContributions | undefined,
+  layout: { x: number; y: number; width: number; stacked?: boolean; general?: boolean }
+) => {
+  const { x, y, width, stacked = false, general = false } = layout
+  const theme = general
+    ? { panel: colors.warm, line: colors.rule, text: colors.ink, muted: colors.dim, accent: colors.accent, shadow: false }
+    : doc.theme
+  const height = stacked ? 116 : 74
+  const inset = stacked ? 12 : 14
+  const valueSize = stacked ? 20 : 24
+  const githubX = stacked ? x + inset : x + width / 2 + inset
+  const githubY = stacked ? y + 78 : y + 27
+  const githubUrl = githubContributions?.profileUrl ?? 'https://github.com/kstraszewski'
+
+  doc.panel(x, y, width, height, theme.panel, theme.line, theme.shadow)
+  if (stacked) {
+    doc.line(x + inset, y + 56, x + width - inset, y + 56, theme.line, 0.6)
+  } else {
+    doc.line(x + width / 2, y + 12, x + width / 2, y + height - 12, theme.line, 0.6)
+  }
+
+  doc.text(formatCodexTokens(), x + inset, y + 27, valueSize, 'F2', theme.text)
+  doc.text('Codex tokens (approx. total)', x + inset, y + 41, stacked ? 7.3 : 8.3, 'F1', theme.text)
+  doc.text(`Screenshot / ${formatActivityDate(codexUsage.recordedAt)}`, x + inset, y + 52, stacked ? 6.3 : 7, 'F1', theme.muted)
+
+  doc.text(
+    githubContributions ? githubContributions.total.toLocaleString('en-US') : 'Unavailable',
+    githubX,
+    githubY,
+    githubContributions ? valueSize : stacked ? 15 : 19,
+    'F2',
+    theme.text
+  )
+  doc.linkText('GitHub contributions / last 12 months', githubUrl, githubX, githubY + 14, stacked ? 6.9 : 8.3, theme.text)
+  doc.text(
+    githubContributions ? `As of ${formatActivityDate(githubContributions.fetchedAt)}` : 'Latest count on GitHub profile',
+    githubX,
+    githubY + 25,
+    stacked ? 6.3 : 7,
+    'F1',
+    theme.muted
+  )
+}
+
+const drawGeneralCv = (profile: Profile, githubContributions?: GitHubContributions) => {
   const doc = new PdfDoc('general')
   drawGeneralHeader(doc, profile)
+  drawActivityStats(doc, githubContributions, { x: PAGE.margin, y: 154, width: 499, general: true })
+  doc.y = 258
 
   sectionTitle(doc, 'Profile')
   doc.y = doc.textBlock(profile.cv.summary, PAGE.margin, doc.y, 500, 11, 15, { color: colors.ink })
@@ -559,6 +618,7 @@ const drawGeneralCv = (profile: Profile) => {
   })
 
   doc.y += 16
+  doc.ensure(112)
   sectionTitle(doc, 'Experience')
 
   profile.track.experience.forEach((item) => {
@@ -659,7 +719,7 @@ const targetCard = (doc: PdfDoc, x: number, y: number, width: number, height: nu
   doc.panel(x, y, width, height, doc.theme.panel, doc.theme.line, doc.theme.shadow)
 }
 
-const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>) => {
+const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>, githubContributions?: GitHubContributions) => {
   const doc = new PdfDoc(variant)
   const theme = doc.theme
   const headlineFont = theme === cvThemes.medusa || theme === cvThemes.plain || theme === cvThemes.lago || theme === cvThemes.oferteo || theme === cvThemes.neoiq || theme === cvThemes.plane ? 'F2' : 'F4'
@@ -795,6 +855,7 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
     doc.text(step.label, 272, y + 16, 9.2, 'F2', theme.text)
     compactTextBlock(doc, step.description, 350, y + 14, 178, 7.3, 9, 3, { color: theme.muted })
   })
+  drawActivityStats(doc, githubContributions, { x: PAGE.margin, y: 662, width: 190, stacked: true })
 
   doc.addPage()
   targetHeader(doc, profile, roleLabel)
@@ -847,5 +908,5 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
   return doc.finish()
 }
 
-export const buildCvPdf = (profile: Profile, variant: CvVariant) =>
-  variant === 'general' ? drawGeneralCv(profile) : drawTargetedCv(profile, variant)
+export const buildCvPdf = (profile: Profile, variant: CvVariant, githubContributions?: GitHubContributions) =>
+  variant === 'general' ? drawGeneralCv(profile, githubContributions) : drawTargetedCv(profile, variant, githubContributions)
