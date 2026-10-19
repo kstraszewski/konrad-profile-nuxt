@@ -11,6 +11,12 @@ yarn-error.log*
 pnpm-debug.log*
 .playwright-mcp/
 
+# Local application records, generated CVs and verification files.
+/reports/
+/output/pdf/
+/tmp/
+.agents/skills/**/Archive.zip
+
 # Legacy static export kept locally as reference, not part of the Nuxt project.
 Konrad CV*.html
 Konrad Straszewski - standalone.html

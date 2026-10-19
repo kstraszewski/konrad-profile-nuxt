@@ -52,3 +52,13 @@ See [setup, behavior and limits](docs/oferteo-demo.md).
 ```bash
 NODE_ENV=development node --experimental-strip-types --test scripts/test-oferto.ts scripts/test-oferto-botid.ts scripts/test-oferto-creator.ts
 ```
+
+## Agent skills
+
+Project-local skills for Nuxt/Vue, AI SDK, Neon Postgres, UI, MCP, and Vercel
+are in `.agents/skills/`, with Claude Code links in `.claude/skills/`.
+See [agent instructions](AGENTS.md) and [sources and update commands](docs/agent-skills.md).
+
+```bash
+npm run skills:update
+```

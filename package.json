@@ -12,6 +12,8 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "typecheck": "nuxt typecheck",
+    "skills:list": "npx --yes skills@1.7.0 list",
+    "skills:update": "node scripts/update-skills.mjs",
     "test:motion": "node --experimental-strip-types --test scripts/test-scene-drag.ts",
     "test:mcp": "node scripts/test-mcp.mjs",
     "test:oferteo": "NODE_ENV=development node --experimental-strip-types --test scripts/test-oferto*.ts"
