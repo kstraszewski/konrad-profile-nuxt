@@ -61,13 +61,14 @@ for (const path of ['/', '/?ref=share', '/jasne.ai', '/cv', '/mcp', '/oferteo', 
     assert.ok(links.some((link) => link.rel === 'apple-touch-icon' && link.href === '/apple-touch-icon.png'))
     assert.ok(links.some((link) => link.rel === 'icon' && link.sizes === '32x32'))
     assert.ok(links.some((link) => link.rel === 'manifest' && link.href === '/site.webmanifest'))
-    assert.ok(title.includes('Full-Stack TypeScript'))
+    assert.ok(title.includes('AI-native Product Engineer'))
     assert.ok(!title.includes('Nuxt/Vue'))
     const jsonLd = head.match(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/i)?.[1]
     assert.ok(jsonLd, 'SSR JSON-LD')
     const graph = JSON.parse(jsonLd)['@graph']
     const person = graph.find((entry) => entry['@type'] === 'Person')
     assert.ok(person && !person.image, 'do not label a brand card as a portrait')
+    assert.equal(person.jobTitle, 'AI-native Product Engineer')
     assert.ok(person.sameAs.every((url) => /github\.com\/kstraszewski|linkedin\.com\/in\//.test(url)))
     assert.ok(graph.find((entry) => entry['@type'] === 'ProfilePage').primaryImageOfPage)
   }

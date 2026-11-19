@@ -17,7 +17,7 @@ const closeMenu = (event) => {
 const trackJasne = () => posthog?.capture('hero_jasne_link_clicked')
 const trackCvDownload = () => posthog?.capture('cv_downloaded', {
   variant: 'general',
-  label: 'Ogólne CV',
+  label: 'AI-native Product Engineer',
   source: 'hero',
 })
 
@@ -47,6 +47,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
       <nav id="home-navigation" class="home-nav__links" :class="{ 'is-open': menuOpen }" aria-label="Main navigation">
         <a href="#work" @click="menuOpen = false">Selected work</a>
         <a href="#track" @click="menuOpen = false">About</a>
+        <NuxtLink :to="profile.links.aiToUi.href" @click="menuOpen = false">AI-to-UI</NuxtLink>
+        <a :href="profile.links.medium.href" target="_blank" rel="noopener noreferrer" @click="menuOpen = false">Blog on Medium</a>
         <a href="#contact" @click="menuOpen = false">Get in touch <HomeIcon name="arrow-up-right" :size="18" /></a>
       </nav>
     </header>
@@ -54,26 +56,24 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
     <main id="main">
       <section class="home-hero home-wrap" aria-labelledby="home-title" data-stack-zone>
         <div class="home-hero__intro">
-          <p class="home-kicker home-reveal" style="--d: 0">Konrad Straszewski <span>—</span> TypeScript · full-stack · AI</p>
+          <p class="home-kicker home-reveal" style="--d: 0">Konrad Straszewski <span>·</span> Full-stack TypeScript</p>
           <h1 id="home-title">
-            <span class="home-line" style="--d: 1"><span>Engineer.</span></span><br>
-            <span class="home-line" style="--d: 2"><span>Builder.</span></span><br>
-            <span class="home-line home-line--accent" style="--d: 3"><span>Still curious.</span></span>
+            <span class="home-line" style="--d: 1"><span>AI-native</span></span><br>
+            <span class="home-line" style="--d: 2"><span>Product</span></span><br>
+            <span class="home-line home-line--accent" style="--d: 3"><span>Engineer</span></span>
           </h1>
           <p class="home-hero__copy home-reveal" style="--d: 5">
-            I build full-stack products in TypeScript, put AI to work, and help teams ship.
-            I helped teams build software with AI at <a :href="profile.links.lendi.href" target="_blank" rel="noreferrer">Lendi</a> from 2024 to 2026.
-            Independently building <NuxtLink to="/jasne.ai" @click="trackJasne">jasne.ai</NuxtLink>.
+            I build software with AI coding agents. At Jasne, I build tools that help sales teams find product answers and train new colleagues.
+            At <a :href="profile.links.lendi.href" target="_blank" rel="noreferrer">Lendi</a>, I taught teams to build software with AI from 2024 to 2026.
           </p>
           <div class="home-hero__actions">
-            <a class="home-button" href="#work">Explore my work <HomeIcon name="arrow-down-right" :size="22" /></a>
-            <a class="home-text-link" href="#contact">Let’s talk <HomeIcon name="arrow-up-right" /></a>
+            <NuxtLink class="home-button" :to="profile.links.jasne.href" @click="trackJasne">Read the Jasne case study <HomeIcon name="arrow-up-right" :size="22" /></NuxtLink>
+            <NuxtLink class="home-text-link" :to="profile.links.aiToUi.href">Try AI-to-UI <HomeIcon name="arrow-up-right" /></NuxtLink>
             <a class="home-text-link home-hero__cv" href="/api/cv/general.pdf" download="Konrad Straszewski CV.pdf" aria-label="Download CV as PDF" @click="trackCvDownload">
               Download CV
               <HomeIcon name="download" />
             </a>
           </div>
-          <ProfileActivityStats />
         </div>
 
         <aside class="home-poster" aria-label="My approach: think, build, ship, learn, repeat." data-stack-focus>
@@ -85,7 +85,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
         </aside>
 
         <div class="home-hero__foot">
-          <span class="home-availability"><i aria-hidden="true" /> Open to senior AI roles · remote</span>
+          <span class="home-availability"><i aria-hidden="true" /> Open to senior product engineering roles · remote</span>
           <span>Szczecin, Poland <HomeIcon class="home-hero__location" name="arrow-up-right" :size="15" /></span>
         </div>
       </section>
@@ -96,29 +96,29 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
           <span class="home-work__count">01 — 03</span>
         </div>
 
-        <article id="lendi" class="home-project home-project--lendi" data-reveal data-reveal-delay="60">
-          <div class="home-project__visual home-lendi">
-            <HomeLendiPreview />
-          </div>
-          <div class="home-project__body">
-            <p class="home-kicker">01 / Lendi <span>·</span> AI Manager <span>·</span> 2024–2026</p>
-            <h3>Building the product.<br>Then the way we build.</h3>
-            <p>I led a six-person frontend team from 2020 to 2023. From 2024 to 2026, I led AI adoption across the company and helped teams build tools and take ownership of products.</p>
-            <div class="home-project__tags"><span>AI adoption</span><span>Engineering leadership</span></div>
-            <a class="home-text-link" href="#track">The full journey <HomeIcon name="arrow-up-right" /></a>
-          </div>
-        </article>
-
         <article id="jasne" class="home-project home-project--jasne" data-reveal>
           <NuxtLink class="home-project__visual home-jasne" to="/jasne.ai" aria-label="Read the jasne.ai case study">
             <HomeJasnePreview />
           </NuxtLink>
           <div class="home-project__body">
-            <p class="home-kicker">02 / jasne.ai <span>·</span> Founder & builder</p>
-            <h3>Clear knowledge.<br>Confident teams.</h3>
-            <p>I’m building jasne.ai to help sales teams find product answers, learn faster, and put knowledge to work. An AI assistant, knowledge base, and tailored training — owned end to end, from product and design to code and rollout.</p>
-            <div class="home-project__tags"><span>AI assistant</span><span>Knowledge & learning</span><span>0 to 1 product</span></div>
-            <NuxtLink class="home-text-link" to="/jasne.ai">Explore jasne.ai <HomeIcon name="arrow-up-right" /></NuxtLink>
+            <p class="home-kicker">01 / jasne.ai <span>·</span> Founder &amp; product engineer</p>
+            <h3>Who gets to see a draft course?</h3>
+            <p>At Jasne, we moved courses and knowledge articles from individual teams to the organization that owns them. I changed how new organizations are created. Our team used AI-assisted browser tests to check who could edit and publish content after the move.</p>
+            <div class="home-project__tags"><span>PostgreSQL</span><span>Permissions</span><span>Playwright &amp; Midscene</span></div>
+            <NuxtLink class="home-text-link" to="/jasne.ai#migration">Read about the migration <HomeIcon name="arrow-up-right" /></NuxtLink>
+          </div>
+        </article>
+
+        <article id="lendi" class="home-project home-project--lendi" data-reveal>
+          <div class="home-project__visual home-lendi">
+            <HomeLendiPreview />
+          </div>
+          <div class="home-project__body">
+            <p class="home-kicker">02 / Lendi <span>·</span> AI Manager <span>·</span> 2024–2026</p>
+            <h3>Eight working products in one hackathon.</h3>
+            <p>After leading a six-person frontend team, I returned to Lendi to help colleagues use AI in their own work. I ran a hackathon for 25 to 30 people. About half came from non-technical roles. Together they built eight working products during the event.</p>
+            <div class="home-project__tags"><span>AI adoption</span><span>Engineering leadership</span></div>
+            <a class="home-text-link" href="#talks">Talks and workshops <HomeIcon name="arrow-down-right" /></a>
           </div>
         </article>
 
@@ -273,8 +273,16 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
 @keyframes home-pulse { 0% { opacity: .55; transform: scale(1); } 100% { opacity: 0; transform: scale(3.2); } }
 
 @media (min-width: 1450px) { .home-hero { padding-top: 70px; } }
+@media (min-width: 1001px) and (max-height: 800px) {
+  .home-nav { min-height: 76px; }
+  .home-hero { padding-top: 32px; }
+  .home-hero h1 { margin-block: 20px; font-size: clamp(68px, 12vh, 92px); }
+  .home-hero__copy { max-width: 48ch; }
+  .home-hero__actions { margin-top: 22px; }
+}
 @media (max-width: 1000px) {
   .home-wrap { width: calc(100% - 64px); }
+  .home-nav__links { gap: 20px; font-size: 13px; }
   .home-hero { gap: 32px; }
   .home-hero h1 { font-size: clamp(60px, 7.6vw, 78px); }
   .home-hero .home-kicker { font-size: 9px; letter-spacing: .7px; }

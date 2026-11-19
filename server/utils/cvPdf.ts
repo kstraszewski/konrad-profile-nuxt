@@ -1,4 +1,5 @@
 import { codexUsage, formatCodexTokens } from '#shared/data/activity'
+import { seoSite } from '../../app/data/seo'
 import type { GitHubContributions } from './githubContributions'
 
 type Profile = typeof import('../../app/data/profile').profile
@@ -396,8 +397,12 @@ class PdfDoc {
   }
 
   linkText(text: string, href: string, x: number, y: number, size: number, color: Color) {
-    const width = approxTextWidth(text, size)
     this.text(text, x, y, size, 'F1', color)
+    this.linkUnderline(text, href, x, y, size, color)
+  }
+
+  linkUnderline(text: string, href: string, x: number, y: number, size: number, color: Color) {
+    const width = approxTextWidth(text, size)
     this.line(x, y + 2, x + width, y + 2, color, 0.4)
     this.links.push({ href, rect: [x, PAGE.height - y - 3, x + width, PAGE.height - y + size] })
   }
@@ -531,10 +536,12 @@ const buildPdf = (pages: PdfPage[]) => {
 const drawGeneralHeader = (doc: PdfDoc, profile: Profile) => {
   doc.text('CV', PAGE.margin, 54, 9, 'F2', colors.accent)
   doc.text(profile.person.name, PAGE.margin, 90, 30, 'F4')
-  doc.text('Product Engineer / AI-native Builder', PAGE.margin, 112, 12, 'F1', colors.dim)
-  doc.text(profile.person.email, 356, 66, 9, 'F1', colors.dim)
-  doc.text(profile.person.phone, 356, 82, 9, 'F1', colors.dim)
-  doc.text(profile.links.linkedin.value, 356, 98, 9, 'F1', colors.dim)
+  doc.text(profile.cv.headline, PAGE.margin, 112, 13, 'F2')
+  doc.linkText(profile.person.email, profile.links.email.href, 356, 52, 9, colors.ink)
+  doc.linkText(profile.person.phone, profile.links.phone.href, 356, 68, 9, colors.ink)
+  doc.linkText('koonrad.dev', seoSite.defaultUrl, 356, 84, 9, colors.ink)
+  doc.linkText('LinkedIn', profile.links.linkedin.href, 356, 100, 9, colors.ink)
+  doc.linkText('GitHub', profile.links.github.href, 416, 100, 9, colors.ink)
   doc.line(PAGE.margin, 134, PAGE.width - PAGE.margin, 134, colors.rule)
   doc.y = 170
 }
@@ -554,62 +561,56 @@ const formatActivityDate = (date: string) =>
     timeZone: 'UTC'
   }).format(new Date(date))
 
-const drawActivityStats = (
+const drawActivityNote = (
   doc: PdfDoc,
   githubContributions: GitHubContributions | undefined,
-  layout: { x: number; y: number; width: number; stacked?: boolean; general?: boolean }
+  layout: { x: number; y: number; width: number; size: number; lineHeight: number; color: Color }
 ) => {
-  const { x, y, width, stacked = false, general = false } = layout
-  const theme = general
-    ? { panel: colors.warm, line: colors.rule, text: colors.ink, muted: colors.dim, accent: colors.accent, shadow: false }
-    : doc.theme
-  const height = stacked ? 116 : 74
-  const inset = stacked ? 12 : 14
-  const valueSize = stacked ? 20 : 24
-  const githubX = stacked ? x + inset : x + width / 2 + inset
-  const githubY = stacked ? y + 78 : y + 27
-  const githubUrl = githubContributions?.profileUrl ?? 'https://github.com/kstraszewski'
+  const { x, width, size, lineHeight, color } = layout
+  let y = layout.y
+  const drawFact = (parts: string[]) => {
+    const line = parts.join(' ')
+    const lines = approxTextWidth(line, size) <= width ? [line] : parts.flatMap((part) => wrapText(part, width, size))
 
-  doc.panel(x, y, width, height, theme.panel, theme.line, theme.shadow)
-  if (stacked) {
-    doc.line(x + inset, y + 56, x + width - inset, y + 56, theme.line, 0.6)
-  } else {
-    doc.line(x + width / 2, y + 12, x + width / 2, y + height - 12, theme.line, 0.6)
+    lines.forEach((text) => {
+      doc.text(text, x, y, size, 'F1', color)
+      y += lineHeight
+    })
   }
 
-  doc.text(formatCodexTokens(), x + inset, y + 27, valueSize, 'F2', theme.text)
-  doc.text('Codex tokens (approx. total)', x + inset, y + 41, stacked ? 7.3 : 8.3, 'F1', theme.text)
-  doc.text(`Screenshot / ${formatActivityDate(codexUsage.recordedAt)}`, x + inset, y + 52, stacked ? 6.3 : 7, 'F1', theme.muted)
+  doc.linkUnderline('GitHub', githubContributions?.profileUrl ?? 'https://github.com/kstraszewski', x, y, size, color)
+  drawFact(
+    githubContributions
+      ? [
+          `GitHub: ${githubContributions.total.toLocaleString('en-US')} contributions in the last 12 months,`,
+          `as of ${formatActivityDate(githubContributions.fetchedAt)}`
+        ]
+      : ['GitHub: latest contribution count on my profile']
+  )
+  drawFact([`Codex: about ${formatCodexTokens()} tokens used in total,`, `as of ${formatActivityDate(codexUsage.recordedAt)}`])
 
-  doc.text(
-    githubContributions ? githubContributions.total.toLocaleString('en-US') : 'Unavailable',
-    githubX,
-    githubY,
-    githubContributions ? valueSize : stacked ? 15 : 19,
-    'F2',
-    theme.text
-  )
-  doc.linkText('GitHub contributions / last 12 months', githubUrl, githubX, githubY + 14, stacked ? 6.9 : 8.3, theme.text)
-  doc.text(
-    githubContributions ? `As of ${formatActivityDate(githubContributions.fetchedAt)}` : 'Latest count on GitHub profile',
-    githubX,
-    githubY + 25,
-    stacked ? 6.3 : 7,
-    'F1',
-    theme.muted
-  )
+  return y
 }
 
-const drawGeneralCv = (profile: Profile, githubContributions?: GitHubContributions) => {
+const drawGeneralCv = (profile: Profile) => {
   const doc = new PdfDoc('general')
   drawGeneralHeader(doc, profile)
-  drawActivityStats(doc, githubContributions, { x: PAGE.margin, y: 154, width: 499, general: true })
-  doc.y = 258
 
   sectionTitle(doc, 'Profile')
   doc.y = doc.textBlock(profile.cv.summary, PAGE.margin, doc.y, 500, 11, 15, { color: colors.ink })
   doc.y += 18
 
+  sectionTitle(doc, 'Selected project')
+  doc.y = doc.textBlock(profile.cv.project.title, PAGE.margin, doc.y, 499, 17, 22, { font: 'F4' })
+  doc.y += 4
+  for (const paragraph of profile.cv.project.paragraphs) {
+    doc.y = doc.textBlock(paragraph, PAGE.margin, doc.y, 499, 11, 15)
+    doc.y += 8
+  }
+  doc.linkText('Read the migration case study at koonrad.dev/jasne.ai', `${seoSite.defaultUrl}${profile.links.jasne.href}#migration`, PAGE.margin, doc.y, 10, colors.accent)
+  doc.y += 40
+
+  sectionTitle(doc, 'Other work')
   profile.cv.highlights.forEach((highlight) => {
     doc.ensure(30)
     doc.text('-', PAGE.margin, doc.y, 10, 'F2', colors.accent)
@@ -617,8 +618,7 @@ const drawGeneralCv = (profile: Profile, githubContributions?: GitHubContributio
     doc.y += 6
   })
 
-  doc.y += 16
-  doc.ensure(112)
+  doc.addPage()
   sectionTitle(doc, 'Experience')
 
   profile.track.experience.forEach((item) => {
@@ -855,7 +855,14 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
     doc.text(step.label, 272, y + 16, 9.2, 'F2', theme.text)
     compactTextBlock(doc, step.description, 350, y + 14, 178, 7.3, 9, 3, { color: theme.muted })
   })
-  drawActivityStats(doc, githubContributions, { x: PAGE.margin, y: 662, width: 190, stacked: true })
+  drawActivityNote(doc, githubContributions, {
+    x: PAGE.margin,
+    y: 733,
+    width: 190,
+    size: 7.3,
+    lineHeight: 9,
+    color: theme.muted
+  })
 
   doc.addPage()
   targetHeader(doc, profile, roleLabel)
@@ -909,4 +916,4 @@ const drawTargetedCv = (profile: Profile, variant: Exclude<CvVariant, 'general'>
 }
 
 export const buildCvPdf = (profile: Profile, variant: CvVariant, githubContributions?: GitHubContributions) =>
-  variant === 'general' ? drawGeneralCv(profile, githubContributions) : drawTargetedCv(profile, variant, githubContributions)
+  variant === 'general' ? drawGeneralCv(profile) : drawTargetedCv(profile, variant, githubContributions)

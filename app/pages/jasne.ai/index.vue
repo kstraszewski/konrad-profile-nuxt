@@ -13,19 +13,22 @@
         </a>
       </section>
 
+      <section id="migration" class="jasne-page__migration" aria-labelledby="migration-title">
+        <p class="jasne-page__kicker"><time datetime="2026-11">November 2026</time></p>
+        <h2 id="migration-title">Changing who owns a course</h2>
+        <div class="jasne-page__grid">
+          <article v-for="beat in profile.jasne.beats" :key="beat.number" class="jasne-page__card">
+            <h3>{{ beat.heading }}</h3>
+            <p>{{ beat.description }}</p>
+          </article>
+        </div>
+      </section>
+
       <section class="jasne-page__facts" aria-label="jasne.ai facts">
         <div v-for="fact in profile.jasne.facts" :key="fact.label" class="jasne-page__fact">
           <div class="jasne-page__fact-label">{{ fact.label }}</div>
           <div class="jasne-page__fact-value">{{ fact.value }}</div>
         </div>
-      </section>
-
-      <section class="jasne-page__grid">
-        <article v-for="beat in profile.jasne.beats" :key="beat.number" class="jasne-page__card">
-          <div class="jasne-page__number">{{ beat.number }}</div>
-          <h2>{{ beat.heading }}</h2>
-          <p>{{ beat.description }}</p>
-        </article>
       </section>
     </main>
   </div>
@@ -61,7 +64,6 @@ useRouteSeo('/jasne.ai')
 
 .jasne-page__back,
 .jasne-page__kicker,
-.jasne-page__number,
 .jasne-page__fact-label {
   color: var(--dim);
   font-family: var(--font-mono);
@@ -144,12 +146,21 @@ useRouteSeo('/jasne.ai')
   font-weight: 500;
 }
 
+.jasne-page__migration {
+  margin-top: 64px;
+  scroll-margin-top: 88px;
+}
+
+.jasne-page__migration > h2 {
+  margin: 0 0 28px;
+  font: 500 clamp(2rem, 4vw, 3.25rem)/1.1 var(--font-headline);
+}
+
 .jasne-page__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 32px;
   min-width: 0;
-  margin-top: 96px;
 }
 
 .jasne-page__card {
@@ -157,12 +168,7 @@ useRouteSeo('/jasne.ai')
   border-top: 1px solid var(--ink);
 }
 
-.jasne-page__number {
-  margin-bottom: 18px;
-  color: var(--accent);
-}
-
-.jasne-page__card h2 {
+.jasne-page__card h3 {
   margin: 0 0 14px;
   font-family: var(--font-headline);
   font-size: 2rem;
@@ -258,10 +264,9 @@ useRouteSeo('/jasne.ai')
 
   .jasne-page__grid {
     gap: 28px;
-    margin-top: 64px;
   }
 
-  .jasne-page__card h2 {
+  .jasne-page__card h3 {
     font-size: 1.65rem;
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="lendi-preview" role="img" aria-label="Lendi: Frontend Lead from 2020 to 2023, then AI Manager from 2024 to now.">
+  <div class="lendi-preview" role="img" aria-label="Lendi: Frontend Lead from 2020 to 2023, then AI Manager from 2024 to 2026.">
     <div class="lendi-preview__inner">
       <div class="lendi-preview__header">
         <img class="lendi-preview__logo" src="/brands/lendi/logo.svg" width="132" height="47" alt="" />
@@ -26,7 +26,7 @@
         </div>
         <span class="lendi-preview__arrow"><HomeIcon name="arrow-right" :size="20" /></span>
         <div class="lendi-preview__role lendi-preview__role--current">
-          <span class="lendi-preview__date">2024 — NOW</span>
+          <span class="lendi-preview__date">2024–2026</span>
           <strong>AI Manager</strong>
         </div>
       </div>

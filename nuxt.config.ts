@@ -17,6 +17,9 @@ export default defineNuxtConfig({
     oferteoDatabaseUrl: process.env.NUXT_OFERTEO_DATABASE_URL || '',
     aiGatewayApiKey: process.env.AI_GATEWAY_API_KEY || '',
     oferteoAiModel: 'deepseek/deepseek-v4.1-flash',
+    // Enable live AI for /ai-to-ui on the local dev server with NUXT_AI_TO_UI_LOCAL_AI=1.
+    aiToUiLocalAi: process.env.NUXT_AI_TO_UI_LOCAL_AI || '',
+    aiToUiModel: '',
     public: {
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://koonrad.dev',
       posthogPublicKey: 'phc_B4WbaRJdBKtTZgC6QQhPJN2uN8HzCfxDXE8HkjqjVuWW',
@@ -40,6 +43,10 @@ export default defineNuxtConfig({
       redirect: '/oferto/demo'
     },
     '/api/oferto/**': {
+      headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' }
+    },
+    '/ai-to-ui': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
+    '/api/ai-to-ui/**': {
       headers: { 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' }
     },
     '/oferteo': {

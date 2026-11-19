@@ -15,8 +15,6 @@
         <h1 id="cv-previews-title">Download my CV.</h1>
       </div>
 
-      <ProfileActivityStats class="cv-activity" />
-
       <div class="cv-preview-grid">
         <article v-for="option in publicCvDownloads" :key="option.href" class="cv-preview">
           <div class="cv-preview__header">
@@ -26,7 +24,7 @@
               <p>{{ option.description }}</p>
             </div>
 
-            <a :href="option.href" download="Konrad Straszewski CV.pdf" @click="onDownload(option.label)">Download</a>
+            <a :href="option.href" download="Konrad Straszewski CV.pdf" @click="onDownload(option)">Download PDF</a>
           </div>
 
           <div
@@ -55,17 +53,17 @@
               <div class="cv-mini-general__head">
                 <span>CV</span>
                 <strong>{{ profile.person.name }}</strong>
-                <small>{{ profile.person.role }}</small>
+                <small>{{ profile.cv.headline }}</small>
               </div>
               <div class="cv-mini-general__section">
-                <span>Profile</span>
-                <p>{{ generalPreviewSummary }}</p>
+                <span>Selected project</span>
+                <p>{{ profile.cv.project.title }}</p>
               </div>
               <div class="cv-mini-general__rows">
                 <span v-for="item in profile.track.experience.slice(0, 2)" :key="`${item.year}-${item.role}`">
                   {{ item.year }} · {{ item.role }}
                 </span>
-                <span>Outside work · boxing, cars, technology, science</span>
+                <span>Experience · product engineering since 2017</span>
               </div>
             </template>
           </div>
@@ -80,9 +78,6 @@ import { profile } from '~/data/profile'
 import { publicCvDownloads } from '~/data/cvDownloads'
 
 const posthog = usePostHog()
-
-const generalPreviewSummary =
-  'Product Engineer and AI-native builder with PostgreSQL, Redis, product engineering, frontend leadership, and AI adoption.'
 
 const isPosthogDownload = (label) => label.includes('PostHog')
 const isN8nDownload = (label) => label.includes('n8n')
@@ -209,27 +204,9 @@ const posthogPreview = (label) => {
   }
 }
 
-const downloadVariant = (label) => {
-  if (isPlaneDownload(label)) return 'plane'
-  if (isNeoiqDownload(label)) return 'neoiq-fde-ai-manager'
-  if (isOferteoDownload(label)) return 'oferteo-fde-ai-manager'
-  if (label.includes('Plain')) return 'plain-ai-product-engineer'
-  if (label.includes('Polar')) return 'polar-senior-product-engineer'
-  if (label.includes('Lago')) return 'lago-product-engineer-growth'
-  if (label.includes('Linear')) return 'linear-fullstack-engineer'
-  if (label.includes('Medusa')) return 'medusa-product-engineer'
-  if (label.includes('n8n') && label.includes('AI Engineer')) return 'n8n-ai-engineer'
-  if (label.includes('n8n') && label.includes('Product Engineer')) return 'n8n-product-engineer'
-  if (isPosthogAiResearchDownload(label)) return 'posthog-ai-research'
-  if (isPosthogPmDownload(label)) return 'posthog-pm'
-  if (label.includes('Product Engineer')) return 'posthog-pe'
-
-  return 'general'
-}
-
-const onDownload = (label) => {
+const onDownload = ({ label, href }) => {
   posthog?.capture('cv_downloaded', {
-    variant: downloadVariant(label),
+    variant: href.slice('/api/cv/'.length, -'.pdf'.length),
     label,
   })
 }
@@ -329,13 +306,6 @@ useRouteSeo('/cv')
   grid-template-columns: minmax(0, 860px);
   gap: 20px;
   min-width: 0;
-}
-
-.cv-activity {
-  margin: 0 0 38px;
-  padding: 24px 0;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
 }
 
 .cv-preview {

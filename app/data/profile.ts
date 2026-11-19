@@ -2,9 +2,12 @@ import { oferteo } from './oferteo'
 import { neoiqCv } from './neoiq-cv'
 import { plane } from './plane'
 
+const groupAiWorkshops = 'Delivered 5 workshops on using AI for groups of 15-35 participants.'
+
 const aiEnablementHighlights = [
-  'Organized an agentic engineering hackathon for 25–30 participants, half with no technical background, resulting in 8 working products.',
-  'Led 6 workshops exclusively for non-technical participants, in groups of 3–4 people.'
+  'Ran an agentic engineering hackathon for 25-30 people, half non-technical, producing 8 working products.',
+  'Led 6 workshops for non-technical participants in groups of 3-4.',
+  groupAiWorkshops
 ] as const
 
 export const profile = {
@@ -14,10 +17,10 @@ export const profile = {
   person: {
     name: 'Konrad Straszewski',
     initials: 'KS',
-    role: 'Full-Stack TypeScript Engineer',
+    role: 'AI-native Product Engineer',
     currentRole: 'Founder of jasne.ai',
     location: 'Szczecin, Poland',
-    availability: 'Available · senior AI roles · remote',
+    availability: 'Open to senior product engineering roles · remote',
     openTo: 'Building products',
     stackPosture: 'PostgreSQL, Redis, vendor-agnostic',
     email: 'koonradstraszewski@gmail.com',
@@ -52,6 +55,17 @@ export const profile = {
       value: 'in/konrad-straszewski',
       href: 'https://www.linkedin.com/in/konrad-straszewski-b4a939165/',
       external: true
+    },
+    medium: {
+      label: 'Medium',
+      value: 'medium.com/@koonradstraszewski',
+      href: 'https://medium.com/@koonradstraszewski',
+      external: true
+    },
+    aiToUi: {
+      label: 'AI-to-UI',
+      value: 'Generative UI demo',
+      href: '/ai-to-ui'
     },
     jasne: {
       label: 'jasne.ai',
@@ -234,11 +248,11 @@ export const profile = {
     sub: 'Case study · 2024 →',
     name: 'jasne.ai',
     intro:
-      "An AI assistant, knowledge base, and tailored training for sales teams. I'm building jasne.ai end to end - product, design, code, infrastructure, and rollout.",
+      'I build Jasne, a product sales teams use to look up answers and train colleagues. The assistant and the training tools share the same company knowledge, so who can write, edit and publish each piece matters.',
     shotLabel: 'FIG. 03.01 - JASNE.AI · PRODUCT SURFACE',
     shotFooter: ['VERTICAL AI · 0→1 PRODUCT', '2024 → NOW'],
     facts: [
-      { label: 'Role', value: 'Founder + Product lead' },
+      { label: 'Role', value: 'Founder & product engineer' },
       { label: 'Stack', value: 'Expo, Nuxt, Vercel AI SDK' },
       { label: 'Models', value: 'Gemini' },
       { label: 'DB', value: 'PostgreSQL / Supabase' },
@@ -248,21 +262,21 @@ export const profile = {
     beats: [
       {
         number: '01',
-        heading: 'Execution got cheap',
+        heading: 'Keeping drafts private',
         description:
-          'The old rule was: ideas are free, execution is the moat. AI breaks that too. Building is getting cheaper; the scarce work is knowing what should exist, for whom, and why it spreads.'
+          'A course author used to need a team before they could start writing. We moved ownership to the organization. A new draft outside a shared folder stays with the author and organization admins until someone shares or publishes it. We had to preserve existing permissions and learning history through the move.'
       },
       {
         number: '02',
-        heading: 'Knowledge becomes useful',
+        heading: 'What the browser tests missed',
         description:
-          'jasne.ai helps sales teams find product answers, learn company processes, and build confidence through tailored training. The goal is to make shared knowledge useful in everyday work.'
+          'Our Playwright tests used Midscene to interact with the interface. They were passing, but the setup still created organizations under the old rules. A teammate updated it. Running the same flows in the new model revealed cases where members with the right permissions could still be denied access.'
       },
       {
         number: '03',
-        heading: 'Human influence is the moat',
+        heading: 'What I shipped',
         description:
-          'In the next few years, the unique value of human influence - taste, trust, credibility, relationships, point of view - becomes the scarce layer. jasne.ai is built to amplify it.'
+          'I changed how we create new customer organizations so each one starts in the new model. Creating the organization and applying its defaults now happen in one database transaction. Both succeed together or both roll back. After release, I created an organization and assigned a manager in production to verify the change.'
       }
     ]
   },
@@ -469,6 +483,17 @@ export const profile = {
       }
     ]
   },
+  sharing: {
+    talk: {
+      event: 'Vibe Conf 2026',
+      date: '2026-04-20',
+      dateLabel: '20 April 2026',
+      location: 'Gdynia, Centrum Nauki Experyment',
+      title: 'Vibe coding > Agentic Engineering - czyli jak przestać bać się kodu.',
+      href: 'https://www.vibeconf.pl/agenda'
+    },
+    workshops: groupAiWorkshops
+  },
   contact: {
     label: "§ 09 · Let's talk",
     heading: {
@@ -482,21 +507,25 @@ export const profile = {
   },
   cv: {
     title: 'CV',
-    headline: 'Product engineer and AI-native builder who still ships the interface.',
+    headline: 'AI-native Product Engineer',
     subhead:
-      'A focused product-engineering CV: product ownership, AI-native building, PostgreSQL, Redis, PostHog practice, jasne.ai, and the stack I use to ship.',
+      'Full-stack TypeScript engineering, the Jasne migration, and my work helping teams build software with AI.',
     summary:
-      'Product Engineer and AI-native builder working in product engineering since 2017. Frontend Developer at Finpack (2017–2020), Frontend Lead at Lendi (2020–2023), AI Builder at NeoIQ (2023–2024), and AI Manager at Lendi (2024–2026). My work is practical: own the product surface, build the tool, shape PostgreSQL/Redis-backed data flows, instrument the loop, write the context, and keep iterating with users and teams.',
+      'I build full-stack TypeScript products with AI coding agents. At Jasne, I design and ship tools that help sales teams find product answers and train new colleagues. As AI Manager at Lendi from 2024 to 2026, I helped teams use AI to build their own software. I have worked in product engineering since 2017 and am based in Szczecin, Poland.',
+    project: {
+      title: 'Jasne: moving to an organization-wide workspace',
+      paragraphs: [
+        'Training material used to belong to a team. We moved content ownership to the organization and separated who can edit a draft from who can see it once published.',
+        'I changed onboarding so each new standard organization starts on the new model in one database transaction. After deployment, I verified that I could create an organization and assign a manager in production.',
+        'During the migration, our team discovered that passing end-to-end tests still used the old organization setup. A teammate updated the Playwright and Midscene tests to use the new model. That exposed permission errors the old setup had missed.'
+      ]
+    },
     aiEnablementHighlights,
     highlights: [
-      "Helped scale Lendi from a startup into Poland's #1 broker and the fastest-growing broker in Europe.",
-      'Progressed from Frontend Developer at Finpack to Frontend Lead at Lendi, AI Builder at NeoIQ, and AI Manager at Lendi while staying close to product surfaces, UX, tooling, and shipping.',
-      'Led practical AI adoption at Lendi: strategy, tooling, training, KPIs, production workflows, and the product-builder operating model.',
-      ...aiEnablementHighlights,
-      'Implemented PostHog in two organizations, used PostHog MCP heavily, and advocated for evidence-first product loops.',
-      'Strong with PostgreSQL and Redis: product data modeling, queryable workflows, caching, queues, and runtime state around real product surfaces.',
-      'Built jasne.ai as a 0->1 vertical AI product across product, UX, code, infra, AI integration, and distribution.',
-      'Based in Szczecin, Poland (GMT+2); strong async writing, docs, and product-context habits.'
+      'Ran an agentic engineering hackathon for 25-30 participants. About half came from non-technical roles. Participants built eight working products during the event.',
+      'Led a six-person frontend team at Lendi, responsible for the Vue and Nuxt applications used by brokers and their customers.',
+      'Worked on vector search and retrieval across large knowledge bases at NeoIQ.',
+      'Implemented PostHog in two organizations to help teams see how people use the products they ship.'
     ],
     downloads: [
       {
@@ -515,8 +544,8 @@ export const profile = {
         href: '/api/cv/oferteo-fde-ai-manager.pdf'
       },
       {
-        label: 'Ogólne CV',
-        description: 'PDF w stylu głównej strony',
+        label: 'AI-native Product Engineer',
+        description: 'Experience, selected work and the Jasne migration case study.',
         href: '/api/cv/general.pdf'
       },
       {

@@ -41,6 +41,8 @@ export default defineEventHandler(async (event) => {
   setHeader(event, 'Cache-Control', 'no-store')
   setHeader(event, 'X-Robots-Tag', 'noindex, nofollow')
 
+  if (variant === 'general') return buildCvPdf(profile, variant)
+
   const githubContributions = await getGitHubContributions(event).catch(() => undefined)
   return buildCvPdf(profile, variant, githubContributions)
 })

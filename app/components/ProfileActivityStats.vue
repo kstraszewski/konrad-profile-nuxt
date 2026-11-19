@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { codexUsage, formatCodexTokens } from '#shared/data/activity'
 
+defineProps<{ compact?: boolean }>()
+
 const { data: contributions } = await useFetch('/api/github/contributions', {
   lazy: true,
   retry: 0,
@@ -18,7 +20,15 @@ const codexDate = new Intl.DateTimeFormat('en-GB', {
 </script>
 
 <template>
-  <dl class="profile-activity" aria-label="GitHub and Codex activity">
+  <div v-if="compact" class="profile-activity-note">
+    <p v-if="contributions && formattedTotal">
+      <a :href="contributions.profileUrl" target="_blank" rel="noreferrer">GitHub</a>: {{ formattedTotal }} contributions in the last 12 months
+    </p>
+    <p :title="`Approximate total from ${codexUsage.source.toLowerCase()}`">
+      Codex: about {{ codexTotal }} tokens used in total, as of <time :datetime="codexUsage.recordedAt">{{ codexDate }}</time>
+    </p>
+  </div>
+  <dl v-else class="profile-activity" aria-label="GitHub and Codex activity">
     <div v-if="contributions && formattedTotal" class="profile-activity__item">
       <dt>
         <a :href="contributions.profileUrl" target="_blank" rel="noreferrer">
@@ -46,6 +56,11 @@ const codexDate = new Intl.DateTimeFormat('en-GB', {
 .profile-activity dt a:focus-visible { outline: 2px solid var(--home-blue, var(--accent)); outline-offset: 4px; }
 .profile-activity dd { margin: 0; color: var(--home-blue, var(--accent)); font-size: 32px; font-weight: 600; line-height: 1; letter-spacing: -1.2px; font-variant-numeric: tabular-nums; }
 .profile-activity .profile-activity__note { order: 2; color: var(--home-muted, var(--dim)); font-size: 11px; font-weight: 400; line-height: 1.5; letter-spacing: 0; }
+.profile-activity-note { display: flex; flex-wrap: wrap; gap: 4px 28px; color: var(--home-muted, var(--dim)); font-family: var(--font-body); font-size: 13px; line-height: 1.5; }
+.profile-activity-note p { margin: 0; }
+.profile-activity-note a { color: var(--home-ink, var(--ink)); text-decoration: underline; text-decoration-color: var(--home-line, var(--rule)); text-underline-offset: 3px; }
+.profile-activity-note a:hover { text-decoration-color: currentColor; }
+.profile-activity-note a:focus-visible { outline: 2px solid var(--home-blue, var(--accent)); outline-offset: 2px; }
 @media (max-width: 420px) {
   .profile-activity { gap: 16px; }
   .profile-activity__item + .profile-activity__item { padding-left: 16px; }

@@ -10,7 +10,7 @@
         loading="lazy"
         decoding="async"
       >
-      <span class="jasne-preview__label">INDEPENDENTLY BUILT</span>
+      <span class="jasne-preview__label">SALES TRAINING</span>
     </div>
 
     <HomeIcon class="jasne-preview__arrow" name="arrow-up-right" :size="28" />

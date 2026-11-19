@@ -27,6 +27,28 @@
         </div>
       </section>
 
+      <section id="talks" class="details-section sharing-section" aria-labelledby="sharing-heading">
+        <div class="section-intro">
+          <span class="section-kicker">Sharing what I learn</span>
+          <h2 id="sharing-heading">Talks &amp;<br />workshops.</h2>
+        </div>
+
+        <ul class="sharing-list">
+          <li>
+            <span class="section-kicker">Conference speaker</span>
+            <h3>{{ profile.sharing.talk.event }}</h3>
+            <p class="sharing-meta"><time :datetime="profile.sharing.talk.date">{{ profile.sharing.talk.dateLabel }}</time> · {{ profile.sharing.talk.location }}</p>
+            <p class="sharing-description" lang="pl">{{ profile.sharing.talk.title }}</p>
+            <a :href="profile.sharing.talk.href" class="text-link" target="_blank" rel="noopener noreferrer">See the event agenda <HomeIcon name="arrow-up-right" :size="18" /></a>
+          </li>
+          <li>
+            <span class="section-kicker">AI workshops</span>
+            <h3>Practical AI, in groups.</h3>
+            <p class="sharing-description">{{ profile.sharing.workshops }}</p>
+          </li>
+        </ul>
+      </section>
+
       <section id="principles" class="details-section principles-section" aria-labelledby="principles-heading">
         <div class="section-intro">
           <span class="section-kicker">How I approach the work</span>
@@ -52,6 +74,7 @@
           <ul class="technology-list" aria-label="Technologies">
             <li v-for="technology in profile.stack.technologies" :key="technology">{{ technology }}</li>
           </ul>
+          <ProfileActivityStats compact class="tools-activity" />
         </section>
 
         <section id="interests" class="exploration-section" aria-labelledby="exploration-heading">
@@ -59,7 +82,8 @@
           <h2 id="exploration-heading">What comes next.</h2>
           <ul class="exploration-list">
             <li v-for="item in explorations" :key="item.number">
-              <span>{{ item.title }}</span>
+              <NuxtLink v-if="item.tag === 'AI-to-UI'" :to="profile.links.aiToUi.href" class="exploration-demo">{{ item.title }} demo</NuxtLink>
+              <span v-else>{{ item.title }}</span>
               <span class="exploration-tag">{{ item.tag }}</span>
               <p v-if="item.featured" class="exploration-description">{{ item.description }}</p>
             </li>
@@ -125,7 +149,7 @@ const explorations = [
   ...profile.interests.items.filter((item) => item.featured),
   ...profile.interests.items.slice(0, 3)
 ]
-const contactLinks = [profile.links.github, profile.links.linkedin, profile.links.phone]
+const contactLinks = [profile.links.github, profile.links.linkedin, profile.links.medium, profile.links.aiToUi, profile.links.phone]
 
 const onContactLinkClick = (item) => {
   posthog?.capture('contact_link_clicked', {
@@ -203,6 +227,40 @@ h2 {
 
 .text-link > .home-icon {
   color: var(--home-blue, #2949ed);
+}
+
+.sharing-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--home-ink, #17191b);
+}
+
+.sharing-list li {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--home-line, #d8dbdf);
+}
+
+.sharing-list h3 {
+  margin: 12px 0 0;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.sharing-meta {
+  margin: 9px 0 0;
+  color: var(--home-muted, #666b75);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.sharing-description {
+  max-width: 560px;
+  margin: 14px 0 8px;
+  font-size: 15px;
+  line-height: 1.65;
 }
 
 .history-list,
@@ -392,6 +450,10 @@ details[open]:has(> summary:focus-visible) > p {
   max-width: 475px;
 }
 
+.tools-activity {
+  margin-top: 24px;
+}
+
 .technology-list li {
   color: var(--home-muted, #666b75);
   font-size: 17px;
@@ -422,6 +484,9 @@ details[open]:has(> summary:focus-visible) > p {
   color: var(--home-muted, #666b75);
   font-size: 12px;
 }
+
+.exploration-demo { text-decoration-color: #b3b6be; text-underline-offset: 4px; }
+.exploration-demo:hover { color: var(--home-blue, #2949ed); text-decoration-color: currentColor; }
 
 .exploration-description {
   grid-column: 1 / -1;

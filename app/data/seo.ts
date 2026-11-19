@@ -19,11 +19,11 @@ export type SeoPage = {
 export const seoSite = {
   name: profile.person.name,
   defaultUrl: 'https://www.koonrad.dev',
-  defaultImage: '/social/koonrad-typescript-v2.png',
+  defaultImage: '/social/koonrad-product-engineer-v2.png',
   imageWidth: 1200,
   imageHeight: 630,
   imageType: 'image/png',
-  imageAlt: 'Konrad Straszewski, full-stack TypeScript engineer and AI Manager at Lendi from 2024 to 2026.',
+  imageAlt: 'Konrad Straszewski, AI-native Product Engineer, founder of jasne.ai and AI Manager at Lendi from 2024 to 2026.',
   locale: 'en_US',
   twitterCard: 'summary_large_image'
 } as const
@@ -39,9 +39,9 @@ export const seoPages: SeoPage[] = [
   },
   {
     path: '/',
-    title: 'Konrad Straszewski | Full-Stack TypeScript Engineer',
+    title: `${profile.person.name} | ${profile.person.role}`,
     description:
-      'Founder of jasne.ai and AI Manager at Lendi from 2024 to 2026. Full-stack TypeScript engineering, AI adoption, and products built end-to-end by Konrad Straszewski.',
+      'Konrad Straszewski builds full-stack TypeScript products with AI coding agents. Read the Jasne migration case study, try the AI-to-UI demo, or download his CV.',
     lastmod: '2026-11-19',
     type: 'profile'
   },
@@ -74,16 +74,16 @@ export const seoPages: SeoPage[] = [
   },
   {
     path: '/jasne.ai',
-    title: 'jasne.ai Case Study | Vertical AI Product by Konrad Straszewski',
+    title: 'Jasne Case Study | Migrating Course Ownership | Konrad Straszewski',
     description:
-      'Case study of jasne.ai, a vertical AI product built end-to-end by Konrad Straszewski across product, UX, Nuxt, Expo, Supabase/PostgreSQL, and AI SDK.',
-    lastmod: '2026-04-30'
+      'How Jasne moved course ownership to organizations, what AI-assisted browser tests missed, and how Konrad verified the new organization setup in production.',
+    lastmod: '2026-11-17'
   },
   {
     path: '/cv',
-    title: 'CV | Konrad Straszewski - Full-Stack TypeScript & AI Engineer',
+    title: `${profile.person.name} | ${profile.person.role} CV`,
     description:
-      'Download Konrad Straszewski’s CV: full-stack TypeScript engineering, AI leadership at Lendi, PostgreSQL and Redis, and end-to-end product building at jasne.ai.',
+      'Download the CV of Konrad Straszewski, an AI-native Product Engineer building Jasne in TypeScript, with experience leading AI adoption at Lendi from 2024 to 2026.',
     lastmod: '2026-11-19'
   },
   {
@@ -185,7 +185,7 @@ export const getPageSeo = (path: string): SeoPage => {
   return seoPages.find((page) => page.path === normalizedPath) ?? {
     path: normalizedPath,
     title: `${seoSite.name} | koonrad.dev`,
-    description: 'Konrad Straszewski, full-stack TypeScript engineer and founder of jasne.ai.',
+    description: 'Konrad Straszewski builds full-stack TypeScript products with AI coding agents.',
     index: false,
     sitemap: false
   }
