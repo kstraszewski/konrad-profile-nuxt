@@ -14,8 +14,8 @@ export const profile = {
   person: {
     name: 'Konrad Straszewski',
     initials: 'KS',
-    role: 'AI Manager & Builder',
-    currentRole: 'AI Manager · Lendi',
+    role: 'Full-Stack TypeScript Engineer',
+    currentRole: 'Founder of jasne.ai',
     location: 'Szczecin, Poland',
     availability: 'Available · senior AI roles · remote',
     openTo: 'Building products',
@@ -106,27 +106,26 @@ export const profile = {
       last: 'then ship the products.'
     },
     intro: {
-      years: 'Back at',
+      years: 'At',
       company: 'Lendi',
-      path: 'Frontend Lead from 2020 to 2023, and since 2024',
+      path: 'I was Frontend Lead from 2020 to 2023 and from 2024 to 2026 I was',
       role: 'AI Manager',
       mandate:
-        'My mandate: redefine the role of the engineer - from feature-shipper to product builder - and prove it ships.',
-      side: "On the side I'm building",
+        'I helped engineers take ownership of products and build software with AI.',
+      side: "Now I'm building",
       sideBuild: 'jasne.ai',
       neoiqLead: 'From 2023 to 2024 I worked as an AI Builder at',
       neoiqCompany: 'NeoIQ',
       neoiqRest: ', working on retrieval-heavy AI.'
     },
     facts: [
-      { label: 'Currently', value: 'AI Manager · Lendi' },
-      { label: 'Side build', value: 'jasne.ai' },
+      { label: 'Currently', value: 'Founder of jasne.ai' },
       { label: 'Based', value: 'Szczecin, Poland' },
       { label: 'Open to', value: 'Building products' },
       { label: 'Stack', value: 'PostgreSQL · Redis · AI product stack' }
     ],
     marquee: [
-      { text: 'AI Manager', strong: true },
+      { text: 'AI Manager at Lendi, 2024–2026', strong: true },
       { text: 'Builder of jasne.ai', italicWord: 'jasne.ai' },
       { text: 'Building products since 2017', strong: true },
       { text: '2023–2024 NeoIQ vector search at scale', strong: true },
@@ -141,16 +140,10 @@ export const profile = {
       "Three things, one thesis: the engineer's job has changed and the orgs that catch up will eat the ones that don't.",
     items: [
       {
-        heading: 'Leading AI adoption at Lendi',
-        description:
-          "Company-wide rollout. Strategy, tooling, training, KPIs. The unglamorous work of moving an org from 'we should do something with AI' to 'this is how we ship now'.",
-        tag: 'Day job'
-      },
-      {
         heading: 'Building jasne.ai',
         description:
-          'A vertical AI product built end-to-end across product, UX, code, infra, AI integration, and distribution. The proof that the model I sell at Lendi works in the wild.',
-        tag: 'Side build'
+          'A vertical AI product built end-to-end across product, UX, code, infrastructure, AI integration, and distribution.',
+        tag: 'Product'
       },
       {
         heading: 'Writing the product-builder playbook',
@@ -174,7 +167,7 @@ export const profile = {
       rest: 'is where I learned the building, the leading, and the unbuilding.'
     },
     intro:
-      'I started as a Frontend Developer at Finpack in 2017, then led a 6-person frontend team at Lendi from 2020 to 2023. After a year as an AI Builder at NeoIQ, I returned to Lendi as AI Manager in 2024.',
+      'I started as a Frontend Developer at Finpack in 2017, then led a 6-person frontend team at Lendi from 2020 to 2023. After a year as an AI Builder at NeoIQ, I returned to Lendi and worked as AI Manager from 2024 to 2026.',
     pride:
       "The part I'm especially proud of: helping scale Lendi from a startup into Poland's #1 broker and the fastest-growing broker in Europe.",
     phases: [
@@ -198,17 +191,17 @@ export const profile = {
         ordinal: '07'
       },
       {
-        year: '2024 → now',
+        year: '2024–2026',
         label: 'AI Manager · Lendi',
-        description: 'Lead AI adoption company-wide. Redefine the engineering function.',
-        ordinal: '08+'
+        description: 'Led company-wide AI adoption and helped engineers take ownership of products.',
+        ordinal: '08'
       }
     ],
     pillars: [
       {
         number: '01',
         heading: 'Adoption',
-        line: 'I roll AI into the seams of the company.',
+        line: 'I introduced AI tools and workflows across the company.',
         bullets: [
           'Internal copilots in product, eng, ops',
           'Agentic workflows that replace coordination meetings',
@@ -218,7 +211,7 @@ export const profile = {
       {
         number: '02',
         heading: 'Redefinition',
-        line: 'I move engineers from tickets to outcomes.',
+        line: 'I helped engineers take ownership of product outcomes.',
         bullets: [
           'Product-builder competency model',
           'Smaller pods, larger surface, faster loops',
@@ -228,7 +221,7 @@ export const profile = {
       {
         number: '03',
         heading: 'Optimisation',
-        line: "I find the 30% of work AI eats first - and don't pretend it's augmentation.",
+        line: "I looked for the 30% of work teams could automate first with AI.",
         bullets: ['Replace rituals before tools', 'Audit work, not seats', 'Compounding wins beat hero deployments']
       }
     ],
@@ -282,7 +275,7 @@ export const profile = {
         number: '01',
         heading: 'Programmers become product builders',
         description:
-          "AI collapses the distance between idea and shipped feature. The job stops being 'write code' and becomes 'own outcomes'. That's my main KPI at Lendi."
+          "AI collapses the distance between idea and shipped feature. The job stops being 'write code' and becomes 'own outcomes'. That was my main KPI at Lendi."
       },
       {
         number: '02',
@@ -335,11 +328,11 @@ export const profile = {
     heading: 'Long arcs over loud titles. I stayed where the work compounded.',
     experience: [
       {
-        year: '2024 → now',
+        year: '2024–2026',
         role: 'AI Manager',
         org: 'Lendi',
         description:
-          'Lead AI adoption company-wide. Redefine engineering function around the product-builder model. Ship internal tooling, agentic workflows, and the cultural shift that makes them stick.'
+          'Led company-wide AI adoption. Shipped internal tools and agentic workflows and helped engineers take ownership of products.'
       },
       {
         year: '2024 → now',
@@ -493,12 +486,12 @@ export const profile = {
     subhead:
       'A focused product-engineering CV: product ownership, AI-native building, PostgreSQL, Redis, PostHog practice, jasne.ai, and the stack I use to ship.',
     summary:
-      'Product Engineer and AI-native builder working in product engineering since 2017. Frontend Developer at Finpack (2017–2020), Frontend Lead at Lendi (2020–2023), AI Builder at NeoIQ (2023–2024), and AI Manager at Lendi since 2024. My work is practical: own the product surface, build the tool, shape PostgreSQL/Redis-backed data flows, instrument the loop, write the context, and keep iterating with users and teams.',
+      'Product Engineer and AI-native builder working in product engineering since 2017. Frontend Developer at Finpack (2017–2020), Frontend Lead at Lendi (2020–2023), AI Builder at NeoIQ (2023–2024), and AI Manager at Lendi (2024–2026). My work is practical: own the product surface, build the tool, shape PostgreSQL/Redis-backed data flows, instrument the loop, write the context, and keep iterating with users and teams.',
     aiEnablementHighlights,
     highlights: [
       "Helped scale Lendi from a startup into Poland's #1 broker and the fastest-growing broker in Europe.",
       'Progressed from Frontend Developer at Finpack to Frontend Lead at Lendi, AI Builder at NeoIQ, and AI Manager at Lendi while staying close to product surfaces, UX, tooling, and shipping.',
-      'Lead practical AI adoption at Lendi: strategy, tooling, training, KPIs, production workflows, and the product-builder operating model.',
+      'Led practical AI adoption at Lendi: strategy, tooling, training, KPIs, production workflows, and the product-builder operating model.',
       ...aiEnablementHighlights,
       'Implemented PostHog in two organizations, used PostHog MCP heavily, and advocated for evidence-first product loops.',
       'Strong with PostgreSQL and Redis: product data modeling, queryable workflows, caching, queues, and runtime state around real product surfaces.',
@@ -600,7 +593,7 @@ export const profile = {
       facts: [
         { label: 'Location', value: 'Szczecin, Poland - GMT+2' },
         { label: 'Mode', value: 'Prototype -> ship -> instrument -> learn' },
-        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
+        { label: 'Current', value: 'Founder of jasne.ai' },
         { label: 'Bias', value: 'Useful product over polished theater' }
       ]
     },
@@ -672,7 +665,7 @@ export const profile = {
       rows: [
         {
           label: 'Lendi / leadership',
-          heading: 'Frontend Lead at Lendi from 2020 to 2023; AI Manager since 2024.',
+          heading: 'Frontend Lead at Lendi from 2020 to 2023 and AI Manager from 2024 to 2026.',
           description:
             'Long-term ownership across B2B/B2C financial product surfaces, mentoring, frontend stack decisions, AI prototypes, and org-level adoption.'
         },
@@ -769,7 +762,7 @@ export const profile = {
       facts: [
         { label: 'Location', value: 'Szczecin, Poland - GMT+2' },
         { label: 'Mode', value: 'Research -> data -> users -> context -> bets' },
-        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
+        { label: 'Current', value: 'Founder of jasne.ai' },
         { label: 'Bias', value: 'Commercial truth over product theater' }
       ]
     },
@@ -855,7 +848,7 @@ export const profile = {
           label: 'Growth loops',
           heading: 'Led practical adoption work with KPIs, training, workflows, and visible behavior change.',
           description:
-            'AI adoption at Lendi required product sense, stakeholder context, workflow analysis, measurement, and helping teams change how they work.'
+            'I led AI adoption at Lendi from 2024 to 2026, using stakeholder input and workflow data to help teams change how they worked.'
         },
         {
           label: 'Founder',
@@ -938,7 +931,7 @@ export const profile = {
       facts: [
         { label: 'Location', value: 'Szczecin, Poland - GMT+1/+2' },
         { label: 'Mode', value: 'Data -> evals -> prototype -> ship -> learn' },
-        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
+        { label: 'Current', value: 'Founder of jasne.ai' },
         { label: 'Bias', value: 'Research should survive contact with users' }
       ]
     },
@@ -1010,7 +1003,7 @@ export const profile = {
       rows: [
         {
           label: 'AI adoption',
-          heading: 'Lead practical AI adoption across a product organization.',
+          heading: 'Led practical AI adoption at Lendi from 2024 to 2026.',
           description:
             'Strategy, tooling, training, KPIs, internal copilots, workflows, and changing how teams actually build with AI.'
         },
@@ -1097,7 +1090,7 @@ export const profile = {
       kicker: 'Application page / Senior or Staff Fullstack Engineer',
       headline: 'I build product systems with ownership, speed, and taste.',
       lead:
-        'Linear is looking for a self-directed builder who can shape the problem, work across the stack, care about UX and speed, and operate well in a remote async team. That maps closely to how I have grown inside Lendi and how I build jasne.ai.'
+        'Linear is looking for a self-directed builder who can shape the problem, work across the stack, care about UX and speed, and operate well in a remote async team. That maps closely to how I grew at Lendi and how I build jasne.ai.'
     },
     panel: {
       file: 'candidate.linear-fit',
@@ -1111,7 +1104,7 @@ export const profile = {
       facts: [
         { label: 'Location', value: 'Szczecin, Poland - Europe timezone' },
         { label: 'Mode', value: 'Shape -> build -> polish -> learn' },
-        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
+        { label: 'Current', value: 'Founder of jasne.ai' },
         { label: 'Stack', value: 'TypeScript product surfaces, Nuxt/Vue, PostgreSQL, Redis, AI SDKs' }
       ]
     },
@@ -1119,7 +1112,7 @@ export const profile = {
       kicker: 'Linear in practice',
       heading: 'The role describes the operating mode I want more of.',
       copy:
-        'The strongest signal in the Linear role is not a framework checklist. It is the expectation that engineers shape customer-facing product work, push for quality, write clearly, and ship without heavy PM overhead. That is the same direction I have been moving teams toward at Lendi.',
+        'What stands out in the Linear role is the expectation that engineers shape customer-facing product work, push for quality, write clearly, and ship without heavy PM overhead. That is the direction I helped teams move toward at Lendi.',
       cards: [
         {
           label: 'Owner',
@@ -1167,7 +1160,7 @@ export const profile = {
           index: '03',
           heading: 'AI changes product development itself',
           description:
-            'My work at Lendi is already about this shift: engineers becoming product builders, agents becoming workflow participants, and tooling changing how teams decide and ship.'
+            'At Lendi, I helped engineers take ownership of product work and use AI agents and tools to change how teams decide what to build and how they ship it.'
         },
         {
           index: '04',
@@ -1183,7 +1176,7 @@ export const profile = {
       rows: [
         {
           label: 'Lendi / leadership',
-          heading: 'Frontend Lead at Lendi from 2020 to 2023; AI Manager since 2024.',
+          heading: 'Frontend Lead at Lendi from 2020 to 2023 and AI Manager from 2024 to 2026.',
           description:
             'Long-term ownership across B2B/B2C product surfaces, frontend stack decisions, mentoring, prototypes, and org-level AI adoption.'
         },
@@ -1284,7 +1277,7 @@ export const profile = {
       facts: [
         { label: 'Location', value: 'Szczecin, Poland - Europe timezone' },
         { label: 'Mode', value: 'Clear thinking -> right problem -> owned system' },
-        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
+        { label: 'Current', value: 'Founder of jasne.ai' },
         { label: 'Stack', value: 'TypeScript, Nuxt/Vue, PostgreSQL, Redis, Neon/Supabase, AI SDKs, PostHog' }
       ]
     },
@@ -1358,7 +1351,7 @@ export const profile = {
           label: 'Lendi scale',
           heading: 'Helped scale production product surfaces in a fast-growing financial company.',
           description:
-            "Frontend Lead at Lendi from 2020 to 2023 and AI Manager since 2024, helping scale Poland's #1 broker."
+            "Frontend Lead at Lendi from 2020 to 2023 and AI Manager from 2024 to 2026, helping scale Poland's #1 broker."
         },
         {
           label: 'B2B/B2C',
@@ -1368,7 +1361,7 @@ export const profile = {
         },
         {
           label: 'AI adoption',
-          heading: 'Lead the shift from AI demos to working product and developer workflows.',
+          heading: 'Led the shift from AI demos to working product and developer workflows.',
           description:
             'Company-wide adoption, training, tooling, internal copilots, workflow redesign, KPIs, and the product-builder operating model.'
         },
@@ -1458,12 +1451,12 @@ export const profile = {
         label: 'n8n-shaped signal',
         value: 'AI workflows in production',
         description:
-          'I am already working on the shift from isolated AI demos to real company workflows: tools, agents, MCP, product surfaces, and measurable adoption.'
+          'At Lendi, I helped teams move from isolated AI demos to everyday workflows with tools, agents, MCP, product interfaces, and adoption metrics.'
       },
       facts: [
         { label: 'Location', value: 'Szczecin, Poland - Europe remote' },
         { label: 'Stack', value: 'TypeScript, Vue/Nuxt, Node-adjacent systems, PostgreSQL, Redis, Supabase, PostHog, AI SDKs' },
-        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
+        { label: 'Current', value: 'Founder of jasne.ai' },
         { label: 'Mode', value: 'Prototype -> orchestrate -> ship -> instrument -> improve' }
       ]
     },
@@ -1477,7 +1470,7 @@ export const profile = {
           label: 'AI',
           title: 'I make AI operational',
           description:
-            'My current job is to move AI from hype into daily work: tooling, training, workflows, internal copilots, adoption KPIs, and production habits.'
+            'At Lendi, I helped teams use AI in their daily work through tooling, training, workflows, internal copilots, adoption KPIs, and production practices.'
         },
         {
           label: 'Flow',
@@ -1517,9 +1510,9 @@ export const profile = {
         },
         {
           index: '03',
-          heading: 'I already coach this transition',
+          heading: 'I coached teams through this transition',
           description:
-            'At Lendi, my work is not only building AI artifacts. It is changing how teams decide, build, measure, and use AI-assisted engineering responsibly.'
+            'At Lendi, I helped teams change how they made decisions, built software, measured results, and used AI responsibly in engineering.'
         },
         {
           index: '04',
@@ -1535,7 +1528,7 @@ export const profile = {
       rows: [
         {
           label: 'AI adoption',
-          heading: 'Lead company-wide AI adoption at Lendi.',
+          heading: 'Led company-wide AI adoption at Lendi from 2024 to 2026.',
           description:
             'Strategy, tooling, training, workflows, KPIs, internal copilots, and the product-builder operating model for real teams.'
         },
@@ -1625,7 +1618,7 @@ export const profile = {
           rows: [
             {
               label: 'AI adoption',
-              heading: 'Lead company-wide AI adoption at Lendi.',
+              heading: 'Led company-wide AI adoption at Lendi from 2024 to 2026.',
               description:
                 'Strategy, tooling, training, KPIs, workflows, internal copilots, and turning AI usage into durable company behavior.'
             },
@@ -1707,7 +1700,7 @@ export const profile = {
               label: 'Lendi',
               heading: 'Helped scale Lendi through long-term product engineering ownership.',
               description:
-                "B2B/B2C financial product surfaces, stack decisions, mentoring, frontend leadership, and later AI adoption inside Poland's #1 broker."
+                'I led frontend work on B2B and B2C financial products from 2020 to 2023, then led AI adoption from 2024 to 2026.'
             },
             {
               label: 'AI adoption',
@@ -1787,7 +1780,7 @@ export const profile = {
       facts: [
         { label: 'Location', value: 'Szczecin, Poland - Europe remote' },
         { label: 'Mode', value: 'Customer context -> AI workflow -> product surface -> iteration' },
-        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
+        { label: 'Current', value: 'Founder of jasne.ai' },
         { label: 'Stack', value: 'TypeScript, Nuxt/Vue, PostgreSQL, Redis, PostHog, AI SDKs, MCP' }
       ]
     },
@@ -1807,7 +1800,7 @@ export const profile = {
           label: 'AI',
           title: 'I make AI operational',
           description:
-            'At Lendi, my job is to move AI from isolated demos into tooling, workflows, training, KPIs, and production habits across real teams.'
+            'At Lendi, I helped teams move from isolated AI demos to practical tooling, workflows, training, adoption metrics, and production practices.'
         },
         {
           label: 'Builder',
@@ -1837,7 +1830,7 @@ export const profile = {
           index: '02',
           heading: 'Speed needs simplicity',
           description:
-            'Plain values small teams, same-day shipping, and stripping complexity down. That matches the operating model I push at Lendi.'
+            'Plain values small teams, same-day shipping, and stripping complexity down. That matches how I encouraged teams at Lendi to work.'
         },
         {
           index: '03',
@@ -1859,7 +1852,7 @@ export const profile = {
       rows: [
         {
           label: 'AI adoption',
-          heading: 'Lead practical AI adoption across Lendi.',
+          heading: 'Led practical AI adoption across Lendi from 2024 to 2026.',
           description:
             'Strategy, tooling, training, KPIs, internal copilots, workflow redesign, and the operating model that makes AI usage stick.'
         },
@@ -1867,7 +1860,7 @@ export const profile = {
           label: 'Product surfaces',
           heading: 'Owned customer-facing product work in a serious financial domain.',
           description:
-            'Frontend leadership across B2B/B2C Lendi surfaces from 2020 to 2023, followed by AI management since 2024.'
+            'Frontend leadership across Lendi’s B2B and B2C products from 2020 to 2023, followed by AI management from 2024 to 2026.'
         },
         {
           label: '0->1 / jasne.ai',
@@ -1961,7 +1954,7 @@ export const profile = {
       facts: [
         { label: 'Location', value: 'Szczecin, Poland - Europe remote' },
         { label: 'Mode', value: 'Usage -> pricing -> product surface -> evidence -> iteration' },
-        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
+        { label: 'Current', value: 'Founder of jasne.ai' },
         { label: 'Stack', value: 'TypeScript product surfaces, PostgreSQL, Redis, PostHog, AI SDKs' }
       ]
     },
@@ -1981,7 +1974,7 @@ export const profile = {
           label: 'AI',
           title: 'I understand AI as a cost and workflow shift',
           description:
-            'My Lendi work is about how AI changes the cost of work, the shape of teams, and what product builders can ship.'
+            'At Lendi, I worked on how AI changes the cost of development, how teams work, and what they can ship.'
         },
         {
           label: 'Data',
@@ -2035,7 +2028,7 @@ export const profile = {
           label: 'Lendi',
           heading: 'Helped scale product surfaces in a financial product company.',
           description:
-            "Frontend Lead at Lendi from 2020 to 2023 and AI Manager since 2024, helping scale Poland's #1 broker."
+            "Frontend Lead at Lendi from 2020 to 2023 and AI Manager from 2024 to 2026, helping scale Poland's #1 broker."
         },
         {
           label: 'Finpack',
@@ -2045,7 +2038,7 @@ export const profile = {
         },
         {
           label: 'AI adoption',
-          heading: 'Lead AI adoption as an operating and economic shift.',
+          heading: 'Led AI adoption as an operating and economic shift.',
           description:
             'Strategy, tooling, training, workflows, KPIs, internal copilots, and redefining engineering from tickets toward outcomes.'
         },
@@ -2120,7 +2113,7 @@ export const profile = {
       kicker: 'Application page / Product Engineer (Growth)',
       headline: 'I turn AI agent prototypes into workflows people can actually run.',
       lead:
-        'Lago wants to turn working Claude Code-powered GTM agents into a production-grade multi-agent platform. That maps closely to my current work: AI adoption, internal copilots, workflow redesign, product instrumentation, and building AI products end-to-end.'
+        'Lago wants to turn working Claude Code-powered GTM agents into a production-grade multi-agent platform. That maps closely to my experience with AI adoption, internal copilots, workflow redesign, product instrumentation, and building AI products end-to-end.'
     },
     panel: {
       file: 'candidate.lago-fit',
@@ -2135,7 +2128,7 @@ export const profile = {
       facts: [
         { label: 'Location', value: 'Szczecin, Poland - Remote Europe fit' },
         { label: 'Mode', value: 'Prototype -> decompose -> instrument -> adopt -> improve' },
-        { label: 'Current', value: 'AI Manager at Lendi; founder of jasne.ai' },
+        { label: 'Current', value: 'Founder of jasne.ai' },
         { label: 'Stack', value: 'AI agents, TypeScript, PostgreSQL, Redis, PostHog, MCP, AI SDKs' }
       ]
     },
@@ -2143,7 +2136,7 @@ export const profile = {
       kicker: 'Lago fit',
       heading: 'The role is growth engineering, but the real problem is AI operating infrastructure.',
       copy:
-        'Lago already has working AI-powered internal agents for lead qualification, research, outreach, monitoring, and GTM workflows. The role is to turn that into a reliable multi-agent platform with instrumentation, feedback loops, and team adoption. That is the same kind of practical AI work I have been leading at Lendi.',
+        'Lago already has working AI-powered internal agents for lead qualification, research, outreach, monitoring, and GTM workflows. The role is to turn that into a reliable multi-agent platform with instrumentation, feedback loops, and team adoption. I led similar work at Lendi.',
       cards: [
         {
           label: 'AI ops',
@@ -2207,15 +2200,15 @@ export const profile = {
       rows: [
         {
           label: 'AI adoption',
-          heading: 'Lead company-wide AI adoption at Lendi.',
+          heading: 'Led company-wide AI adoption at Lendi from 2024 to 2026.',
           description:
             'Strategy, tooling, training, workflows, KPIs, internal copilots, and the product-builder operating model for real teams.'
         },
         {
           label: 'Workflow design',
-          heading: 'Redesign how engineering and product teams work with AI.',
+          heading: 'Redesigned how engineering and product teams work with AI.',
           description:
-            'The work is not only tools. It is changing rituals, ownership, measurement, and the way teams move from tickets to outcomes.'
+            'I helped teams change their routines, take ownership of outcomes, and measure the results of their work.'
         },
         {
           label: 'jasne.ai',

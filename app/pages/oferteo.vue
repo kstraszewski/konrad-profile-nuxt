@@ -47,7 +47,7 @@
             </div>
             <p class="hero-sign">
               <strong>Konrad Straszewski</strong>
-              <span>AI Manager w Lendi · founder jasne.ai</span>
+              <span>Założyciel jasne.ai · AI Manager w Lendi (2024–2026)</span>
             </p>
           </div>
           <OferteoFlowScene />
@@ -133,10 +133,10 @@
 
         <ul class="proof-list">
           <li data-reveal>
-            <p class="proof-meta"><strong>Lendi</strong><span>Frontend Lead 2020–2023</span><span>AI Manager od 2024</span></p>
+            <p class="proof-meta"><strong>Lendi</strong><span>Frontend Lead 2020–2023</span><span>AI Manager 2024–2026</span></p>
             <div>
               <h3>Od prowadzenia zespołu do adopcji AI w firmie.</h3>
-              <p>Prowadziłem 6-osobowy zespół frontendowy. Dziś odpowiadam za adopcję AI: strategię, narzędzia, szkolenia, KPI, wewnętrznych asystentów i automatyzację procesów.</p>
+              <p>Prowadziłem 6-osobowy zespół frontendowy. Później odpowiadałem za strategię AI, narzędzia, szkolenia, KPI, wewnętrznych asystentów i automatyzację procesów.</p>
             </div>
           </li>
           <li data-reveal data-reveal-delay="60">

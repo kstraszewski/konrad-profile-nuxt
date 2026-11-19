@@ -7,8 +7,7 @@
           <h2 id="context-heading">A little <br />context.</h2>
           <p>
             I started at Finpack in 2017, led Lendi’s 6-person frontend team from 2020
-            to 2023, and worked as an AI Builder at <a :href="profile.links.neoiq.href" target="_blank" rel="noopener noreferrer">NeoIQ</a> in 2023–2024. Since 2024,
-            I’ve been Lendi’s AI Manager.
+            to 2023, and worked as an AI Builder at <a :href="profile.links.neoiq.href" target="_blank" rel="noopener noreferrer">NeoIQ</a> in 2023–2024. I worked as AI Manager at Lendi from 2024 to 2026.
           </p>
           <a href="/api/cv/general.pdf" class="text-link" download="Konrad Straszewski CV.pdf">Download CV <HomeIcon name="download" /></a>
         </div>

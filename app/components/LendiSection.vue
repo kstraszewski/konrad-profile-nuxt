@@ -27,7 +27,7 @@
           v-for="(phase, index) in profile.lendi.phases"
           :key="phase.year"
           class="lendi__phase"
-          :class="{ 'lendi__phase--current': index === profile.lendi.phases.length - 1 }"
+          :class="{ 'lendi__phase--latest': index === profile.lendi.phases.length - 1 }"
         >
           <div class="lendi__phase-kicker">YEAR {{ phase.ordinal }}</div>
           <h3 class="lendi__phase-year">{{ phase.year }}</h3>
@@ -111,7 +111,7 @@ const onLendiClick = () => {
   border-right: 0;
 }
 
-.lendi__phase--current {
+.lendi__phase--latest {
   background: rgba(17, 17, 17, 0.06);
 }
 
@@ -131,7 +131,7 @@ const onLendiClick = () => {
   letter-spacing: 0;
 }
 
-.lendi__phase--current .lendi__phase-year {
+.lendi__phase--latest .lendi__phase-year {
   color: var(--accent);
 }
 

@@ -62,7 +62,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
           </h1>
           <p class="home-hero__copy home-reveal" style="--d: 5">
             I build full-stack products in TypeScript, put AI to work, and help teams ship.
-            Currently at <a :href="profile.links.lendi.href" target="_blank" rel="noreferrer">Lendi</a>.
+            I helped teams build software with AI at <a :href="profile.links.lendi.href" target="_blank" rel="noreferrer">Lendi</a> from 2024 to 2026.
             Independently building <NuxtLink to="/jasne.ai" @click="trackJasne">jasne.ai</NuxtLink>.
           </p>
           <div class="home-hero__actions">
@@ -101,9 +101,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', closeMenu))
             <HomeLendiPreview />
           </div>
           <div class="home-project__body">
-            <p class="home-kicker">01 / Lendi <span>·</span> AI Manager</p>
+            <p class="home-kicker">01 / Lendi <span>·</span> AI Manager <span>·</span> 2024–2026</p>
             <h3>Building the product.<br>Then the way we build.</h3>
-            <p>I led a six-person frontend team from 2020 to 2023. Since returning as AI Manager in 2024, I lead AI adoption across the company: tools, workflows, and the shift from shipping tickets to owning products.</p>
+            <p>I led a six-person frontend team from 2020 to 2023. From 2024 to 2026, I led AI adoption across the company and helped teams build tools and take ownership of products.</p>
             <div class="home-project__tags"><span>AI adoption</span><span>Engineering leadership</span></div>
             <a class="home-text-link" href="#track">The full journey <HomeIcon name="arrow-up-right" /></a>
           </div>

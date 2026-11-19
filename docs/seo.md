@@ -4,7 +4,7 @@ Public metadata lives in `app/data/seo.ts` and is rendered on the server by
 `app/composables/useRouteSeo.ts`. The canonical production origin is
 `https://www.koonrad.dev`, matching the domain that the apex redirects to.
 
-The share image is `public/social/koonrad-typescript-v1.png`: a 1200×630 PNG.
+The share image is `public/social/koonrad-typescript-v2.png`: a 1200×630 PNG.
 Its editable vector source is `assets/brand/social-card.svg`. Raster exports are
 committed, so deployment does not need fonts, image rendering, or a runtime API.
 When changing the image, export a new PNG and version its filename in `seoSite`

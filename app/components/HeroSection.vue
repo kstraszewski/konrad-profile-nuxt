@@ -28,7 +28,7 @@
           rel="noreferrer"
         >
           {{ profile.hero.intro.company }}
-        </a> -
+        </a>,
         {{ profile.hero.intro.path }}
         <strong>{{ profile.hero.intro.role }}</strong>. {{ profile.hero.intro.mandate }}
         {{ profile.hero.intro.side }}

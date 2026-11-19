@@ -2,7 +2,7 @@ export const neoiqCv = {
   hero: {
     kicker: 'neoIQ / A personal note for Marwan',
     headline: 'A familiar face. A hands-on AI builder.',
-    lead: 'AI Manager at Lendi and founder of jasne.ai. Product engineering, context-rich AI and practical team adoption.'
+    lead: 'Founder of jasne.ai and former AI Manager at Lendi. Product engineering, context-rich AI and practical team adoption.'
   },
   proof: {
     kicker: 'Relevant experience',
@@ -18,11 +18,11 @@ export const neoiqCv = {
       },
       {
         label: 'Lendi / AI adoption',
-        heading: 'Lead company-wide AI adoption: strategy, tooling, training, KPIs and internal copilots.'
+        heading: 'Led company-wide AI adoption across strategy, tooling, training, KPIs and internal copilots.'
       },
       {
         label: 'Leadership',
-        heading: 'Frontend Lead at Lendi in 2020–2023, leading a 6-person team; AI Manager since 2024.'
+        heading: 'Led a six-person frontend team at Lendi from 2020 to 2023 and returned as AI Manager from 2024 to 2026.'
       },
       {
         label: 'NeoIQ / AI Builder',

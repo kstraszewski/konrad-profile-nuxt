@@ -24,7 +24,7 @@ export const plane = {
     },
     facts: [
       { label: 'Based in', value: 'Szczecin, Poland' },
-      { label: 'Current', value: 'AI Manager at Lendi · Building jasne.ai' },
+      { label: 'Current', value: 'Building jasne.ai' },
       { label: 'Background', value: 'Financial products since 2017 · AI work since 2023' },
       { label: 'Tools', value: 'TypeScript, Vue/Nuxt, PostgreSQL, Redis, AI SDKs, MCP, PostHog' }
     ]
@@ -45,7 +45,7 @@ export const plane = {
         label: 'Practical AI',
         title: 'Connect the tool to the team',
         description:
-          'At Lendi, I lead AI adoption across tooling, training, internal copilots, workflows, and KPIs. Useful software also needs working habits that support it.'
+          'At Lendi, I led AI adoption across tooling, training, internal copilots, workflows, and KPIs. Useful software also needs working habits that support it.'
       },
       {
         label: 'MCP',
@@ -97,7 +97,7 @@ export const plane = {
     rows: [
       {
         label: 'Lendi / AI',
-        heading: 'Lead company-wide AI adoption since 2024.',
+        heading: 'Led company-wide AI adoption from 2024 to 2026.',
         description:
           'AI strategy, tooling, training, KPIs, internal copilots, and workflow redesign as AI Manager at Lendi.'
       },
@@ -187,7 +187,7 @@ export const plane = {
     hero: {
       kicker: 'Plane / Company introduction',
       headline: 'AI & Product Builder',
-      lead: 'AI Manager at Lendi. Building jasne.ai. Financial UX, AI adoption, and MCP workflows.'
+      lead: 'Founder of jasne.ai and former AI Manager at Lendi. Financial UX, AI adoption, and MCP workflows.'
     },
     proof: {
       kicker: 'Relevant experience',
@@ -195,7 +195,7 @@ export const plane = {
       rows: [
         {
           label: 'Lendi / AI',
-          heading: 'Lead company-wide AI adoption at Lendi since 2024.'
+          heading: 'Led company-wide AI adoption at Lendi from 2024 to 2026.'
         },
         {
           label: 'Leadership',

@@ -32,7 +32,7 @@ export const oferteo = {
       description: 'Brief gotowy do wyceny. Wspólnie z klientami, wykonawcami i zespołem Oferteo.'
     },
     facts: [
-      { label: 'Dziś', value: 'AI Manager w Lendi' },
+      { label: '2024–2026', value: 'AI Manager w Lendi' },
       { label: 'Buduję', value: 'jasne.ai · produkt AI od 0 do 1' },
       { label: 'Łączę', value: 'Kod, produkt i zmianę sposobu pracy' },
       { label: 'Mierzę', value: 'Jakość, użycie i efekt biznesowy' }
@@ -78,7 +78,7 @@ export const oferteo = {
       {
         index: '02 / Zbudować',
         heading: 'Samodzielnie dowieźć pierwszy produkt',
-        description: 'Mogę przejść od problemu do UX, kodu i integracji. W jasne.ai łączę te obowiązki, a w Lendi znam zarówno powierzchnie B2B, jak i B2C.'
+        description: 'Mogę przejść od problemu do UX, kodu i integracji. W jasne.ai łączę te obowiązki, a w Lendi pracowałem przy produktach B2B i B2C.'
       },
       {
         index: '03 / Sprawdzić',
@@ -88,7 +88,7 @@ export const oferteo = {
       {
         index: '04 / Utrzymać',
         heading: 'Pomóc zespołowi przejąć rozwiązanie',
-        description: 'Jako AI Manager pracuję także nad szkoleniami, KPI i sposobem pracy. Wdrożenie kończy się dopiero wtedy, gdy ludzie potrafią z niego korzystać i wiedzą, kto za nie odpowiada.'
+        description: 'Jako AI Manager pracowałem także nad szkoleniami, KPI i sposobem pracy zespołów. Wdrożenie kończy się dopiero wtedy, gdy ludzie potrafią z niego korzystać i wiedzą, kto za nie odpowiada.'
       }
     ]
   },
@@ -98,17 +98,17 @@ export const oferteo = {
     rows: [
       {
         label: 'Lendi',
-        heading: 'Frontend Lead w latach 2020–2023, AI Manager od 2024 roku.',
+        heading: 'Frontend Lead w latach 2020–2023, AI Manager w latach 2024–2026.',
         description: 'Wieloletnia praca przy produktach finansowych B2B i B2C. Znam proces od interfejsu użytkownika po decyzje zespołu i rozwój produktu.'
       },
       {
         label: 'Przywództwo',
         heading: 'Prowadziłem 6-osobowy zespół frontendowy.',
-        description: 'Odpowiedzialność za technologię, mentoring i rozwój zespołu. Dziś pomagam inżynierom przejmować większą odpowiedzialność za wynik produktu.'
+        description: 'Odpowiadałem za technologię, mentoring i rozwój zespołu. Pomagałem też inżynierom przejmować większą odpowiedzialność za wynik produktu.'
       },
       {
         label: 'AI adoption',
-        heading: 'Prowadzę adopcję AI w Lendi.',
+        heading: 'Prowadziłem adopcję AI w Lendi.',
         description: 'Strategia, narzędzia, szkolenia, KPI, wewnętrzni asystenci i automatyzacja procesów. Praca nad wdrożeniem oraz zmianą codziennych nawyków.'
       },
       {
@@ -176,15 +176,15 @@ export const oferteo = {
     hero: {
       kicker: 'Oferteo / FDE & AI Manager / Collaboration proposal',
       headline: 'I build AI products and help teams make them work.',
-      lead: 'AI Manager at Lendi, founder of jasne.ai. Product engineering, team leadership and practical AI adoption.'
+      lead: 'Founder of jasne.ai and former AI Manager at Lendi. Product engineering, team leadership and practical AI adoption.'
     },
     proof: {
       kicker: 'Evidence',
       heading: 'Product delivery, AI adoption and team leadership.',
       rows: [
-        { label: 'Lendi', heading: 'Frontend Lead in 2020–2023, AI Manager since 2024; experience across B2B/B2C products.' },
-        { label: 'Leadership', heading: 'Led a 6-person frontend team; owned stack decisions, mentoring and delivery.' },
-        { label: 'AI adoption', heading: 'Lead company-wide AI adoption: strategy, tooling, training, KPIs and internal copilots.' },
+        { label: 'Lendi', heading: 'Worked on B2B and B2C products as Frontend Lead in 2020–2023 and AI Manager in 2024–2026.' },
+        { label: 'Leadership', heading: 'Led a six-person frontend team and owned stack decisions, mentoring and delivery.' },
+        { label: 'AI adoption', heading: 'Led company-wide AI adoption across strategy, tooling, training, KPIs and internal copilots.' },
         { label: 'jasne.ai', heading: 'Build a vertical AI product end-to-end: product, UX, code, infrastructure and distribution.' },
         { label: 'PostHog', heading: 'Implemented PostHog in two organizations; use funnels, recordings, flags and MCP.' },
         { label: 'NeoIQ / AI Builder', heading: 'Built retrieval-heavy AI and vector search at NeoIQ in 2023–2024.' }

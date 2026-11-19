@@ -19,11 +19,11 @@ export type SeoPage = {
 export const seoSite = {
   name: profile.person.name,
   defaultUrl: 'https://www.koonrad.dev',
-  defaultImage: '/social/koonrad-typescript-v1.png',
+  defaultImage: '/social/koonrad-typescript-v2.png',
   imageWidth: 1200,
   imageHeight: 630,
   imageType: 'image/png',
-  imageAlt: 'Konrad Straszewski — AI Manager & Full-Stack TypeScript Engineer',
+  imageAlt: 'Konrad Straszewski, full-stack TypeScript engineer and AI Manager at Lendi from 2024 to 2026.',
   locale: 'en_US',
   twitterCard: 'summary_large_image'
 } as const
@@ -39,10 +39,10 @@ export const seoPages: SeoPage[] = [
   },
   {
     path: '/',
-    title: 'Konrad Straszewski | AI Manager & Full-Stack TypeScript Engineer',
+    title: 'Konrad Straszewski | Full-Stack TypeScript Engineer',
     description:
-      'AI Manager at Lendi and founder of jasne.ai. Full-stack TypeScript engineering, AI adoption, and products built end-to-end by Konrad Straszewski.',
-    lastmod: '2026-09-26',
+      'Founder of jasne.ai and AI Manager at Lendi from 2024 to 2026. Full-stack TypeScript engineering, AI adoption, and products built end-to-end by Konrad Straszewski.',
+    lastmod: '2026-11-19',
     type: 'profile'
   },
   {
@@ -84,14 +84,14 @@ export const seoPages: SeoPage[] = [
     title: 'CV | Konrad Straszewski - Full-Stack TypeScript & AI Engineer',
     description:
       'Download Konrad Straszewski’s CV: full-stack TypeScript engineering, AI leadership at Lendi, PostgreSQL and Redis, and end-to-end product building at jasne.ai.',
-    lastmod: '2026-09-26'
+    lastmod: '2026-11-19'
   },
   {
     path: '/mcp',
     title: 'MCP Server | Talk to Konrad Straszewski CV',
     description:
       'Connect a public read-only MCP server for Konrad Straszewski and ask AI clients about his CV, AI leadership, product engineering, jasne.ai, Lendi, and fit for roles.',
-    lastmod: '2026-05-04'
+    lastmod: '2026-11-19'
   },
   {
     path: '/posthog',
@@ -185,7 +185,7 @@ export const getPageSeo = (path: string): SeoPage => {
   return seoPages.find((page) => page.path === normalizedPath) ?? {
     path: normalizedPath,
     title: `${seoSite.name} | koonrad.dev`,
-    description: 'Konrad Straszewski — full-stack TypeScript engineer, AI manager, and product builder.',
+    description: 'Konrad Straszewski, full-stack TypeScript engineer and founder of jasne.ai.',
     index: false,
     sitemap: false
   }
@@ -205,11 +205,6 @@ const getPersonSchema = (siteUrl: string) => ({
     '@type': 'PostalAddress',
     addressLocality: 'Szczecin',
     addressCountry: 'PL'
-  },
-  worksFor: {
-    '@type': 'Organization',
-    name: 'Lendi',
-    url: profile.links.lendi.href
   },
   sameAs: [profile.links.linkedin.href, profile.links.github.href],
   knowsAbout: [
